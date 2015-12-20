@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - DisguisePersistence.cs
+// RpiUO - DisguisePersistence.cs
+// Last Edit: 2015/12/20
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -12,7 +14,8 @@ namespace Server.Items
 {
 	public static class DisguisePersistence
 	{
-		public const string FilePath = @"Saves\\Disguises\\Persistence.bin";
+        //Rpi - Changed the literal string to use foward slash convention, so it works on Linux.
+		public const string FilePath = "Saves/Disguises/Persistence.bin";
 
 		public static void Configure()
 		{

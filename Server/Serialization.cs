@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - Serialization.cs
+// RpiUO - Serialization.cs
+// Last Edit: 2015/12/20
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -518,8 +520,21 @@ namespace Server
 			m_Index += 2;
 		}
 
-		public override unsafe void Write(double value)
+        //Rpi
+        //Lets remove the unsafe operation because the hard float on
+        //Raspberry Pi 2 used on the machine code does not work well
+        //with pointers used on the c#. Using another implementation
+        //instead. Same for doubles.
+		public override /*unsafe*/ void Write(double value)
 		{
+            byte[] eightBytes = System.BitConverter.GetBytes(value);
+
+            for (int i = 0; i < 8; i++)
+            {
+                Write(eightBytes[i]);
+            }
+
+            /* Old unsafe Implementation
 			if ((m_Index + 8) > m_Buffer.Length)
 			{
 				Flush();
@@ -530,11 +545,24 @@ namespace Server
 				*((double*)(pBuffer + m_Index)) = value;
 			}
 
-			m_Index += 8;
+			m_Index += 8;*/
 		}
 
-		public override unsafe void Write(float value)
+        //Rpi
+        //Lets remove the unsafe operation because the hard float on
+        //Raspberry Pi 2 used on the machine code does not work well
+        //with pointers used on the c#. Using another implementation
+        //instead.
+        public override /*unsafe*/ void Write(float value)
 		{
+            byte[] fourBytes = System.BitConverter.GetBytes(value);
+
+            for (int i = 0; i < 4; i++)
+            {
+                Write(fourBytes[i]);
+            }
+
+            /* Old unsafe Implementation
 			if ((m_Index + 4) > m_Buffer.Length)
 			{
 				Flush();
@@ -545,8 +573,8 @@ namespace Server
 				*((float*)(pBuffer + m_Index)) = value;
 			}
 
-			m_Index += 4;
-		}
+			m_Index += 4;*/
+        }
 
 		private readonly char[] m_SingleCharBuffer = new char[1];
 

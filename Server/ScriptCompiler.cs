@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - ScriptCompiler.cs
+// RpiUO - ScriptCompiler.cs
+// Last Edit: 2015/12/20
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -76,7 +78,8 @@ namespace Server
 				AppendCompilerOption(ref sb, "/d:x64");
 			}
 
-			AppendCompilerOption(ref sb, "/d:Framework_4_0");
+            //Rpi - We do no want a hard coded version, since it will slow us down on optmizations...
+			//AppendCompilerOption(ref sb, "/d:Framework_4_0");
 
 			return (sb == null ? null : sb.ToString());
 		}

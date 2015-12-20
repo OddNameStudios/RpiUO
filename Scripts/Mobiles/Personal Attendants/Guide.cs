@@ -1,3 +1,11 @@
+#region Header
+// **********
+// RpiUO - Guide.cs
+// Last Edit: 2015/12/20
+// Look for Rpi comment
+// **********
+#endregion
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -58,7 +66,8 @@ namespace Server.Mobiles
 
             try
             {
-                using (FileStream stream = File.OpenRead("Data\\Guide\\Definitions.cfg"))
+                //Rpi - Changed literal string to use foward slash to work on linux file system
+                using (FileStream stream = File.OpenRead("Data/Guide/Definitions.cfg"))
                     using (StreamReader reader = new StreamReader(stream))
                     {
                         while (!reader.EndOfStream)
@@ -75,7 +84,8 @@ namespace Server.Mobiles
                         }
                     }
 
-                foreach (string file in Directory.GetFiles("Data\\Guide\\", "*.graph"))
+                //Rpi - Changed literal string to use foward slash to work on linux file system
+                foreach (string file in Directory.GetFiles("Data/Guide/", "*.graph"))
                 {
                     using (FileStream stream = File.OpenRead(file))
                         using (StreamReader reader = new StreamReader(stream))

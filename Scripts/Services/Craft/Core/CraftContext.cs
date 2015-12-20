@@ -1,3 +1,11 @@
+#region Header
+// **********
+// RpiUO - CraftContext.cs
+// Last Edit: 2015/12/20
+// Look for Rpi comment
+// **********
+#endregion
+
 using System;
 using System.Collections.Generic;
 
@@ -269,7 +277,10 @@ namespace Server.Engines.Craft
         }
 
         #region Serialize/Deserialize Persistence
-        public const string FilePath = @"Saves\\CraftContext\\Contexts.bin";
+
+        //Rpi
+        //Changed the literal stgring FilePath to work on linux, by addind foward slashes.
+        public const string FilePath = "Saves/CraftContext/Contexts.bin";
 
         private static List<CraftContext> Contexts = new List<CraftContext>();
 

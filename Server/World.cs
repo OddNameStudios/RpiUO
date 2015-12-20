@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - World.cs
+// RpiUO - World.cs
+// Last Edit: 2015/12/20
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -367,42 +369,53 @@ namespace Server
 
 						var types = ReadTypes(tdbReader);
 
-						mobileCount = idxReader.ReadInt32();
+                        //Rpi
+                        //Lets look if there is anything before try to read.
+                        //In Rpi, therer is no Arm7 safe code to ReadInt32()
+                        //so we should check it first
+                        if (idxReader.PeekChar() != -1)
+                        {
+                            mobileCount = idxReader.ReadInt32();
 
-						m_Mobiles = new Dictionary<Serial, Mobile>(mobileCount);
+                            m_Mobiles = new Dictionary<Serial, Mobile>(mobileCount);
 
-						for (int i = 0; i < mobileCount; ++i)
-						{
-							int typeID = idxReader.ReadInt32();
-							int serial = idxReader.ReadInt32();
-							long pos = idxReader.ReadInt64();
-							int length = idxReader.ReadInt32();
+                            for (int i = 0; i < mobileCount; ++i)
+                            {
+                                int typeID = idxReader.ReadInt32();
+                                int serial = idxReader.ReadInt32();
+                                long pos = idxReader.ReadInt64();
+                                int length = idxReader.ReadInt32();
 
-							var objs = types[typeID];
+                                var objs = types[typeID];
 
-							if (objs == null)
-							{
-								continue;
-							}
+                                if (objs == null)
+                                {
+                                    continue;
+                                }
 
-							Mobile m = null;
-							ConstructorInfo ctor = objs.Item1;
-							string typeName = objs.Item2;
+                                Mobile m = null;
+                                ConstructorInfo ctor = objs.Item1;
+                                string typeName = objs.Item2;
 
-							try
-							{
-								ctorArgs[0] = (Serial)serial;
-								m = (Mobile)(ctor.Invoke(ctorArgs));
-							}
-							catch
-							{ }
+                                try
+                                {
+                                    ctorArgs[0] = (Serial)serial;
+                                    m = (Mobile)(ctor.Invoke(ctorArgs));
+                                }
+                                catch
+                                { }
 
-							if (m != null)
-							{
-								mobiles.Add(new MobileEntry(m, typeID, typeName, pos, length));
-								AddMobile(m);
-							}
-						}
+                                if (m != null)
+                                {
+                                    mobiles.Add(new MobileEntry(m, typeID, typeName, pos, length));
+                                    AddMobile(m);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            m_Mobiles = new Dictionary<Serial, Mobile>();
+                        }
 
 						tdbReader.Close();
 					}
@@ -427,42 +440,53 @@ namespace Server
 
 						var types = ReadTypes(tdbReader);
 
-						itemCount = idxReader.ReadInt32();
+                        //Rpi
+                        //Lets look if there is anything before try to read.
+                        //In Rpi, therer is no Arm7 safe code to ReadInt32()
+                        //so we should check it first
+                        if (idxReader.PeekChar() != -1)
+                        {
+                            itemCount = idxReader.ReadInt32();
 
-						m_Items = new Dictionary<Serial, Item>(itemCount);
+                            m_Items = new Dictionary<Serial, Item>(itemCount);
 
-						for (int i = 0; i < itemCount; ++i)
-						{
-							int typeID = idxReader.ReadInt32();
-							int serial = idxReader.ReadInt32();
-							long pos = idxReader.ReadInt64();
-							int length = idxReader.ReadInt32();
+                            for (int i = 0; i < itemCount; ++i)
+                            {
+                                int typeID = idxReader.ReadInt32();
+                                int serial = idxReader.ReadInt32();
+                                long pos = idxReader.ReadInt64();
+                                int length = idxReader.ReadInt32();
 
-							var objs = types[typeID];
+                                var objs = types[typeID];
 
-							if (objs == null)
-							{
-								continue;
-							}
+                                if (objs == null)
+                                {
+                                    continue;
+                                }
 
-							Item item = null;
-							ConstructorInfo ctor = objs.Item1;
-							string typeName = objs.Item2;
+                                Item item = null;
+                                ConstructorInfo ctor = objs.Item1;
+                                string typeName = objs.Item2;
 
-							try
-							{
-								ctorArgs[0] = (Serial)serial;
-								item = (Item)(ctor.Invoke(ctorArgs));
-							}
-							catch
-							{ }
+                                try
+                                {
+                                    ctorArgs[0] = (Serial)serial;
+                                    item = (Item)(ctor.Invoke(ctorArgs));
+                                }
+                                catch
+                                { }
 
-							if (item != null)
-							{
-								items.Add(new ItemEntry(item, typeID, typeName, pos, length));
-								AddItem(item);
-							}
-						}
+                                if (item != null)
+                                {
+                                    items.Add(new ItemEntry(item, typeID, typeName, pos, length));
+                                    AddItem(item);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            m_Items = new Dictionary<Serial, Item>();
+                        }
 
 						tdbReader.Close();
 					}
@@ -481,24 +505,31 @@ namespace Server
 				{
 					BinaryReader idxReader = new BinaryReader(idx);
 
-					guildCount = idxReader.ReadInt32();
+                    //Rpi
+                    //Lets look if there is anything before try to read.
+                    //In Rpi, therer is no Arm7 safe code to ReadInt32()
+                    //so we should check it first
+                    if (idxReader.PeekChar() != -1)
+                    {
+                        guildCount = idxReader.ReadInt32();
 
-					CreateGuildEventArgs createEventArgs = new CreateGuildEventArgs(-1);
-					for (int i = 0; i < guildCount; ++i)
-					{
-						idxReader.ReadInt32(); //no typeid for guilds
-						int id = idxReader.ReadInt32();
-						long pos = idxReader.ReadInt64();
-						int length = idxReader.ReadInt32();
+                        CreateGuildEventArgs createEventArgs = new CreateGuildEventArgs(-1);
+                        for (int i = 0; i < guildCount; ++i)
+                        {
+                            idxReader.ReadInt32(); //no typeid for guilds
+                            int id = idxReader.ReadInt32();
+                            long pos = idxReader.ReadInt64();
+                            int length = idxReader.ReadInt32();
 
-						createEventArgs.Id = id;
-						EventSink.InvokeCreateGuild(createEventArgs);
-						BaseGuild guild = createEventArgs.Guild;
-						if (guild != null)
-						{
-							guilds.Add(new GuildEntry(guild, pos, length));
-						}
-					}
+                            createEventArgs.Id = id;
+                            EventSink.InvokeCreateGuild(createEventArgs);
+                            BaseGuild guild = createEventArgs.Guild;
+                            if (guild != null)
+                            {
+                                guilds.Add(new GuildEntry(guild, pos, length));
+                            }
+                        }
+                    }
 
 					idxReader.Close();
 				}
@@ -516,45 +547,56 @@ namespace Server
 
 						var types = ReadTypes(typeReader);
 
-						dataCount = indexReader.ReadInt32();
-						_Data = new Dictionary<CustomSerial, SaveData>(dataCount);
+                        //Rpi
+                        //Lets look if there is anything before try to read.
+                        //In Rpi, therer is no Arm7 safe code to ReadInt32()
+                        //so we should check it first
+                        if (indexReader.PeekChar() != -1)
+                        {
+                            dataCount = indexReader.ReadInt32();
+                            _Data = new Dictionary<CustomSerial, SaveData>(dataCount);
 
-						for (int i = 0; i < dataCount; ++i)
-						{
-							int typeID = indexReader.ReadInt32();
-							int serial = indexReader.ReadInt32();
-							long pos = indexReader.ReadInt64();
-							int length = indexReader.ReadInt32();
+                            for (int i = 0; i < dataCount; ++i)
+                            {
+                                int typeID = indexReader.ReadInt32();
+                                int serial = indexReader.ReadInt32();
+                                long pos = indexReader.ReadInt64();
+                                int length = indexReader.ReadInt32();
 
-							var objects = types[typeID];
+                                var objects = types[typeID];
 
-							if (objects == null)
-							{
-								continue;
-							}
+                                if (objects == null)
+                                {
+                                    continue;
+                                }
 
-							SaveData saveData = null;
-							ConstructorInfo ctor = objects.Item1;
-							string typeName = objects.Item2;
+                                SaveData saveData = null;
+                                ConstructorInfo ctor = objects.Item1;
+                                string typeName = objects.Item2;
 
-							try
-							{
-								ctorArgs[0] = (CustomSerial)serial;
-								saveData = (SaveData)(ctor.Invoke(ctorArgs));
-							}
-							catch
-							{
-								Utility.PushColor(ConsoleColor.Red);
-								Console.WriteLine("Error loading {0}, Serial: {1}", typeName, serial);
-								Utility.PopColor();
-							}
+                                try
+                                {
+                                    ctorArgs[0] = (CustomSerial)serial;
+                                    saveData = (SaveData)(ctor.Invoke(ctorArgs));
+                                }
+                                catch
+                                {
+                                    Utility.PushColor(ConsoleColor.Red);
+                                    Console.WriteLine("Error loading {0}, Serial: {1}", typeName, serial);
+                                    Utility.PopColor();
+                                }
 
-							if (saveData != null)
-							{
-								data.Add(new DataEntry(saveData, typeID, typeName, pos, length));
-								AddData(saveData);
-							}
-						}
+                                if (saveData != null)
+                                {
+                                    data.Add(new DataEntry(saveData, typeID, typeName, pos, length));
+                                    AddData(saveData);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            _Data = new Dictionary<CustomSerial, SaveData>();
+                        }
 
 						typeReader.Close();
 					}
