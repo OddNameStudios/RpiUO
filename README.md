@@ -1,28 +1,13 @@
-# [ServUO]
+# [RpiUO]
 
-Servuo is a community driven Ultima Online server emulator written in c#.
+RpiUO is a community driven Ultima Online server emulator written in c#, aiming to run on a Raspberry Pi 2 hardware using Raspbian,a Debian-based Linux. To use it, you will need to compile Mono [http://www.mono-project.com/].
 
 
 ### Version
-Publish 54
+Publish 1
 
 ### Installation
 
-Getting started with ServUO is quite easy. Just run Compile.WIN.bat and follow the prompts. This script will compile both the server binary and Ultima SDK binary for you and run the server for you at end. After this you can run the server by executing ServUO.exe.
+Getting started with RpiUO is quite easy. Just run Compile.PI and follow the prompts. This script will compile both the server binary and Ultima SDK binary for you. After this you can run the server by executing the linux bash command: 'mono RpiUO.exe'.
 
-More in dept advice and guides can be found in our community. 
-### Development
-
-Want to contribute? Great!
-
-You can submit a pull request at any time and we will review it asap!
-
-License
-----
-
-GPL V2
-
-
-
-
-   [ServUO]: <https://servuo.com>
+More in dept advice and guides can be found in our wiki.
