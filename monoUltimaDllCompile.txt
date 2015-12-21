@@ -1,3 +1,1 @@
 mcs -d:MONO -out:Ultima.dll -t:library -optimize+ -unsafe -nowarn:0219 -r:System,System.Drawing -recurse:Ultima/*.cs
-
-echo "Ultima.dll Successfull Compiled..."
