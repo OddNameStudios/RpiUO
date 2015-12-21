@@ -1,13 +1,15 @@
 #region Header
 // **********
-// ServUO - Account.cs
+// Rpi - Account.cs
+// Last Edit: 2015/12/21
+// Look for Rpi comment
 // **********
 #endregion
 
 #region References
 using System;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq; //Rpi - Removed Linq query to optimize for speed
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -58,104 +60,132 @@ namespace Server.Accounting
 				long share = 0, shared;
 				int diff;
 
-				foreach (var a in Accounts.GetAccounts().OfType<Account>().Where(a => a.Count > 0))
-				{
-					try
-					{
-						if (!AccountGold.Enabled)
-						{
-							share = (int)Math.Truncate((a.TotalCurrency / a.Count) * CurrencyThreshold);
-							found += a.TotalCurrency * CurrencyThreshold;
-						}
 
-						foreach (var m in a.m_Mobiles.Where(m => m != null))
-						{
-							box = m.FindBankNoCreate();
 
-							if (box == null)
-							{
-								continue;
-							}
 
-							if (AccountGold.Enabled)
-							{
-								foreach (var o in checks = box.FindItemsByType<BankCheck>())
-								{
-									found += o.Worth;
+                //Rpi - Removed Linq query to optimize for speed
+                //foreach (var a in Accounts.GetAccounts().OfType<Account>().Where(a => a.Count > 0))
 
-									if (!a.DepositGold(o.Worth))
-									{
-										break;
-									}
+                //Rpi - Begin of mod
+                Account an_account = null; //Used to avoid multiple allocations
+                foreach (ICollection<IAccount> an_item in Accounts.GetAccounts())
+                {
+                    if (an_item is Account)
+                    {
+                        an_account = an_item as Account;
 
-									converted += o.Worth;
-									o.Delete();
-								}
+                        if (an_account.Count > 0)
+                        {
+                            //Rpi - End of mod
 
-								checks.Clear();
-								checks.TrimExcess();
+                            try
+                            {
+                                if (!AccountGold.Enabled)
+                                {
+                                    share = (int)Math.Truncate((an_account.TotalCurrency / an_account.Count) * CurrencyThreshold);
+                                    found += an_account.TotalCurrency * CurrencyThreshold;
+                                }
 
-								foreach (var o in gold = box.FindItemsByType<Gold>())
-								{
-									found += o.Amount;
 
-									if (!a.DepositGold(o.Amount))
-									{
-										break;
-									}
 
-									converted += o.Amount;
-									o.Delete();
-								}
+                                //Rpi - Removed Linq query to optimize for speed
+                                //foreach (var m in an_account.m_Mobiles.Where(m => m != null)) { }
 
-								gold.Clear();
-								gold.TrimExcess();
-							}
-							else
-							{
-								shared = share;
+                                foreach (Mobile m in an_account.m_Mobiles)
+                                { 
+                                    if(m != null)
+                                    {
+                                        //Rpi - End mod
 
-								while (shared > 0)
-								{
-									if (shared > 60000)
-									{
-										diff = (int)Math.Min(10000000, shared);
+                                        box = m.FindBankNoCreate();
 
-										if (a.WithdrawGold(diff))
-										{
-											box.DropItem(new BankCheck(diff));
-										}
-										else
-										{
-											break;
-										}
-									}
-									else
-									{
-										diff = (int)Math.Min(60000, shared);
+                                        if (box == null)
+                                        {
+                                            continue;
+                                        }
 
-										if (a.WithdrawGold(diff))
-										{
-											box.DropItem(new Gold(diff));
-										}
-										else
-										{
-											break;
-										}
-									}
+                                        if (AccountGold.Enabled)
+                                        {
+                                            foreach (var o in checks = box.FindItemsByType<BankCheck>())
+                                            {
+                                                found += o.Worth;
 
-									converted += diff;
-									shared -= diff;
-								}
-							}
+                                                if (!an_account.DepositGold(o.Worth))
+                                                {
+                                                    break;
+                                                }
 
-							box.UpdateTotals();
-						}
-					}
-					catch
-					{ }
-				}
-			}
+                                                converted += o.Worth;
+                                                o.Delete();
+                                            }
+
+                                            checks.Clear();
+                                            checks.TrimExcess();
+
+                                            foreach (var o in gold = box.FindItemsByType<Gold>())
+                                            {
+                                                found += o.Amount;
+
+                                                if (!an_account.DepositGold(o.Amount))
+                                                {
+                                                    break;
+                                                }
+
+                                                converted += o.Amount;
+                                                o.Delete();
+                                            }
+
+                                            gold.Clear();
+                                            gold.TrimExcess();
+                                        }
+                                        else
+                                        {
+                                            shared = share;
+
+                                            while (shared > 0)
+                                            {
+                                                if (shared > 60000)
+                                                {
+                                                    diff = (int)Math.Min(10000000, shared);
+
+                                                    if (an_account.WithdrawGold(diff))
+                                                    {
+                                                        box.DropItem(new BankCheck(diff));
+                                                    }
+                                                    else
+                                                    {
+                                                        break;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    diff = (int)Math.Min(60000, shared);
+
+                                                    if (an_account.WithdrawGold(diff))
+                                                    {
+                                                        box.DropItem(new Gold(diff));
+                                                    }
+                                                    else
+                                                    {
+                                                        break;
+                                                    }
+                                                }
+
+                                                converted += diff;
+                                                shared -= diff;
+                                            }
+                                        }
+
+                                        box.UpdateTotals();
+                                    }
+                                }
+					        }
+					        catch
+					        { }
+				        }
+			        }
+                }
+            }
 			catch
 			{ }
 
@@ -281,17 +311,36 @@ namespace Server.Accounting
 			LoginIPs = LoadAddressList(node);
 			IPRestrictions = LoadAccessCheck(node);
 
-			foreach (Mobile m in m_Mobiles.Where(m => m != null))
-			{
-				m.Account = this;
+
+            //Rpi - Removed Linq query to optimize for speed
+            //foreach (Mobile m in m_Mobiles.Where(m => m != null))
+
+            //Rpi - Begin mod
+            foreach (Mobile m in m_Mobiles)
+            {
+                if (m != null) m.Account = this;
 			}
+
+            //Rpi - End Mod
 
 			var totalGameTime = Utility.GetXMLTimeSpan(Utility.GetText(node["totalGameTime"], null), TimeSpan.Zero);
 
-			if (totalGameTime == TimeSpan.Zero)
+            
+            if (totalGameTime == TimeSpan.Zero)
 			{
-				totalGameTime = m_Mobiles.OfType<PlayerMobile>().Aggregate(totalGameTime, (current, m) => current + m.GameTime);
-			}
+                //Rpi - Removed Linq query to optimize for speed
+                //totalGameTime = m_Mobiles.OfType<PlayerMobile>().Aggregate(totalGameTime, (current, m) => current + m.GameTime);
+
+                foreach (Mobile mobile in m_Mobiles)
+                {
+                    if (mobile is PlayerMobile)
+                    {
+                        totalGameTime += (mobile as PlayerMobile).GameTime;
+                    }
+
+                }
+                //Rpi - End mod
+            }
 
 			m_TotalGameTime = totalGameTime;
 
@@ -450,10 +499,24 @@ namespace Server.Accounting
 		{
 			get
 			{
-				foreach (var m in m_Mobiles.OfType<PlayerMobile>().Where(m => m.NetState != null))
+                //Rpi - Removed Linq query to optimize for speed
+                //foreach (var m in m_Mobiles.OfType<PlayerMobile>().Where(m => m.NetState != null))
+
+                PlayerMobile playerMobile = null;
+                foreach (Mobile mobile in m_Mobiles)
 				{
-					return m_TotalGameTime + (DateTime.UtcNow - m.SessionStart);
+                    if (mobile is PlayerMobile)
+                    {
+                        playerMobile = mobile as PlayerMobile;
+
+                        if (playerMobile.NetState != null)
+                        {
+                            //There is only one online player per account, so we can take the fist one found
+                            return m_TotalGameTime + (DateTime.UtcNow - playerMobile.SessionStart);
+                        }
+                    }
 				}
+                //Rpi - End mod
 
 				return m_TotalGameTime;
 			}
@@ -732,22 +795,36 @@ namespace Server.Accounting
 			string[] stringList;
 			var accessCheck = node["accessCheck"];
 
-			if (accessCheck != null)
+            List<string> a_stringList = new List<string>();
+
+            if (accessCheck != null)
 			{
-				stringList =
+                //Rpi - Removed Linq query to optimize for speed
+                /*stringList =
 					accessCheck.GetElementsByTagName("ip")
 							   .Cast<XmlElement>()
 							   .Select(ip => Utility.GetText(ip, null))
 							   .Where(text => text != null)
-							   .ToArray();
+							   .ToArray(); */
+
+                string helperString;
+                foreach (XmlElement ip_element in accessCheck.GetElementsByTagName("ip"))
+                {
+                    helperString = Utility.GetText(ip_element, null);
+
+                    if (helperString != null)
+                    {
+                        a_stringList.Add(helperString);
+                    }
+                }     
 			}
 			else
 			{
-				stringList = new string[0];
+				return new string[0];
 			}
 
-			return stringList;
-		}
+            return a_stringList.ToArray();
+        }
 
 		/// <summary>
 		///     Deserializes a list of IPAddress values from an xml element.
@@ -767,17 +844,25 @@ namespace Server.Accounting
 
 				count = 0;
 
-				foreach (XmlElement ip in addressList.GetElementsByTagName("ip").Cast<XmlElement>().Where(ip => count < list.Length))
-				{
-					IPAddress address;
+                //Rpi - Removed Linq query to optimize for speed
+                //foreach (XmlElement ip in addressList.GetElementsByTagName("ip").Cast<XmlElement>().Where(ip => count < list.Length))
 
-					if (!IPAddress.TryParse(Utility.GetText(ip, null), out address))
-					{
-						continue;
-					}
+                foreach(XmlElement ip in addressList.GetElementsByTagName("ip"))
+                {
+                    if (count < list.Length)
+                    {
+                        //Rpi - End mod
 
-					list[count] = Utility.Intern(address);
-					count++;
+                        IPAddress address;
+
+                        if (!IPAddress.TryParse(Utility.GetText(ip, null), out address))
+                        {
+                            continue;
+                        }
+
+                        list[count] = Utility.Intern(address);
+                        count++;
+                    }
 				}
 
 				if (count == list.Length)
@@ -962,13 +1047,24 @@ namespace Server.Accounting
 		/// <param name="value">Tag value.</param>
 		public void SetTag(string name, string value)
 		{
-			foreach (var tag in Tags.Where(tag => tag.Name == name))
-			{
-				tag.Value = value;
-				return;
-			}
 
-			AddTag(name, value);
+
+
+            //Rpi - Removed Linq query to optimize for speed
+            //foreach (var tag in Tags.Where(tag => tag.Name == name))
+
+            //Rpi - Begin mod
+            foreach (AccountTag tag in Tags)
+            {
+                if (tag.Name == name)
+                {
+                    tag.Value = value;
+                    return;
+                }
+            }
+            //Rpi - end mod
+
+            AddTag(name, value);
 		}
 
 		/// <summary>
@@ -977,7 +1073,20 @@ namespace Server.Accounting
 		/// <param name="name">Name of the desired tag value.</param>
 		public string GetTag(string name)
 		{
-			return Tags.Where(tag => tag.Name == name).Select(tag => tag.Value).FirstOrDefault();
+            //Rpi - Removed Linq query to optimize for speed 
+            //Tags.Where(tag => tag.Name == name).Select(tag => tag.Value).FirstOrDefault();
+
+            //Rpi - Begin mod
+            foreach (AccountTag tag in Tags)
+            {
+                if(tag.Name == name)
+                {
+                    return tag.Value;
+                }
+            }
+            //Rpi - End mod
+
+            return null;
 		}
 
 		public void SetUnspecifiedBan(Mobile from)
@@ -1042,22 +1151,33 @@ namespace Server.Accounting
 		{
 			Young = false;
 
-			foreach (var m in m_Mobiles.OfType<PlayerMobile>().Where(m => m.Young))
+            //Rpi - Removed Linq query to optimize for speed
+            //foreach (var mobile in m_Mobiles.OfType<PlayerMobile>().Where(m => m.Young))
+            PlayerMobile player = null;
+            foreach (Mobile mobile in m_Mobiles)
 			{
-				m.Young = false;
+                if (mobile is PlayerMobile)
+                {
+                    player = mobile as PlayerMobile;
 
-				if (m.NetState == null)
-				{
-					continue;
-				}
+                    if(player.Young)
+                    {
+                        player.Young = false;
 
-				if (message > 0)
-				{
-					m.SendLocalizedMessage(message);
-				}
+                        if (player.NetState == null)
+                        {
+                            continue;
+                        }
 
-				m.SendLocalizedMessage(1019039);
-				// You are no longer considered a young player of Ultima Online, and are no longer subject to the limitations and benefits of being in that caste.
+                        if (message > 0)
+                        {
+                            player.SendLocalizedMessage(message);
+                        }
+
+                        player.SendLocalizedMessage(1019039);
+                        // You are no longer considered a young player of Ultima Online, and are no longer subject to the limitations and benefits of being in that caste.
+                    }
+                }           
 			}
 		}
 
