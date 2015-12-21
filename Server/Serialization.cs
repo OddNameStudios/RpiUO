@@ -1,7 +1,7 @@
 #region Header
 // **********
 // RpiUO - Serialization.cs
-// Last Edit: 2015/12/20
+// Last Edit: 2015/12/21
 // Look for Rpi comment
 // **********
 #endregion
@@ -24,6 +24,9 @@ namespace Server
 {
 	public abstract class GenericReader
 	{
+        //Rpi - Added to verify if exist data before reading
+        public abstract int PeekChar();
+
 		public abstract string ReadString();
 		public abstract DateTime ReadDateTime();
 		public abstract DateTimeOffset ReadDateTimeOffset();
@@ -1280,7 +1283,13 @@ namespace Server
 			return m_File.BaseStream.Seek(offset, origin);
 		}
 
-		public override string ReadString()
+        //Rpi - Implementation of PeekChar is used to verify if there is any data before try load it.
+        public override int PeekChar()
+        {
+            return m_File.PeekChar();
+        }
+
+        public override string ReadString()
 		{
 			if (ReadByte() != 0)
 			{

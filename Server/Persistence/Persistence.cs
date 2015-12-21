@@ -1,6 +1,8 @@
 ﻿#region Header
 // **********
-// ServUO - Persistence.cs
+// RpiUO - Persistence.cs
+// Last Edit: 2015/12/21
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -90,21 +92,26 @@ namespace Server
 			{
 				var reader = new BinaryFileReader(new BinaryReader(fs));
 
-				try
-				{
-					deserializer(reader);
-				}
-				catch (EndOfStreamException eos)
-				{
-					if (!created)
-					{
-						Console.WriteLine("[Persistence]: {0}", eos);
-					}
-				}
-				finally
-				{
-					reader.Close();
-				}
+                //Rpi - Added verification process before trying to read for the first time, and there is no data.
+                if (reader.PeekChar() != -1)
+                {
+                    try
+                    {
+                        deserializer(reader);
+                    }
+                    catch (EndOfStreamException eos)
+                    {
+                        if (!created)
+                        {
+                            Console.WriteLine("[Persistence]: {0}", eos);
+                        }
+                    }
+                    finally
+                    {
+                        reader.Close();
+                    }
+                }
+
 			}
 		}
 	}

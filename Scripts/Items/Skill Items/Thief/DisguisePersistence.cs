@@ -48,23 +48,27 @@ namespace Server.Items
 				FilePath,
 				reader =>
 				{
-					var version = reader.ReadInt();
+                    //Rpi - Added verification process before trying to read for the first time, and there is no data.
+                    if (reader.PeekChar() != -1)
+                    {
+                        var version = reader.ReadInt();
 
-					switch (version)
-					{
-						case 0:
-						{
-							var count = reader.ReadInt();
+                        switch (version)
+                        {
+                            case 0:
+                                {
+                                    var count = reader.ReadInt();
 
-							for (var i = 0; i < count; ++i)
-							{
-								var m = reader.ReadMobile();
-								DisguiseTimers.CreateTimer(m, reader.ReadTimeSpan());
-								m.NameMod = reader.ReadString();
-							}
-						}
-							break;
-					}
+                                    for (var i = 0; i < count; ++i)
+                                    {
+                                        var m = reader.ReadMobile();
+                                        DisguiseTimers.CreateTimer(m, reader.ReadTimeSpan());
+                                        m.NameMod = reader.ReadString();
+                                    }
+                                }
+                                break;
+                        }
+                    }
 				});
 		}
 	}
