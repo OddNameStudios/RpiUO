@@ -1,0 +1,1 @@
+mcs -out:Ultima.dll -recurse:Ultima/*.cs -t:library -d:MONO -optimize+ -unsafe -nowarn:0219 -r:System,System.Drawing

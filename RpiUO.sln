@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scripts", "Scripts\Scripts.csproj", "{308EA7C6-2873-4E47-AF3F-ABBA3F8AB63E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{AE4A9EAA-E0EB-4DC9-9604-BE4289F9F6C3} = {AE4A9EAA-E0EB-4DC9-9604-BE4289F9F6C3}
@@ -10,8 +12,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EF956787-B078-4D19-B03B-4A8F2A4841AD}"
 	ProjectSection(SolutionItems) = preProject
+		monoUltimaCompile.txt = monoUltimaCompile.txt
+		piServerCoreCompile.txt = piServerCoreCompile.txt
 		Publish.txt = Publish.txt
 		README.md = README.md
+		winServerCoreCompile.txt = winServerCoreCompile.txt
+		winUltimaCompile.txt = winUltimaCompile.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultima", "Ultima\Ultima.csproj", "{E08CFBE4-E013-44EE-8829-426D05BC083F}"

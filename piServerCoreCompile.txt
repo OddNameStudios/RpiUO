@@ -1,3 +1,1 @@
-mcs -out:initServer.exe -d:MONO -optimize+ -unsafe -nowarn:0219,0414 -r:System,System.Configuration.Install,System.Data,System.Drawing,System.EnterpriseServices,System.Management,System.Security,System.ServiceProcess,System.Web,System.Web.Services,System.Windows.Forms,System.Xml,Ultima.dll -recurse:Server/*.cs
-
-echo "RpiUO Server Successfull compiled..."
+mcs -out:initServer.exe -recurse:Server/*.cs -d:MONO -optimize+ -unsafe -nowarn:0219,0414 -r:System,System.Data,System.Drawing,System.Xml,Ultima.dll 
