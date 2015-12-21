@@ -7,6 +7,9 @@ This project is a fork from ServUO, which is a fork from RunUO. It aims to impro
 ### Version
 Publish 1
 
+Stable on:
+2015/12/20
+
 ### Installation
 
 Getting started with RpiUO is quite easy. Just run Compile.PI and follow the prompts. This script will compile both the server binary and Ultima SDK binary for you. After this you can run the server by executing the linux bash command: 'mono RpiUO.exe'.
