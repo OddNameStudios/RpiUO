@@ -12,6 +12,6 @@ Stable on:
 
 ### Installation
 
-Getting started with RpiUO is quite easy. Just run Compile.PI and follow the prompts. This script will compile both the server binary and Ultima SDK binary for you. After this you can run the server by executing the linux bash command: 'mono RpiUO.exe'.
+Getting started with RpiUO is quite easy. Just run Compile.PI and follow the prompts. This script will compile both the server binary and Ultima SDK binary for you. After this you can run the server by executing the linux bash command: 'mono initServer.exe'.
 
 More in dept advice and guides can be found in our wiki.
