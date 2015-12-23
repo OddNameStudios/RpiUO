@@ -1,11 +1,8 @@
 // **********
 // RpiUO - SaveStrategy.cs
-// Last Edit: 2015/12/20
+// Last Edit: 2015/12/23
 // Look for Rpi comment
 // **********
-
-
-using System;
 
 namespace Server
 {
@@ -14,11 +11,15 @@ namespace Server
         public abstract string Name { get; }
         public static SaveStrategy Acquire()
         {
+            //Rpi - Removed Conditional pre-processor clausule - pi got only 4 processors and the DynamicSaveStrategy does not work well on there...
+            //Since pi is multicore, there is no need to another save strategy than the best available.
+            /*
+
             if (Core.MultiProcessor)
             {
                 int processorCount = Core.ProcessorCount;
 
-                //Rpi - Removed Conditional pre-processor clausule - pi got only 4 processors and the DynamicSaveStrategy does not work well on there...
+                
                 //#if DynamicSaveStrategy
                 if (processorCount > 4)
                 {
@@ -41,6 +42,8 @@ namespace Server
             {
                 return new StandardSaveStrategy();
             }
+            */
+            return new DualSaveStrategy();
         }
 
         public abstract void Save(SaveMetrics metrics, bool permitBackgroundWrite);

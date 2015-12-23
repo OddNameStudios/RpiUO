@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - TileMatrix.cs
+// RpiUO - TileMatrix.cs
+// Last Edit: 2015/12/23
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -436,11 +438,12 @@ namespace Server
 
 					fixed (StaticTile* pTiles = staTiles)
 					{
-#if !MONO
+//Rpi - Mono does have an implementation for SafeFileHandle. Lets always use it.
+//#if !MONO
 						NativeReader.Read(m_Statics.SafeFileHandle.DangerousGetHandle(), pTiles, length);
-#else
-						NativeReader.Read( m_Statics.Handle, pTiles, length );
-#endif
+//#else
+						//NativeReader.Read( m_Statics.Handle, pTiles, length );
+//#endif
 						if (m_Lists == null)
 						{
 							m_Lists = new TileList[8][];
@@ -523,11 +526,12 @@ namespace Server
 
 				fixed (LandTile* pTiles = tiles)
 				{
-#if !MONO
-					NativeReader.Read(m_Map.SafeFileHandle.DangerousGetHandle(), pTiles, 192);
-#else
-					NativeReader.Read( m_Map.Handle, pTiles, 192 );
-#endif
+//Rpi - Mono does have an implementation for SafeFileHandle. Lets always use it.
+//#if !MONO
+                    NativeReader.Read(m_Map.SafeFileHandle.DangerousGetHandle(), pTiles, 192);
+//#else
+					//NativeReader.Read( m_Map.Handle, pTiles, 192 );
+//#endif
 				}
 
 				return tiles;
