@@ -1,2 +1,3 @@
-mcs -out:initServer.exe -recurse:Server/*.cs -d:MONO -optimize+ -unsafe -nowarn:0219,0414 -r:System,System.Data,System.Drawing,System.Xml,Ultima.dll
-mono --aot -O:all initServer.exe
+mcs -out:initServer.exe -recurse:Server/*.cs -d:MONO -optimize+ -nowarn:0219,0414 -r:System,System.Data,System.Drawing,System.Xml,Ultima.dll -unsafe
+
+mono --aot -O=all initServer.exe
