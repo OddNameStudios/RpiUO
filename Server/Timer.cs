@@ -388,31 +388,40 @@ namespace Server
 
 		private bool m_Queued;
 
+        //Rpi - This is the most accessed function on the server
 		public static void Slice()
 		{
 			lock (m_Queue)
 			{
 				m_QueueCountAtSlice = m_Queue.Count;
 
-				var index = 0;
+				int index = 0;
+
+                //Rpi - timer and profiler variables are always referencing new instances inside the while loop
+                //lets use the same variable, declaring outside the loop
+
+                Timer timer;
+                TimerProfile profiler;
 
 				while (index < m_BreakCount && m_Queue.Count != 0)
 				{
-					var t = m_Queue.Dequeue();
-					var prof = t.GetProfile();
+					//Timer timer = m_Queue.Dequeue();
+					//TimerProfile profiler = timer.GetProfile();
+                    timer = m_Queue.Dequeue();
+                    profiler = timer.GetProfile();
 
-					if (prof != null)
+                    if (profiler != null)
 					{
-						prof.Start();
+						profiler.Start();
 					}
 
-					t.OnTick();
-					t.m_Queued = false;
+					timer.OnTick();
+					timer.m_Queued = false;
 					++index;
 
-					if (prof != null)
+					if (profiler != null)
 					{
-						prof.Finish();
+						profiler.Finish();
 					}
 				}
 			}

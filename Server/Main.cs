@@ -441,7 +441,7 @@ namespace Server
 			Utility.PopColor();
 			Utility.PushColor(ConsoleColor.Cyan);
 			Console.WriteLine(
-				"ServUO - [http://www.servuo.com] Version {0}.{1}, Build {2}.{3}",
+                "RpiUO - [https://github.com/OddNameStudios/RpiUO] Version {0}.{1}, Build {2}.{3}",
 				ver.Major,
 				ver.Minor,
 				ver.Build,

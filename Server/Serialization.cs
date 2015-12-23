@@ -473,6 +473,7 @@ namespace Server
 
 		public override void Write(int value)
 		{
+
 			if ((m_Index + 4) > m_Buffer.Length)
 			{
 				Flush();
