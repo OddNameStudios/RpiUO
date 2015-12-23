@@ -29,7 +29,7 @@ using Server.Spells.Necromancy;
 using Server.Spells.Sixth;
 using Server.Spells.Spellweaving;
 using Server.Targeting;
-using System.Linq;
+//using System.Linq;
 #endregion
 
 namespace Server.Mobiles
@@ -6292,26 +6292,42 @@ namespace Server.Mobiles
 		/// <returns></returns>
 		public virtual Mobile GetBardTarget(bool creaturesOnly = false)
 		{
-			Mobile m = this.Combatant;
+            //Rpi - Renamed some variables..
+			Mobile combatant = this.Combatant;
 
-			if (m == null && GetMaster() is PlayerMobile)
-				m = GetMaster().Combatant;
+			if (combatant == null && GetMaster() is PlayerMobile)
+				combatant = GetMaster().Combatant;
 
-			if (m == null || m == this || !CanBeHarmful(m, false) || (creaturesOnly && !(m is BaseCreature)))
+			if (combatant == null || combatant == this || !CanBeHarmful(combatant, false) || (creaturesOnly && !(combatant is BaseCreature)))
 			{
-				List<AggressorInfo> list = new List<AggressorInfo>();
-				list.AddRange(this.Aggressors.Where(info => !creaturesOnly || info.Attacker is PlayerMobile ));
+				List<AggressorInfo> listAggressor = new List<AggressorInfo>();
 
-				if (list.Count > 0)
-					m = list[Utility.Random(list.Count)].Attacker;
+
+                //Rpi - replaces linq code below
+                int loop;
+
+                for (loop = 0; loop < this.Aggressors.Count; loop++)
+                {
+                    //this.Aggressors
+                    if(!creaturesOnly || listAggressor[loop].Attacker is PlayerMobile)
+                    {
+                        listAggressor.Add(this.Aggressors[loop]);
+                    }
+                }
+
+                //Rpi - removed linq code for better performance
+                //agressorsList.AddRange(this.Aggressors.Where(info => !creaturesOnly || info.Attacker is PlayerMobile ));
+
+                if (listAggressor.Count > 0)
+					combatant = listAggressor[Utility.Random(listAggressor.Count)].Attacker;
 				else
-					m = null;
+					combatant = null;
 
-				list.Clear();
-				list.TrimExcess();
+				listAggressor.Clear();
+				listAggressor.TrimExcess();
 			}
 
-			return m;
+			return combatant;
 		}
 
 		/// <summary>

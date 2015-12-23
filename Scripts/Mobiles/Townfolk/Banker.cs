@@ -7,7 +7,7 @@
 #region References
 using System;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 
 using Server.Accounting;
 using Server.ContextMenus;
@@ -55,11 +55,25 @@ namespace Server.Mobiles
 
             if (bank != null)
             {
-                var gold = bank.FindItemsByType<Gold>();
-                var checks = bank.FindItemsByType<BankCheck>();
+                List<Gold> gold = bank.FindItemsByType<Gold>();
+                List<BankCheck> checks = bank.FindItemsByType<BankCheck>();
 
-                balance += gold.Aggregate(0.0, (c, t) => c + t.Amount);
-                balance += checks.Aggregate(0.0, (c, t) => c + t.Worth);
+                //Rpi - Substitute code for the removed linq code below
+                int loop;
+
+                for(loop =0; loop < gold.Count; loop++ )
+                {
+                    balance += gold[loop].Amount;
+                }
+
+                for (loop = 0; loop < checks.Count; loop++)
+                {
+                    balance += checks[loop].Worth;
+                }
+
+                //Rpi - Removed linq command for speed up
+                //balance += gold.Aggregate(0.0, (c, t) => c + t.Amount);
+                //balance += checks.Aggregate(0.0, (c, t) => c + t.Worth);
             }
 
             return (int)Math.Max(0, Math.Min(Int32.MaxValue, balance));
@@ -88,8 +102,22 @@ namespace Server.Mobiles
                 gold = bank.FindItemsByType(typeof(Gold));
                 checks = bank.FindItemsByType(typeof(BankCheck));
 
-                balance += gold.OfType<Gold>().Aggregate(0.0, (c, t) => c + t.Amount);
-                balance += checks.OfType<BankCheck>().Aggregate(0.0, (c, t) => c + t.Worth);
+                //Rpi - Substitute code for the removed linq code below
+                int loop;
+
+                for (loop = 0; loop < gold.Length; loop++)
+                {   //Since the code above, we are sure about the type of the array
+                    balance += (gold[loop] as Gold).Amount;
+                }
+
+                for (loop = 0; loop < checks.Length; loop++)
+                {   //Since the code above, we are sure about the type of the array
+                    balance += (checks[loop] as BankCheck).Worth;
+                }
+
+                //Rpi - Removed linq command for speed up
+                //balance += gold.OfType<Gold>().Aggregate(0.0, (c, t) => c + t.Amount);
+                //balance += checks.OfType<BankCheck>().Aggregate(0.0, (c, t) => c + t.Worth);
             }
             else
             {

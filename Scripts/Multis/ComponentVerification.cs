@@ -200,25 +200,40 @@ namespace Server.Multis
 
 		private static void LoadSpreadsheet(int[] table, string path, params string[] tileColumns)
 		{
-			var ss = new Spreadsheet(path);
+            //Rpi - Renamed variables for clarity
+			Spreadsheet spreadsheet = new Spreadsheet(path);
 
-			var tileCIDs = new int[tileColumns.Length];
+			int[] tileColumnsIDs = new int[tileColumns.Length];
 
 			for (var i = 0; i < tileColumns.Length; ++i)
 			{
-				tileCIDs[i] = ss.GetColumnID(tileColumns[i]);
+				tileColumnsIDs[i] = spreadsheet.GetColumnID(tileColumns[i]);
 			}
 
-			var featureCID = ss.GetColumnID("FeatureMask");
+			int featureColumnsID = spreadsheet.GetColumnID("FeatureMask");
 
-			foreach (var record in ss.Records)
+            //RPi - This code replaces the linq code below
+            int featureID;
+
+			//foreach (DataRecord record in spreadsheet.Records)
+            for (int counter = 0; counter < spreadsheet.Records.Length; counter++)
 			{
-				var fid = record.GetInt32(featureCID);
+				featureID = spreadsheet.Records[counter].GetInt32(featureColumnsID);
 
-				foreach (var itemID in tileCIDs.Select(v => record.GetInt32(v)).Where(id => id > 0 && id < table.Length))
+                //Rpi - Replaces the linq code below
+                for (int loop = 0; loop < tileColumnsIDs.Length; loop++)
+                {
+                    for (int element = 1; element < table.Length; element++)
+                    {
+                        table[tileColumnsIDs[loop]] = featureID;
+                    }
+                }
+
+                //Rpi - Removed linq code for better speed
+				/*foreach (var itemID in tileColumnsIDs.Select(v => record.GetInt32(v)).Where(id => id > 0 && id < table.Length))
 				{
-					table[itemID] = fid;
-				}
+					table[itemID] = featureID;
+				}*/
 			}
 		}
 	}
