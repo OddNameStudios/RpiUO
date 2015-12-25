@@ -1,14 +1,16 @@
 #region Header
 // **********
-// ServUO - ServerList.cs
+// RpiUO - ServerList.cs
+// Last Edit: 2015/12/24
+// Look for Rpi comment
 // **********
 #endregion
 
 #region References
 using System;
 using System.IO;
-using System.Linq;
 using System.Net;
+//using System.Linq;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
@@ -16,7 +18,7 @@ using System.Text.RegularExpressions;
 
 namespace Server.Misc
 {
-	public class ServerList
+    public class ServerList
 	{
 		/* 
         * The default setting for Address, a value of 'null', will use your local IP address. If all of your local IP addresses
@@ -146,13 +148,34 @@ namespace Server.Misc
 
 		private static bool HasPublicIPAddress()
 		{
-			var adapters = NetworkInterface.GetAllNetworkInterfaces();
+            //Rpi - Replaces the linq code below
+            NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+
+            foreach (NetworkInterface adapter in adapters)
+            {
+                IPInterfaceProperties properties = adapter.GetIPProperties();
+
+                foreach (IPAddressInformation unicast in properties.UnicastAddresses)
+                {
+                    IPAddress ip = unicast.Address;
+
+                    if (!IPAddress.IsLoopback(ip) && ip.AddressFamily != AddressFamily.InterNetworkV6 && !IsPrivateNetwork(ip))
+                        return true;
+                }
+            }
+
+            return false;
+
+            //Rpi - We are back to the old version of this function to avoid Linq
+            /*
+            IEnumerable<IPAddress> ip;
 			var uips = adapters.Select(a => a.GetIPProperties())
 							   .SelectMany(p => p.UnicastAddresses.Cast<IPAddressInformation>(), (p, u) => u.Address);
 
 			return
 				uips.Any(
 					ip => !IPAddress.IsLoopback(ip) && ip.AddressFamily != AddressFamily.InterNetworkV6 && !IsPrivateNetwork(ip));
+                    */
 		}
 
 		private static bool IsPrivateNetwork(IPAddress ip)

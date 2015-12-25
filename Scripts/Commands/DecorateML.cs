@@ -1,3 +1,9 @@
+// **********
+// RpiUO - DecorateML.cs
+// Last Edit: 2015/12/24
+// Look for Rpi comment
+// **********
+
 using System;
 using System.IO;
 using System.Xml;
@@ -341,8 +347,10 @@ namespace Server
             PeerlessAltar altar;
             PeerlessTeleporter tele;				
             PrismOfLightPillar pillar;
-            StygianDragonBrazier brazier;
-            MedusaNest nest;
+
+            //Rpi - Remove the two next lines because they are never used
+            //StygianDragonBrazier brazier;
+            //MedusaNest nest;
 			
             // Bedlam - Malas
             altar = new BedlamAltar();

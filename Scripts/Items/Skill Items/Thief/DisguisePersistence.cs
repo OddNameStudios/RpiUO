@@ -1,13 +1,13 @@
 #region Header
 // **********
 // RpiUO - DisguisePersistence.cs
-// Last Edit: 2015/12/20
+// Last Edit: 2015/12/23
 // Look for Rpi comment
 // **********
 #endregion
 
 #region References
-using System.Linq;
+//using System.Linq;
 #endregion
 
 namespace Server.Items
@@ -33,12 +33,27 @@ namespace Server.Items
 
 					writer.Write(DisguiseTimers.Timers.Count);
 
-					foreach (var m in DisguiseTimers.Timers.Keys.OfType<Mobile>())
+                    //Rpi - Replaces the linq code below
+                    Mobile mobile;
+                    foreach (var key in DisguiseTimers.Timers.Keys)
+                    {
+                        if (key is Mobile)
+                        {
+                            mobile = key as Mobile;
+                            writer.Write(mobile);
+                            writer.Write(DisguiseTimers.TimeRemaining(mobile));
+                            writer.Write(mobile.NameMod);
+                        }
+
+                    }
+
+                    //Rpi - Remove linq code for better performance
+					/*foreach (var mobile in DisguiseTimers.Timers.Keys.OfType<Mobile>())
 					{
-						writer.Write(m);
-						writer.Write(DisguiseTimers.TimeRemaining(m));
-						writer.Write(m.NameMod);
-					}
+						writer.Write(mobile);
+						writer.Write(DisguiseTimers.TimeRemaining(mobile));
+						writer.Write(mobile.NameMod);
+					}*/
 				});
 		}
 

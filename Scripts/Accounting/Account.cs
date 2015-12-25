@@ -1,7 +1,7 @@
 #region Header
 // **********
 // Rpi - Account.cs
-// Last Edit: 2015/12/21
+// Last Edit: 2015/12/24
 // Look for Rpi comment
 // **********
 #endregion
@@ -792,7 +792,8 @@ namespace Server.Accounting
 		/// <returns>String list. Value will never be null.</returns>
 		public static string[] LoadAccessCheck(XmlElement node)
 		{
-			string[] stringList;
+            //Rpi - Removes the next line because it is never used
+			//string[] stringList;
 			var accessCheck = node["accessCheck"];
 
             List<string> a_stringList = new List<string>();
@@ -1077,14 +1078,13 @@ namespace Server.Accounting
             //Tags.Where(tag => tag.Name == name).Select(tag => tag.Value).FirstOrDefault();
 
             //Rpi - Begin mod
-            foreach (AccountTag tag in Tags)
+            for(int counter = 0; counter < Tags.Count; counter++)
             {
-                if(tag.Name == name)
+                if(Tags[counter].Name == name)
                 {
-                    return tag.Value;
+                    return Tags[counter].Value;
                 }
             }
-            //Rpi - End mod
 
             return null;
 		}

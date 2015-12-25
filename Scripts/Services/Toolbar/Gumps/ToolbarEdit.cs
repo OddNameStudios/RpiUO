@@ -1,13 +1,15 @@
 ﻿#region Header
 // **********
-// ServUO - ToolbarEdit.cs
+// RpiUO - ToolbarEdit.cs
+// Last Edit: 2015/12/23
+// Look for Rpi comment
 // **********
 #endregion
 
 #region References
 using System;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 
 using Server;
 using Server.Gumps;
@@ -180,7 +182,17 @@ namespace Services.Toolbar.Gumps
 		/// </summary>
 		public static List<TextRelay> CreateList(TextRelay[] entries)
 		{
-			return entries.ToList();
+            //Rpi - Replaces the linq code below
+            List<TextRelay> listTextRelay = new List<TextRelay>();
+            for(int counter = 0; counter<entries.Length; counter++)
+            {
+                listTextRelay.Add(entries[counter]);
+            }
+
+            return listTextRelay;
+
+            //rPi- Replaces the linq code below for better performance
+			//return entries.ToList();
 		}
 
 		public void CombineEntries(List<string> list)

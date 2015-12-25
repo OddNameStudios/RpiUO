@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - Main.cs
+// RpiUO - Main.cs
+// Last Edit: 2015/12/23
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -9,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+//using System.Linq;
 using System.Reflection;
 using System.Runtime;
 using System.Runtime.InteropServices;
@@ -300,7 +302,24 @@ namespace Server
 
 		public static float CyclesPerSecond { get { return _CyclesPerSecond[(_CycleIndex - 1) % _CyclesPerSecond.Length]; } }
 
-		public static float AverageCPS { get { return _CyclesPerSecond.Take(_CycleIndex).Average(); } }
+		public static float AverageCPS
+        {
+            get
+            {
+                //Rpi - Replaces the linq code below
+                float average = 0f;
+
+                for(int count = 0; count <_CycleIndex; count++)
+                {
+                    average += _CyclesPerSecond[count];
+                }
+
+                return average / _CycleIndex;
+               
+                //Rpi - Removed linq code for better speed
+                //return _CyclesPerSecond.Take(_CycleIndex).Average();
+            }
+        }
 
 		public static void Kill()
 		{
@@ -665,11 +684,15 @@ namespace Server
 		private static readonly Type[] m_SerialTypeArray = {typeof(Serial)};
 		private static readonly Type[] m_CustomsSerialTypeArray = {typeof(CustomSerial)};
 
-		private static void VerifyType(Type t)
+		private static void VerifyType(Type type)
 		{
-			bool isItem = t.IsSubclassOf(typeof(Item));
+            //Rpi - TODO later
+            bool isItem = type.IsSubclassOf(typeof(Item));
+            //bool isItem = type.IsAssignableFrom(typeof(Item));
 
-			if (isItem || t.IsSubclassOf(typeof(Mobile)))
+            //Rpi - TODO later
+			if (isItem || type.IsSubclassOf(typeof(Mobile)))
+            //if (isItem || type.IsAssignableFrom(typeof(Mobile)))
 			{
 				if (isItem)
 				{
@@ -684,7 +707,7 @@ namespace Server
 
 				try
 				{
-					if (t.GetConstructor(m_SerialTypeArray) == null)
+					if (type.GetConstructor(m_SerialTypeArray) == null)
 					{
 						warningSb = new StringBuilder();
 
@@ -692,7 +715,7 @@ namespace Server
 					}
 
 					if (
-						t.GetMethod(
+						type.GetMethod(
 							"Serialize",
 							BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly) == null)
 					{
@@ -705,7 +728,7 @@ namespace Server
 					}
 
 					if (
-						t.GetMethod(
+						type.GetMethod(
 							"Deserialize",
 							BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly) == null)
 					{
@@ -720,26 +743,28 @@ namespace Server
 					if (warningSb != null && warningSb.Length > 0)
 					{
 						Utility.PushColor(ConsoleColor.Yellow);
-						Console.WriteLine("Warning: {0}\n{1}", t, warningSb);
+						Console.WriteLine("Warning: {0}\n{1}", type, warningSb);
 						Utility.PopColor();
 					}
 				}
 				catch
 				{
 					Utility.PushColor(ConsoleColor.Yellow);
-					Console.WriteLine("Warning: Exception in serialization verification of type {0}", t);
+					Console.WriteLine("Warning: Exception in serialization verification of type {0}", type);
 					Utility.PopColor();
 				}
 			}
-			else if (t.IsSubclassOf(typeof(SaveData)))
-			{
+            else if (type.IsSubclassOf(typeof(SaveData)))
+            //Rpi - TODO later
+            //else if (type.IsAssignableFrom(typeof(SaveData)))
+            {
 				Interlocked.Increment(ref m_CustomsCount);
 
 				StringBuilder warningSb = null;
 
 				try
 				{
-					if (t.GetConstructor(m_CustomsSerialTypeArray) == null)
+					if (type.GetConstructor(m_CustomsSerialTypeArray) == null)
 					{
 						warningSb = new StringBuilder();
 
@@ -747,7 +772,7 @@ namespace Server
 					}
 
 					if (
-						t.GetMethod(
+						type.GetMethod(
 							"Serialize",
 							BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly) == null)
 					{
@@ -760,7 +785,7 @@ namespace Server
 					}
 
 					if (
-						t.GetMethod(
+						type.GetMethod(
 							"Deserialize",
 							BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly) == null)
 					{
@@ -775,14 +800,14 @@ namespace Server
 					if (warningSb != null && warningSb.Length > 0)
 					{
 						Utility.PushColor(ConsoleColor.Yellow);
-						Console.WriteLine("Warning: {0}\n{1}", t, warningSb);
+						Console.WriteLine("Warning: {0}\n{1}", type, warningSb);
 						Utility.PopColor();
 					}
 				}
 				catch
 				{
 					Utility.PushColor(ConsoleColor.Yellow);
-					Console.WriteLine("Warning: Exception in serialization verification of type {0}", t);
+					Console.WriteLine("Warning: Exception in serialization verification of type {0}", type);
 					Utility.PopColor();
 				}
 			}

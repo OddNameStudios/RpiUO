@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - Mobile.cs
+// RpiUO - Mobile.cs
+// Last Edit: 2015/12/24
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -9,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+//using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -541,17 +543,55 @@ namespace Server
 
 		public BaseModule GetModule(string name)
 		{
-			return Modules.FirstOrDefault(mod => mod.Name == name);
+            //Rpi - Replaces the linq code below
+            for(int counter=0;counter<Modules.Count;counter++)
+            {
+                if(Modules[counter].Name == name)
+                {
+                    return Modules[counter];
+                }
+            }
+
+            return null;
+
+            //Rpi - Removed linq code for better performance
+            //return Modules.FirstOrDefault(mod => mod.Name == name);
 		}
 
 		public BaseModule GetModule(Type type)
 		{
-			return Modules.FirstOrDefault(mod => mod.GetType() == type);
+            //Rpi - Replaces the linq code below
+            for (int counter = 0; counter < Modules.Count; counter++)
+            {
+                if (Modules[counter].GetType() == type)
+                {
+                    return Modules[counter];
+                }
+            }
+
+            return null;
+
+            //RPi - Removed linq code for better performance
+            //return Modules.FirstOrDefault(mod => mod.GetType() == type);
 		}
 
 		public List<BaseModule> GetModules(string name)
 		{
-			return Modules.Where(mod => mod.Name == name).ToList();
+            //Rpi - Replaces the linq code below
+            List<BaseModule> listModule = new List<BaseModule>();
+
+            for(int counter=0; counter < Modules.Count; counter++)
+            {
+                if (Modules[counter].Name == name)
+                {
+                    listModule.Add(Modules[counter]);
+                }
+            }
+
+            return listModule;
+      
+            //Rpi - Removed linq code for better performance
+            //return Modules.Where(mod => mod.Name == name).ToList(); ;  
 		}
 
 		public List<BaseModule> SearchModules(string search)

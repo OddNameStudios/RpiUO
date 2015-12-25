@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - Map.cs
+// RpiUO - Map.cs
+// Last Edit: 2015/12/24
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -117,7 +119,7 @@ using Server.Targeting;
 #endregion
 
 #if Map_NewEnumerables || Map_PoolFixColumn || Map_InternalProtection || Map_AllUpdates
-using System.Linq;
+//using System.Linq;
 #endif
 #endregion
 
@@ -170,63 +172,205 @@ namespace Server
 			MultiTileSelector = SelectMultiTiles;
 		}
 
-		public static IEnumerable<NetState> SelectClients(Sector s, Rectangle2D bounds)
+		public static IEnumerable<NetState> SelectClients(Sector sector, Rectangle2D bounds)
 		{
-			return s.Clients.Where(o => o != null && o.Mobile != null && !o.Mobile.Deleted && bounds.Contains(o.Mobile));
+            //Rpi - Replaces the linq code below
+            NetState netState;
+            List<NetState> netStateList = new List<NetState>();
+            for (int counter=0; counter < sector.Clients.Count; counter++)
+            {
+                netState = sector.Clients[counter];
+                if(netState != null && netState.Mobile != null && !netState.Mobile.Deleted && bounds.Contains(netState.Mobile))
+                {
+                    netStateList.Add(netState);
+                }
+            }
+
+            return netStateList;
+
+            //Rpi - removed linq code for better performance
+            //return sector.Clients.Where(o => o != null && o.Mobile != null && !o.Mobile.Deleted && bounds.Contains(o.Mobile));
+        }
+
+        public static IEnumerable<IEntity> SelectEntities(Sector sector, Rectangle2D bounds)
+		{
+            //Rpi - Replaces the linq code below
+            //Enumerable.Empty
+            List<IEntity> entityList = new List<IEntity>();
+            int counter;
+
+            //Mobiles.Where and bounds.Contains 
+            Mobile mobile;
+            for(counter=0; counter < sector.Mobiles.Count; counter++)
+            {
+                mobile = sector.Mobiles[counter];
+                if (mobile != null && !mobile.Deleted && bounds.Contains(mobile.Location))
+                {
+                    entityList.Add(mobile);
+                }
+            }
+
+            //Items.Where and bounds.Contains
+            Item item;
+            for(counter = 0; counter < sector.Items.Count; counter++)
+            {
+                item = sector.Items[counter];
+                if(item != null && !item.Deleted && item.Parent == null && bounds.Contains(item.Location))
+                {
+                    entityList.Add(item);
+                }
+            }
+
+            return entityList;
+
+            //Rpi - Replaced linq code for better performance
+			//return
+			//	Enumerable.Empty<IEntity>()
+			//			  .Union(sector.Mobiles.Where(o => o != null && !o.Deleted))
+			//			  .Union(sector.Items.Where(o => o != null && !o.Deleted && o.Parent == null))
+			//			  .Where(bounds.Contains);
 		}
 
-		public static IEnumerable<IEntity> SelectEntities(Sector s, Rectangle2D bounds)
+		public static IEnumerable<Mobile> SelectMobiles(Sector sector, Rectangle2D bounds)
 		{
-			return
-				Enumerable.Empty<IEntity>()
-						  .Union(s.Mobiles.Where(o => o != null && !o.Deleted))
-						  .Union(s.Items.Where(o => o != null && !o.Deleted && o.Parent == null))
-						  .Where(bounds.Contains);
+            //Rpi - Replaces the linq code below
+            Mobile mobile;
+            List<Mobile> mobileList = new List<Mobile>();
+            for (int counter = 0; counter < sector.Mobiles.Count; counter++)
+            {
+                mobile = sector.Mobiles[counter];
+                if (mobile != null && !mobile.Deleted && bounds.Contains(mobile.Location))
+                {
+                    mobileList.Add(mobile);
+                }
+            }
+
+            return mobileList;
+
+            //Rpi - removed linq code for better performance
+            //return sector.Mobiles.Where(o => o != null && !o.Deleted && bounds.Contains(o));
+        }
+
+        public static IEnumerable<Item> SelectItems(Sector sector, Rectangle2D bounds)
+		{
+            //Rpi - Replaces the linq code below
+            Item item;
+            List<Item> itemList = new List<Item>();
+            for (int counter = 0; counter < sector.Items.Count; counter++)
+            {
+                item = sector.Items[counter];
+                if(item != null && !item.Deleted && bounds.Contains(item.Location))
+                {
+                    itemList.Add(item);
+                }
+            }
+
+            return itemList;
+
+            //Rpi - removed linq code for better performance
+            //return sector.Items.Where(o => o != null && !o.Deleted && o.Parent == null && bounds.Contains(o));
 		}
 
-		public static IEnumerable<Mobile> SelectMobiles(Sector s, Rectangle2D bounds)
+		public static IEnumerable<BaseMulti> SelectMultis(Sector sector, Rectangle2D bounds)
 		{
-			return s.Mobiles.Where(o => o != null && !o.Deleted && bounds.Contains(o));
+            //Rpi - Replaces the linq code below
+            BaseMulti baseMulti;
+            List<BaseMulti> baseMultiList = new List<BaseMulti>();
+            for (int counter = 0; counter < sector.Multis.Count; counter++)
+            {
+                baseMulti = sector.Multis[counter];
+                if (baseMulti != null && !baseMulti.Deleted && bounds.Contains(baseMulti.Location))
+                {
+                    baseMultiList.Add(baseMulti);
+                }
+            }
+
+            return baseMultiList;
+
+            //Rpi - removed linq code for better performance
+			//return sector.Multis.Where(o => o != null && !o.Deleted && bounds.Contains(o.Location));
 		}
 
-		public static IEnumerable<Item> SelectItems(Sector s, Rectangle2D bounds)
+		public static IEnumerable<StaticTile[]> SelectMultiTiles(Sector sector, Rectangle2D bounds)
 		{
-			return s.Items.Where(o => o != null && !o.Deleted && o.Parent == null && bounds.Contains(o));
-		}
+            //Rpi - replaces the linq code below
+            BaseMulti baseMulti;
+            for (int counter = 0; counter < sector.Multis.Count; counter++)
+            {
+                baseMulti = sector.Multis[counter];
+                if(baseMulti != null && !baseMulti.Deleted)
+                {
+                    MultiComponentList multiComponentList = baseMulti.Components;
 
-		public static IEnumerable<BaseMulti> SelectMultis(Sector s, Rectangle2D bounds)
-		{
-			return s.Multis.Where(o => o != null && !o.Deleted && bounds.Contains(o.Location));
-		}
+                    int x, y, xo, yo;
+                    StaticTile[] t, r;
 
-		public static IEnumerable<StaticTile[]> SelectMultiTiles(Sector s, Rectangle2D bounds)
-		{
-			foreach (var o in s.Multis.Where(o => o != null && !o.Deleted))
+                    for (x = bounds.Start.X; x < bounds.End.X; x++)
+                    {
+                        xo = x - (baseMulti.X + multiComponentList.Min.X);
+
+                        if (xo < 0 || xo >= multiComponentList.Width)
+                        {
+                            continue;
+                        }
+
+                        for (y = bounds.Start.Y; y < bounds.End.Y; y++)
+                        {
+                            yo = y - (baseMulti.Y + multiComponentList.Min.Y);
+
+                            if (yo < 0 || yo >= multiComponentList.Height)
+                            {
+                                continue;
+                            }
+
+                            t = multiComponentList.Tiles[xo][yo];
+
+                            if (t.Length <= 0)
+                            {
+                                continue;
+                            }
+
+                            r = new StaticTile[t.Length];
+
+                            for (var i = 0; i < t.Length; i++)
+                            {
+                                r[i] = t[i];
+                                r[i].Z += baseMulti.Z;
+                            }
+
+                            yield return r;
+                        }
+                    }
+                }
+            }
+
+            //Rpi - removed the linq code below for better speed
+			/*foreach (BaseMulti baseMulti in sector.Multis.Where(o => o != null && !o.Deleted))
 			{
-				var c = o.Components;
+				MultiComponentList multiComponentList = baseMulti.Components;
 
 				int x, y, xo, yo;
 				StaticTile[] t, r;
 
 				for (x = bounds.Start.X; x < bounds.End.X; x++)
 				{
-					xo = x - (o.X + c.Min.X);
+					xo = x - (baseMulti.X + multiComponentList.Min.X);
 
-					if (xo < 0 || xo >= c.Width)
+					if (xo < 0 || xo >= multiComponentList.Width)
 					{
 						continue;
 					}
 
 					for (y = bounds.Start.Y; y < bounds.End.Y; y++)
 					{
-						yo = y - (o.Y + c.Min.Y);
+						yo = y - (baseMulti.Y + multiComponentList.Min.Y);
 
-						if (yo < 0 || yo >= c.Height)
+						if (yo < 0 || yo >= multiComponentList.Height)
 						{
 							continue;
 						}
 
-						t = c.Tiles[xo][yo];
+						t = multiComponentList.Tiles[xo][yo];
 
 						if (t.Length <= 0)
 						{
@@ -238,13 +382,13 @@ namespace Server
 						for (var i = 0; i < t.Length; i++)
 						{
 							r[i] = t[i];
-							r[i].Z += o.Z;
+							r[i].Z += baseMulti.Z;
 						}
 
 						yield return r;
 					}
 				}
-			}
+			}*/
 		}
 
 		public static Map.PooledEnumerable<NetState> GetClients(Map map, Rectangle2D bounds)
@@ -1037,14 +1181,36 @@ namespace Server
 				pool = new List<Item>(128); // Arbitrary limit
 			}
 
-			var eable = map.GetItemsInRange(new Point3D(x, y, 0), 0);
+			var pooledEnumerable = map.GetItemsInRange(new Point3D(x, y, 0), 0);
 
-			pool.AddRange(
-				eable.Where(item => item.ItemID <= TileData.MaxItemValue && !(item is BaseMulti))
-					 .OrderBy(item => item.Z)
-					 .Take(pool.Capacity));
 
-			eable.Free();
+            //RPi - Here is an implementation of the linq query below
+            List<Item> itemList = new List<Item>();
+            //Rpi - Where
+            foreach (Item item in pooledEnumerable)
+            {
+                if(item.ItemID <= TileData.MaxItemValue && !(item is BaseMulti))
+                {
+                    itemList.Add(item);
+                }
+
+            }
+            //Rpi - OrderBy item.Z
+            itemList.Sort((itemA, itemB) => itemA.Z .CompareTo(itemB.Z));
+
+            //Rpi - Take implementation
+            for(int counter=0; counter < pool.Capacity && counter < itemList.Count; counter++)
+            {
+                pool.Add(itemList[counter]);
+            }
+
+            //RPi - Removed linq code below for better performance
+			//pool.AddRange(
+			//	pooledEnumerable.Where(item => item.ItemID <= TileData.MaxItemValue && !(item is BaseMulti))
+			//		 .OrderBy(item => item.Z)
+			//		 .Take(pool.Capacity));
+
+			pooledEnumerable.Free();
 
 			return pool;
 		}
@@ -1786,7 +1952,9 @@ namespace Server
 
 			private NullEnumerable()
 			{
-				_Empty = Enumerable.Empty<T>();
+                _Empty = new List<T>();
+                //Rpi - Removed lin code below for better performance
+				//_Empty = Enumerable.Empty<T>();
 			}
 
 			IEnumerator IEnumerable.GetEnumerator()
@@ -1807,30 +1975,43 @@ namespace Server
 		{
 			private static readonly Queue<PooledEnumerable<T>> _Buffer = new Queue<PooledEnumerable<T>>(0x200);
 
+            //Rpi - Variable names refactored for better clarity
 			public static PooledEnumerable<T> Instantiate(Map map, Rectangle2D bounds, PooledEnumeration.Selector<T> selector)
 			{
-				PooledEnumerable<T> e = null;
+				PooledEnumerable<T> pooledEnumerable = null;
 
 				lock (((ICollection)_Buffer).SyncRoot)
 				{
 					if (_Buffer.Count > 0)
 					{
-						e = _Buffer.Dequeue();
+						pooledEnumerable = _Buffer.Dequeue();
 					}
 				}
 
-				var pool = PooledEnumeration.EnumerateSectors(map, bounds).SelectMany(s => selector(s, bounds));
+                //Rpi - SUbstitutes the linq code below
+                List<T> pool = new List<T>();
 
-				if (e != null)
+                foreach (Sector sector in PooledEnumeration.EnumerateSectors(map,bounds))
+                {
+                    foreach (T selected in selector(sector, bounds))
+                    {
+                        pool.Add(selected);
+                    }
+                }
+
+                //Rpi - Replaces the linq code below with an inline implementation of SelectMany using 
+				//var pool = PooledEnumeration.EnumerateSectors(map, bounds).SelectMany(s => selector(s, bounds));
+
+				if (pooledEnumerable != null)
 				{
-					e._Pool.AddRange(pool);
+					pooledEnumerable._Pool.AddRange(pool);
 				}
 				else
 				{
-					e = new PooledEnumerable<T>(pool);
+					pooledEnumerable = new PooledEnumerable<T>(pool);
 				}
 
-				return e;
+				return pooledEnumerable;
 			}
 
 			private bool _IsDisposed;

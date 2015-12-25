@@ -1,7 +1,13 @@
+// **********
+// RpiUO - FastMovement.cs
+// Last Edit: 2015/12/23
+// Look for Rpi comment
+// **********
+
 #region References
 using System;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 
 using Server.Items;
 using Server.Mobiles;
@@ -68,7 +74,28 @@ namespace Server.Movement
 			IEnumerable<StaticTile> tiles,
 			IEnumerable<Item> items)
 		{
-			return tiles.All(t => IsOk(t, ourZ, ourTop)) && items.All(i => IsOk(i, ourZ, ourTop, ignoreDoors, ignoreSpellFields));
+
+            //Rpi - Replaces the linq code below
+            foreach(StaticTile tile in tiles)
+            {
+                if (FastMovementImpl.IsOk(tile, ourZ, ourTop) == false)
+                {
+                    return false;
+                }
+            }
+
+            foreach(Item item in items)
+            {
+                if (FastMovementImpl.IsOk(item, ourZ, ourTop, ignoreDoors, ignoreSpellFields) == false)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+
+            //RPi - Removed linq code for better performance
+			//return tiles.All(t => IsOk(t, ourZ, ourTop)) && items.All(i => IsOk(i, ourZ, ourTop, ignoreDoors, ignoreSpellFields));
 		}
 
 		private static bool Check(
@@ -384,8 +411,6 @@ namespace Server.Movement
 
 			int startZ, startTop;
 
-			IEnumerable<Item> itemsStart, itemsForward, itemsLeft, itemsRight;
-
 			var ignoreMovableImpassables = MovementImpl.IgnoreMovableImpassables;
 			var reqFlags = ImpassableSurface;
 
@@ -394,27 +419,86 @@ namespace Server.Movement
 				reqFlags |= TileFlag.Wet;
 			}
 
-			if (checkDiagonals)
-			{
-				var sStart = map.GetSector(xStart, yStart);
-				var sForward = map.GetSector(xForward, yForward);
-				var sLeft = map.GetSector(xLeft, yLeft);
-				var sRight = map.GetSector(xRight, yRight);
+            IEnumerable<Item> itemsStart, itemsForward, itemsLeft, itemsRight;
 
-				itemsStart = sStart.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xStart, yStart));
-				itemsForward = sForward.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xForward, yForward));
-				itemsLeft = sLeft.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xLeft, yLeft));
-				itemsRight = sRight.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xRight, yRight));
+            //Rpi - Auxiliar variables to use in the if-else statement below, to replace linq code
+            List<Item> queryList;
+
+            if (checkDiagonals)
+			{
+				Sector sectorStart = map.GetSector(xStart, yStart);
+                Sector sectorForward = map.GetSector(xForward, yForward);
+                Sector sectorLeft = map.GetSector(xLeft, yLeft);
+                Sector sectorRight = map.GetSector(xRight, yRight);
+
+                //Rpi - Replaces the linq code below
+                queryList = new List<Item>();
+                foreach(Item item in sectorStart.Items)
+                {
+                    if (Verify(item, reqFlags, ignoreMovableImpassables, xStart, yStart) == true)
+                        queryList.Add(item);
+                }
+                itemsStart = queryList;
+
+                queryList = new List<Item>();
+                foreach (Item item in sectorForward.Items)
+                {
+                    if (Verify(item, reqFlags, ignoreMovableImpassables, xForward, yForward) == true)
+                        queryList.Add(item);
+                }
+                itemsForward = queryList;
+
+                queryList = new List<Item>();
+                foreach (Item item in sectorLeft.Items)
+                {
+                    if (Verify(item, reqFlags, ignoreMovableImpassables, xLeft, yLeft) == true)
+                        queryList.Add(item);
+                }
+                itemsLeft = queryList;
+
+                queryList = new List<Item>();
+                foreach (Item item in sectorRight.Items)
+                {
+                    if (Verify(item, reqFlags, ignoreMovableImpassables, xRight, yRight) == true)
+                        queryList.Add(item);
+                }
+                itemsRight = queryList;
+
+                //Rpi - removed linq code for better performance
+                //itemsStart = sectorStart.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xStart, yStart));
+				//itemsForward = sectorForward.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xForward, yForward));
+				//itemsLeft = sectorLeft.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xLeft, yLeft));
+				//itemsRight = sectorRight.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xRight, yRight));
 			}
 			else
 			{
-				var sStart = map.GetSector(xStart, yStart);
-				var sForward = map.GetSector(xForward, yForward);
+                Sector sectorStart = map.GetSector(xStart, yStart);
+                Sector sectorForward = map.GetSector(xForward, yForward);
 
-				itemsStart = sStart.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xStart, yStart));
-				itemsForward = sForward.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xForward, yForward));
-				itemsLeft = Enumerable.Empty<Item>();
-				itemsRight = Enumerable.Empty<Item>();
+                queryList = new List<Item>();
+                foreach (Item item in sectorStart.Items)
+                {
+                    if (Verify(item, reqFlags, ignoreMovableImpassables, xStart, yStart) == true)
+                        queryList.Add(item);
+                }
+                itemsStart = queryList;
+
+                queryList = new List<Item>();
+                foreach (Item item in sectorForward.Items)
+                {
+                    if (Verify(item, reqFlags, ignoreMovableImpassables, xForward, yForward) == true)
+                        queryList.Add(item);
+                }
+                itemsForward = queryList;
+
+                itemsLeft = new List<Item>();
+                itemsRight = new List<Item>();
+
+                //Rpi - removed linq code for better performance
+                //itemsStart = sectorStart.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xStart, yStart));
+				//itemsForward = sectorForward.Items.Where(i => Verify(i, reqFlags, ignoreMovableImpassables, xForward, yForward));
+				//itemsLeft = Enumerable.Empty<Item>();
+				//itemsRight = Enumerable.Empty<Item>();
 			}
 
 			GetStartZ(m, map, loc, itemsStart, out startZ, out startTop);

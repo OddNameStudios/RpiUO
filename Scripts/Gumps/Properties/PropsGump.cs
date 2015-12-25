@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - PropsGump.cs
+// RpiUO - PropsGump.cs
+// Last Edit: 2015/12/24
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -9,7 +11,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
+//using System.Linq;
 using System.Reflection;
 
 using CustomsFramework;
@@ -518,10 +520,21 @@ namespace Server.Gumps
 						}
 						else if (IsType(type, _TypeOfMap))
 						{
-							//Must explicitly cast collection to avoid potential covariant cast runtime exception
-							var values = Map.GetMapValues().Cast<object>().ToArray();
+                            //Must explicitly cast collection to avoid potential covariant cast runtime exception
+                            
+                            //Rpi - Replaces the linq code below
+                            Map[] maps = Map.GetMapValues();
+                            object[] values = new object[maps.Length];
 
-							from.SendGump(new SetListOptionGump(prop, from, m_Object, m_Stack, m_Page, m_List, Map.GetMapNames(), values));
+                            for (int counter=0; counter < Map.GetMapValues().Length; counter++)
+                            {
+                                values[counter] = maps[counter] as object;
+                            }
+
+                            //Rpi - Removed linq code for better performance
+                            //var values = Map.GetMapValues().Cast<object>().ToArray();
+
+                            from.SendGump(new SetListOptionGump(prop, from, m_Object, m_Stack, m_Page, m_List, Map.GetMapNames(), values));
 						}
 						else if (IsType(type, _TypeOfSkills) && m_Object is Mobile)
 						{
@@ -599,7 +612,19 @@ namespace Server.Gumps
 
 		private static bool IsType(Type type, IEnumerable<Type> check)
 		{
-			return check.Any(t => IsType(type, t));
+            //Rpi - Replaces the linq code below
+            foreach(Type typeToCheck in check)
+            {
+                if (IsType(type, typeToCheck))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
+            //Rpi - Replaced the follow linq code for better performance
+			//return check.Any(t => IsType(type, t));
 		}
 
 		private static CPA GetCPA(PropertyInfo prop)

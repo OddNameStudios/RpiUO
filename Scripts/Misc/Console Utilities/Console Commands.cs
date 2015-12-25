@@ -1,8 +1,14 @@
+// **********
+// RpiUO - Console Commands.cs
+// Last Edit: 2015/12/23
+// Look for Rpi comment
+// **********
+
 #region References
 using System;
 using System.Collections;
 using System.Diagnostics;
-using System.Linq;
+//using System.Linq;
 using System.Threading;
 
 using Server.Accounting;
@@ -130,12 +136,25 @@ namespace Server.Misc
 			ThreadPool.QueueUserWorkItem(ConsoleListen);
 		}
 
-		public static void BroadcastMessage(AccessLevel ac, int hue, string message)
+        //Rpi - Variable names changed for clarity
+		public static void BroadcastMessage(AccessLevel accessLevel, int hue, string message)
 		{
-			foreach (Mobile m in NetState.Instances.Select(state => state.Mobile).Where(m => m != null && m.AccessLevel >= ac))
+            //Rpi - Replacement for linq code below
+            Mobile mobileConectado;
+            for(int count=0; count < NetState.Instances.Count; count++)
+            {
+                mobileConectado = NetState.Instances[count].Mobile;
+                if(mobileConectado != null && mobileConectado.AccessLevel >= accessLevel)
+                {
+                    mobileConectado.SendMessage(hue, message);
+                }
+            }
+
+            //Rpi - Linq code removed for better performance
+			/*foreach (Mobile m in NetState.Instances.Select(state => state.Mobile).Where(m => m != null && m.AccessLevel >= accessLevel))
 			{
 				m.SendMessage(hue, message);
-			}
+			}*/
 		}
 
 		public static void Next(string input)

@@ -1,3 +1,9 @@
+// **********
+// RpiUO - AccountPrompt.cs
+// Last Edit: 2015/12/24
+// Look for Rpi comment
+// **********
+
 using System;
 using Server.Accounting;
 
@@ -16,9 +22,11 @@ namespace Server.Misc
                 {
                     Console.WriteLine();
 
+                    Console.WriteLine();
                     Console.Write("Username: ");
                     string username = Console.ReadLine();
 
+                    Console.WriteLine();
                     Console.Write("Password: ");
                     string password = Console.ReadLine();
 

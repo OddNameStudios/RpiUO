@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - Item.cs
+// RpiUO - Item.cs
+// Last Edit: 2015/12/23
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -9,9 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
+//using System.Linq;
 using System.Threading.Tasks;
 
 using CustomsFramework;
@@ -673,18 +674,53 @@ namespace Server
 
 		public BaseModule GetModule(string name)
 		{
-			return Modules.FirstOrDefault(mod => mod.Name == name);
+            //Rpi - This code is the implementation of the linq expression, added to avoid using the linq library
+            foreach (BaseModule baseModule in Modules)
+            {
+                if (baseModule.Name == name)
+                    return baseModule;
+            }
+
+            return default(BaseModule);
+
+            //RPi - Linq code removed 
+            //return Modules.FirstOrDefault(mod => mod.Name == name);
 		}
 
 		public BaseModule GetModule(Type type)
 		{
-			return Modules.FirstOrDefault(mod => mod.GetType() == type);
+            //Rpi - This code is the implementation of the linq expression, added to avoid using the linq library
+            foreach (BaseModule baseModule in Modules)
+            {
+                if (baseModule.GetType() == type)
+                {
+                    return baseModule;
+                }
+            }
+
+            return default(BaseModule);
+
+            //RPi - Linq code removed 
+            //return Modules.FirstOrDefault(mod => mod.GetType() == type);
 		}
 
 		public List<BaseModule> GetModules(string name)
 		{
-			return Modules.Where(mod => mod.Name == name).ToList();
-		}
+            //Rpi - This code is the implementation of the linq expression, added to avoid using the linq library
+            List<BaseModule> moduleList = new List<BaseModule>();
+            foreach (BaseModule baseModule in Modules)
+            {
+                if (baseModule.Name == name)
+                {
+                    moduleList.Add(baseModule);
+                }
+            }
+
+            return moduleList;
+
+            //RPi - Linq code removed 
+            //return Modules.Where(mod => mod.Name == name).ToList();
+        }
 
 		public List<BaseModule> SearchModules(string search)
 		{

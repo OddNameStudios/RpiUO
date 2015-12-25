@@ -1,7 +1,13 @@
+// **********
+// RpiUO - WebStatus.cs
+// Last Edit: 2015/12/23
+// Look for Rpi comment
+// **********
+
 #region References
 using System;
 using System.IO;
-using System.Linq;
+//using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -83,15 +89,15 @@ namespace Server.Misc
 
 		private static string Encode(string input)
 		{
-			var sb = new StringBuilder(input);
+			StringBuilder stringBuilder = new StringBuilder(input);
 
-			sb.Replace("&", "&amp;");
-			sb.Replace("<", "&lt;");
-			sb.Replace(">", "&gt;");
-			sb.Replace("\"", "&quot;");
-			sb.Replace("'", "&apos;");
+			stringBuilder.Replace("&", "&amp;");
+			stringBuilder.Replace("<", "&lt;");
+			stringBuilder.Replace(">", "&gt;");
+			stringBuilder.Replace("\"", "&quot;");
+			stringBuilder.Replace("'", "&apos;");
 
-			return sb.ToString();
+			return stringBuilder.ToString();
 		}
 
 		public StatusPage()
@@ -107,81 +113,91 @@ namespace Server.Misc
 				Directory.CreateDirectory("web");
 			}
 
-			using (var op = new StreamWriter("web/status.html"))
+			using (StreamWriter streamWriter = new StreamWriter("web/status.html"))
 			{
-				op.WriteLine("<!DOCTYPE html>");
-				op.WriteLine("<html>");
-				op.WriteLine("   <head>");
-				op.WriteLine("      <title>" + ServerList.ServerName + " Server Status</title>");
-				op.WriteLine("   </head>");
-				op.WriteLine("   <style type=\"text/css\">");
-				op.WriteLine("   body { background: #999; }");
-				op.WriteLine("   table { width: 100%; }");
-				op.WriteLine("   tr.ruo-header td { background: #000; color: #FFF; }");
-				op.WriteLine("   tr.odd td { background: #222; color: #DDD; }");
-				op.WriteLine("   tr.even td { background: #DDD; color: #222; }");
-				op.WriteLine("   </style>");
-				op.WriteLine("   <body>");
-				op.WriteLine("      <h1>RunUO Server Status</h1>");
-				op.WriteLine("      <h3>Online clients</h3>");
-				op.WriteLine("      <table cellpadding=\"0\" cellspacing=\"0\">");
-				op.WriteLine("         <tr class=\"ruo-header\"><td>Name</td><td>Location</td><td>Kills</td><td>Karma/Fame</td></tr>");
+				streamWriter.WriteLine("<!DOCTYPE html>");
+				streamWriter.WriteLine("<html>");
+				streamWriter.WriteLine("   <head>");
+				streamWriter.WriteLine("      <title>" + ServerList.ServerName + " Server Status</title>");
+				streamWriter.WriteLine("   </head>");
+				streamWriter.WriteLine("   <style type=\"text/css\">");
+				streamWriter.WriteLine("   body { background: #999; }");
+				streamWriter.WriteLine("   table { width: 100%; }");
+				streamWriter.WriteLine("   tr.ruo-header td { background: #000; color: #FFF; }");
+				streamWriter.WriteLine("   tr.odd td { background: #222; color: #DDD; }");
+				streamWriter.WriteLine("   tr.even td { background: #DDD; color: #222; }");
+				streamWriter.WriteLine("   </style>");
+				streamWriter.WriteLine("   <body>");
+				streamWriter.WriteLine("      <h1>RunUO Server Status</h1>");
+				streamWriter.WriteLine("      <h3>Online clients</h3>");
+				streamWriter.WriteLine("      <table cellpadding=\"0\" cellspacing=\"0\">");
+				streamWriter.WriteLine("         <tr class=\"ruo-header\"><td>Name</td><td>Location</td><td>Kills</td><td>Karma/Fame</td></tr>");
 
-				var index = 0;
+				int index = 0;
 
-				foreach (var m in NetState.Instances.Where(state => state.Mobile != null).Select(state => state.Mobile))
+                //Rpi - Removed linq code for better performance
+                //foreach (Mobile mobile in NetState.Instances.Where(state => state.Mobile != null).Select(state => state.Mobile))
+
+                //Rpi - Replaces the linq code above
+                Mobile mobile;
+                for(int counter=0; counter < NetState.Instances.Count; counter++)
 				{
-					++index;
+                    mobile = NetState.Instances[counter].Mobile;
 
-					var g = m.Guild as Guild;
+                    if(mobile != null)
+                    {
+                        ++index;
 
-					op.Write("         <tr class=\"ruo-result " + (index % 2 == 0 ? "even" : "odd") + "\"><td>");
+                        var g = mobile.Guild as Guild;
 
-					if (g != null)
-					{
-						op.Write(Encode(m.Name));
-						op.Write(" [");
+                        streamWriter.Write("         <tr class=\"ruo-result " + (index % 2 == 0 ? "even" : "odd") + "\"><td>");
 
-						var title = m.GuildTitle;
+                        if (g != null)
+                        {
+                            streamWriter.Write(Encode(mobile.Name));
+                            streamWriter.Write(" [");
 
-						title = title != null ? title.Trim() : String.Empty;
+                            var title = mobile.GuildTitle;
 
-						if (title.Length > 0)
-						{
-							op.Write(Encode(title));
-							op.Write(", ");
-						}
+                            title = title != null ? title.Trim() : String.Empty;
 
-						op.Write(Encode(g.Abbreviation));
+                            if (title.Length > 0)
+                            {
+                                streamWriter.Write(Encode(title));
+                                streamWriter.Write(", ");
+                            }
 
-						op.Write(']');
-					}
-					else
-					{
-						op.Write(Encode(m.Name));
-					}
+                            streamWriter.Write(Encode(g.Abbreviation));
 
-					op.Write("</td><td>");
-					op.Write(m.X);
-					op.Write(", ");
-					op.Write(m.Y);
-					op.Write(", ");
-					op.Write(m.Z);
-					op.Write(" (");
-					op.Write(m.Map);
-					op.Write(")</td><td>");
-					op.Write(m.Kills);
-					op.Write("</td><td>");
-					op.Write(m.Karma);
-					op.Write(" / ");
-					op.Write(m.Fame);
-					op.WriteLine("</td></tr>");
+                            streamWriter.Write(']');
+                        }
+                        else
+                        {
+                            streamWriter.Write(Encode(mobile.Name));
+                        }
+
+                        streamWriter.Write("</td><td>");
+                        streamWriter.Write(mobile.X);
+                        streamWriter.Write(", ");
+                        streamWriter.Write(mobile.Y);
+                        streamWriter.Write(", ");
+                        streamWriter.Write(mobile.Z);
+                        streamWriter.Write(" (");
+                        streamWriter.Write(mobile.Map);
+                        streamWriter.Write(")</td><td>");
+                        streamWriter.Write(mobile.Kills);
+                        streamWriter.Write("</td><td>");
+                        streamWriter.Write(mobile.Karma);
+                        streamWriter.Write(" / ");
+                        streamWriter.Write(mobile.Fame);
+                        streamWriter.WriteLine("</td></tr>");
+                    }
 				}
 
-				op.WriteLine("         <tr>");
-				op.WriteLine("      </table>");
-				op.WriteLine("   </body>");
-				op.WriteLine("</html>");
+				streamWriter.WriteLine("         <tr>");
+				streamWriter.WriteLine("      </table>");
+				streamWriter.WriteLine("   </body>");
+				streamWriter.WriteLine("</html>");
 			}
 
 			lock (_StatusLock)

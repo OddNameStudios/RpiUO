@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - Docs.cs
+// RpiUO - Docs.cs
+// Last Edit: 2015/12/24
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -9,7 +11,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+//using System.Linq;
 using System.Reflection;
 using System.Text;
 
@@ -1541,19 +1543,20 @@ namespace Server.Commands
 		#endregion
 
 		#region Bodies
+        //Rpi - Renamed variables with better names
 		public static List<BodyEntry> LoadBodies()
 		{
-			var list = new List<BodyEntry>();
+			List<BodyEntry> listBodyEntry = new List<BodyEntry>();
 
-			var path = Path.Combine(Core.BaseDirectory, "Data/models.txt");
+			string modelsPath = Path.Combine(Core.BaseDirectory, "Data/models.txt");
 
-			if (File.Exists(path))
+			if (File.Exists(modelsPath))
 			{
-				using (var ip = new StreamReader(path))
+				using (StreamReader streamReader = new StreamReader(modelsPath))
 				{
 					string line;
 
-					while ((line = ip.ReadLine()) != null)
+					while ((line = streamReader.ReadLine()) != null)
 					{
 						line = line.Trim();
 
@@ -1562,40 +1565,56 @@ namespace Server.Commands
 							continue;
 						}
 
-						var split = line.Split('\t');
+						string[] splitedLines = line.Split('\t');
 
-						if (split.Length < 3)
+						if (splitedLines.Length < 3)
 						{
 							continue;
 						}
 
 						int body;
 
-						if (!Int32.TryParse(split[0], out body))
+						if (!Int32.TryParse(splitedLines[0], out body))
 						{
 							continue;
 						}
 
 						ModelBodyType type;
 
-						if (!Enum.TryParse(split[1], out type))
+						if (!Enum.TryParse(splitedLines[1], out type))
 						{
 							type = ModelBodyType.Invalid;
 						}
 
-						var name = String.Join(" ", split.Skip(2).Select(n => !String.IsNullOrWhiteSpace(n) ? n : "unknown"));
+                        //Rpi - Replacement of linq code below
+                        StringBuilder stringBuilder = new StringBuilder();
 
-						var entry = new BodyEntry(body, type, name);
+                        for(int count=2; count < splitedLines.Length; count++)
+                        {
+                            if (String.IsNullOrWhiteSpace(splitedLines[count]) == false)
+                            {
+                                stringBuilder.Append(splitedLines[count]);
+                            }
+                            else
+                            {
+                                stringBuilder.Append("unknown");
+                            }
+                        }
 
-						if (!list.Contains(entry))
+                        //Rpi - Removed linq code for better performance
+						//string name = String.Join(" ", splitedLines.Skip(2).Select(n => !String.IsNullOrWhiteSpace(n) ? n : "unknown"));
+
+						BodyEntry bodyEntry = new BodyEntry(body, type, stringBuilder.ToString());
+
+						if (!listBodyEntry.Contains(bodyEntry))
 						{
-							list.Add(entry);
+							listBodyEntry.Add(bodyEntry);
 						}
 					}
 				}
 			}
 
-			return list;
+			return listBodyEntry;
 		}
 
 		private static void DocumentBodies()
@@ -2289,7 +2308,16 @@ namespace Server.Commands
 
 		private static bool InAssemblies(Type t, IEnumerable<Assembly> asms)
 		{
-			return asms.Any(a => a == t.Assembly);
+            //Rpi - Replaces the linq code below
+            foreach(Assembly assembly in asms)
+            {
+                if(assembly == t.Assembly) return true;
+            }
+
+            return false;
+
+            //Rpi - Removed linq code for better performance
+			//return asms.Any(a => a == t.Assembly);
 		}
 
 		#region Constructable Objects
@@ -2322,16 +2350,47 @@ namespace Server.Commands
 
 			ArrayList items = new ArrayList(), mobiles = new ArrayList();
 
-			foreach (var t in types.Select(ti => ti.m_Type))
+            //Rpi - Replace the linq code below
+            Type type;
+            for(int counter =0; counter< types.Count; counter++)
+            {
+                type = types[counter].m_Type;
+
+                bool isItem;
+
+                if (type.IsAbstract || !IsConstructable(type, out isItem))
+                {
+                    continue;
+                }
+
+                var ctors = type.GetConstructors();
+                var anyConstructable = false;
+
+                for (var j = 0; !anyConstructable && j < ctors.Length; ++j)
+                {
+                    anyConstructable = IsConstructable(ctors[j]);
+                }
+
+                if (!anyConstructable)
+                {
+                    continue;
+                }
+
+                (isItem ? items : mobiles).Add(type);
+                (isItem ? items : mobiles).Add(ctors);
+            }
+
+            //Rpi - Remove the linq code below for better performance
+			/*foreach (var type in types.Select(ti => ti.m_Type))
 			{
 				bool isItem;
 
-				if (t.IsAbstract || !IsConstructable(t, out isItem))
+				if (type.IsAbstract || !IsConstructable(type, out isItem))
 				{
 					continue;
 				}
 
-				var ctors = t.GetConstructors();
+				var ctors = type.GetConstructors();
 				var anyConstructable = false;
 
 				for (var j = 0; !anyConstructable && j < ctors.Length; ++j)
@@ -2344,9 +2403,9 @@ namespace Server.Commands
 					continue;
 				}
 
-				(isItem ? items : mobiles).Add(t);
+				(isItem ? items : mobiles).Add(type);
 				(isItem ? items : mobiles).Add(ctors);
-			}
+			}*/
 
 			using (var html = GetWriter("docs/", "objects.html"))
 			{
@@ -2397,13 +2456,48 @@ namespace Server.Commands
 			}
 		}
 
-		private static void DocumentConstructableObject(StreamWriter html, Type t, IEnumerable<ConstructorInfo> ctors)
+		private static void DocumentConstructableObject(StreamWriter html, Type t, IEnumerable<ConstructorInfo> constructors)
 		{
 			html.Write("         <tr><td class=\"lentry\">{0}</td><td class=\"rentry\">", t.Name);
 
-			var first = true;
+			bool first = true;
 
-			foreach (var ctor in ctors.Where(IsConstructable))
+            //Rpi - Replaces the linq code below
+            int counter;
+            TypeInfo typeInfo;
+            foreach(ConstructorInfo constructor in constructors)
+            {
+                if(IsConstructable(constructor) == true)
+                {
+                    if (!first)
+                    {
+                        html.Write("<br />");
+                    }
+
+                    first = false;
+
+                    html.Write("{0}Add {1}", CommandSystem.Prefix, t.Name);
+
+                    ParameterInfo[] parameters = constructor.GetParameters();
+
+                    for(counter=0; counter < parameters.Length; counter++)
+                    {
+                        //parameters[counter]
+                        m_Types.TryGetValue(parameters[counter].ParameterType, out typeInfo);
+
+                        if (typeInfo != null)
+                        {
+                            html.Write("href=\"types/{0}\" ", typeInfo.FileName);
+                        }
+
+                        html.Write("title=\"{0}\">{1}</a>", GetTooltipFor(parameters[counter]), parameters[counter].Name);
+
+                    }
+                }
+            }
+
+            //Rpi - Removed the linq code for better performance
+			/*foreach (var ctor in constructors.Where(IsConstructable))
 			{
 				if (!first)
 				{
@@ -2430,7 +2524,7 @@ namespace Server.Commands
 
 					html.Write("title=\"{0}\">{1}</a>", GetTooltipFor(p), p.Name);
 				}
-			}
+			}*/
 
 			html.WriteLine("</td></tr>");
 		}
