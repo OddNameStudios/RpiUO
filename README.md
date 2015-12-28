@@ -18,8 +18,8 @@ Getting started with RpiUO is quite easy. Just run 'bash Compile.PI.bash' and it
 
 ### Last Big Changes History
 
-[2015/12/28] => Removed all Linq, refactored some classes for a speed up.
-[2015/12/25] => Removed some Linq usage for better cpu performance and smaller memory footprint. 
-[2015/12/23] => Removed some compiler warning causes.
-[2015/12/21] => Updated project dependencies, serialization checks and small fixes.
-[2015/12/20] => Added minor changes to compile on Raspberry Pi 2.
+[2015/12/28] Removed all Linq, refactored some classes for a speed up.
+[2015/12/25] Removed some Linq usage for better cpu performance and smaller memory footprint. 
+[2015/12/23] Removed some compiler warning causes.
+[2015/12/21] Updated project dependencies, serialization checks and small fixes.
+[2015/12/20] Added minor changes to compile on Raspberry Pi 2.
