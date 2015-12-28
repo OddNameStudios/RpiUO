@@ -1,3 +1,9 @@
+// **********
+// RpiUO - Firewall.cs
+// Last Edit: 2015/12/28
+// Look for Rpi comment
+// **********
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -76,7 +82,7 @@ namespace Server
 
             public override string ToString()
             {
-                return String.Format("{0}/{1}", this.m_CIDRPrefix, this.m_CIDRLength);
+                return String.Format("{0}/{1}", this.m_CIDRPrefix, this.m_CIDRLength.TostringLookup());
             }
 
             public override bool Equals(object obj)

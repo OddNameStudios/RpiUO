@@ -143,8 +143,8 @@ namespace Server.Spells.Mystic
                 Point3D finish = new Point3D(x, y, z);
 
                 Effects.SendMovingParticles(
-                    new Entity(Serial.Zero, start, m_Map),
-                    new Entity(Serial.Zero, finish, m_Map),
+                    new Entity(Serial.Zero_sr, start, m_Map),
+                    new Entity(Serial.Zero_sr, finish, m_Map),
                     0x36D4, 15, 0, false, false, 1365, 0, 9502, 1, 0, (EffectLayer)255, 0x100);
 
                 Effects.SendLocationEffect(finish, m_Map, 0x3728, 10, 20, 1365, 0);

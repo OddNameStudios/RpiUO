@@ -1,7 +1,7 @@
 #region Header
 // **********
 // RpiUO - Mobile.cs
-// Last Edit: 2015/12/24
+// Last Edit: 2015/12/28
 // Look for Rpi comment
 // **********
 #endregion
@@ -1887,7 +1887,7 @@ namespace Server
 
 		public override string ToString()
 		{
-			return String.Format("0x{0:X} \"{1}\"", m_Serial.Value, Name);
+			return String.Format("0x{0:X} \"{1}\"", m_Serial.Value.TostringLookup(), Name);
 		}
 
 		public long NextActionTime { get; set; }
@@ -4668,7 +4668,7 @@ namespace Server
 
 											if (root == null)
 											{
-												src = new Entity(Serial.Zero, item.Location, map);
+												src = new Entity(Serial.Zero_sr, item.Location, map);
 											}
 											else
 											{
@@ -4830,7 +4830,7 @@ namespace Server
 								IEntity trg;
 
 								if (root == null)
-									trg = new Entity(Serial.Zero, item.Location, map);
+									trg = new Entity(Serial.Zero_sr, item.Location, map);
 								else
 									trg = new Entity(((Item)root).Serial, ((Item)root).Location, map);
 
@@ -5835,7 +5835,7 @@ namespace Server
 			{
 				m_NetState.Send(
 					new MessageLocalizedAffix(
-						Serial.MinusOne,
+						Serial.MinusOne_sr,
 						-1,
 						MessageType.Label,
 						0x3B2,
@@ -5843,7 +5843,7 @@ namespace Server
 						1008158,
 						"",
 						AffixType.Append | AffixType.System,
-						amount.ToString(),
+						amount.TostringLookup(),
 						""));
 			}
 		}
@@ -9658,7 +9658,7 @@ namespace Server
 				return;
 			}
 
-			if (m_Map != null && m_Map != Map.Internal && !World.Loading)
+			if (m_Map != null && m_Map != Map.Internal && !World.IsLoading_s)
 			{
 				ObjectPropertyList oldList = m_PropertyList;
 				Packet.Release(ref m_PropertyList);
@@ -10809,12 +10809,12 @@ namespace Server
 			m_DamageEntries = new List<DamageEntry>();
 
 			Type ourType = GetType();
-			m_TypeRef = World.m_MobileTypes.IndexOf(ourType);
+			m_TypeRef = World.mobileTypesList_is.IndexOf(ourType);
 
 			if (m_TypeRef == -1)
 			{
-				World.m_MobileTypes.Add(ourType);
-				m_TypeRef = World.m_MobileTypes.Count - 1;
+				World.mobileTypesList_is.Add(ourType);
+				m_TypeRef = World.mobileTypesList_is.Count - 1;
 			}
 		}
 
@@ -10828,12 +10828,12 @@ namespace Server
 			World.AddMobile(this);
 
 			Type ourType = GetType();
-			m_TypeRef = World.m_MobileTypes.IndexOf(ourType);
+			m_TypeRef = World.mobileTypesList_is.IndexOf(ourType);
 
 			if (m_TypeRef == -1)
 			{
-				World.m_MobileTypes.Add(ourType);
-				m_TypeRef = World.m_MobileTypes.Count - 1;
+				World.mobileTypesList_is.Add(ourType);
+				m_TypeRef = World.mobileTypesList_is.Count - 1;
 			}
 		}
 
@@ -11813,7 +11813,7 @@ namespace Server
 
 				if (ns != null)
 				{
-					ns.Send(new MessageLocalized(Serial.MinusOne, -1, MessageType.Regular, hue, 3, number, "System", args));
+					ns.Send(new MessageLocalized(Serial.MinusOne_sr, -1, MessageType.Regular, hue, 3, number, "System", args));
 				}
 			}
 		}
@@ -11836,7 +11836,7 @@ namespace Server
 			{
 				ns.Send(
 					new MessageLocalizedAffix(
-						Serial.MinusOne,
+						Serial.MinusOne_sr,
 						-1,
 						MessageType.Regular,
 						hue,
@@ -11875,7 +11875,7 @@ namespace Server
 
 			if (ns != null)
 			{
-				ns.Send(new UnicodeMessage(Serial.MinusOne, -1, MessageType.Regular, hue, 3, "ENU", "System", text));
+				ns.Send(new UnicodeMessage(Serial.MinusOne_sr, -1, MessageType.Regular, hue, 3, "ENU", "System", text));
 			}
 		}
 
@@ -11900,7 +11900,7 @@ namespace Server
 
 			if (ns != null)
 			{
-				ns.Send(new AsciiMessage(Serial.MinusOne, -1, MessageType.Regular, hue, 3, "System", text));
+				ns.Send(new AsciiMessage(Serial.MinusOne_sr, -1, MessageType.Regular, hue, 3, "System", text));
 			}
 		}
 

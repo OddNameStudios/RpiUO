@@ -16,7 +16,7 @@ namespace Server.Commands
         public static void Convert_OnCommand(CommandEventArgs e)
         {
             e.Mobile.SendMessage("Converting all players to PlayerMobile.  You will be disconnected.  Please Restart the server after the world has finished saving.");
-            List<Mobile> mobs = new List<Mobile>(World.Mobiles.Values);
+            List<Mobile> mobs = new List<Mobile>(World.MobilesDictionary_s.Values);
             int count = 0;
             
             foreach (Mobile m in mobs)
@@ -42,7 +42,7 @@ namespace Server.Commands
                         pm.Skills[i].SetLockNoRelay(m.Skills[i].Lock);
                     }
                     
-                    World.Mobiles[m.Serial] = pm;
+                    World.MobilesDictionary_s[m.Serial] = pm;
                 }
             }
             

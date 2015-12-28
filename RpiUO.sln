@@ -13,6 +13,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EF956787-B078-4D19-B03B-4A8F2A4841AD}"
 	ProjectSection(SolutionItems) = preProject
 		monoUltimaCompile = monoUltimaCompile
+		Naming Conventions.txt = Naming Conventions.txt
 		piServerCoreCompile = piServerCoreCompile
 		Publish.txt = Publish.txt
 		README.md = README.md

@@ -857,7 +857,7 @@ namespace Server.Mobiles
                 else if (e is Mobile)
                     writer.Write((Mobile)e);
                 else
-                    writer.Write(Serial.MinusOne);
+                    writer.Write(Serial.MinusOne_sr);
             }
         }
 

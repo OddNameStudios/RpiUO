@@ -73,7 +73,7 @@ namespace Server
                         for (int j = -2; j < 5; j++)
                             if ((i == -2 || i == 2) || (j == -2 || j == 2))
                                 Effects.SendMovingParticles(
-                                    new Entity(Serial.Zero, new Point3D(this.m_From.X + i, this.m_From.Y + j, this.m_From.Z + 14), this.m_From.Map),
+                                    new Entity(Serial.Zero_sr, new Point3D(this.m_From.X + i, this.m_From.Y + j, this.m_From.Z + 14), this.m_From.Map),
                                     this.m_Target, 0x46E9, 2, 0, false, false, 0, 0, 9502, 1, 0, (EffectLayer)255, 0x100);
                             else
                                 continue;
@@ -160,8 +160,8 @@ namespace Server
 
                             //TODO Match the look
                             Effects.SendMovingParticles(
-                                new Entity(Serial.Zero, new Point3D(this.m_List[i].X + x, this.m_List[i].Y + y, this.m_List[i].Z - 5), this.m_List[i].Map),
-                                new Entity(Serial.Zero, new Point3D(this.m_List[i].X + x, this.m_List[i].Y + y, this.m_List[i].Z + 60), this.m_List[i].Map),
+                                new Entity(Serial.Zero_sr, new Point3D(this.m_List[i].X + x, this.m_List[i].Y + y, this.m_List[i].Z - 5), this.m_List[i].Map),
+                                new Entity(Serial.Zero_sr, new Point3D(this.m_List[i].X + x, this.m_List[i].Y + y, this.m_List[i].Z + 60), this.m_List[i].Map),
                                 0x378A + Utility.Random(19)/*ItemID*/, 10, 0, false, false, 0, 0, 9502, 1, 0, (EffectLayer)255, 0x100);
                         }
                     }
@@ -474,8 +474,8 @@ namespace Server
                 }
 
                 Effects.SendMovingParticles(
-                    new Entity(Serial.Zero, new Point3D(point.X, point.Y, point.Z + 30), this.m_From.Map),
-                    new Entity(Serial.Zero, point, this.m_From.Map),
+                    new Entity(Serial.Zero_sr, new Point3D(point.X, point.Y, point.Z + 30), this.m_From.Map),
+                    new Entity(Serial.Zero_sr, point, this.m_From.Map),
                     0x36D4, 5, 0, false, false, 0, 0, 9502, 1, 0, (EffectLayer)255, 0x100);
 
                 Effects.PlaySound(point, this.m_From.Map, 0x11D);   

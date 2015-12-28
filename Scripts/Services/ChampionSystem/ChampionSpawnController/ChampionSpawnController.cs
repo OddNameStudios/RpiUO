@@ -403,7 +403,7 @@ namespace Server.Engines.CannedEvil
 
         private bool Check()
         {
-            foreach (Item item in World.Items.Values)
+            foreach (Item item in World.ItemsDictionary_s.Values)
             {
                 if (item is ChampionSpawnController && !item.Deleted && item != this)
                     return true;
@@ -416,7 +416,7 @@ namespace Server.Engines.CannedEvil
         {
             ArrayList list = new ArrayList();
 
-            foreach (Item item in World.Items.Values)
+            foreach (Item item in World.ItemsDictionary_s.Values)
             {
                 if (item is ChampionSpawn && !item.Deleted)
                     list.Add(item);

@@ -1,6 +1,7 @@
 #region Header
-// **********
-// ServUO - Serial.cs
+// RpiUO - Serial.cs
+// Last Edit: 2015/12/28
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -12,27 +13,29 @@ namespace Server
 {
 	public struct Serial : IComparable, IComparable<Serial>
 	{
-		private readonly int m_Serial;
+        //Rpi - Refactored using the naming convention
 
-		private static Serial m_LastMobile = Zero;
-		private static Serial m_LastItem = 0x40000000;
+        private readonly int serial_pr;
 
-		public static Serial LastMobile { get { return m_LastMobile; } }
-		public static Serial LastItem { get { return m_LastItem; } }
+		private static Serial lastMobile_ps = Zero_sr;
+		private static Serial lastItem_ps = 0x40000000;
 
-		public static readonly Serial MinusOne = new Serial(-1);
-		public static readonly Serial Zero = new Serial(0);
+		public static Serial LastMobile_s { get { return lastMobile_ps; } }
+		public static Serial LastItem_s { get { return lastItem_ps; } }
+
+		public static readonly Serial MinusOne_sr = new Serial(-1);
+		public static readonly Serial Zero_sr = new Serial(0);
 
 		public static Serial NewMobile
 		{
 			get
 			{
-				while (World.FindMobile(m_LastMobile = (m_LastMobile + 1)) != null)
+				while (World.FindMobile(lastMobile_ps = (lastMobile_ps + 1)) != null)
 				{
 					;
 				}
 
-				return m_LastMobile;
+				return lastMobile_ps;
 			}
 		}
 
@@ -40,45 +43,45 @@ namespace Server
 		{
 			get
 			{
-				while (World.FindItem(m_LastItem = (m_LastItem + 1)) != null)
+				while (World.FindItem(lastItem_ps = (lastItem_ps + 1)) != null)
 				{
 					;
 				}
 
-				return m_LastItem;
+				return lastItem_ps;
 			}
 		}
 
-		private Serial(int serial)
+		private Serial(int a_serial)
 		{
-			m_Serial = serial;
+			serial_pr = a_serial;
 		}
 
-		public int Value { get { return m_Serial; } }
+		public int Value { get { return serial_pr; } }
 
-		public bool IsMobile { get { return (m_Serial > 0 && m_Serial < 0x40000000); } }
+		public bool IsMobile { get { return (serial_pr > 0 && serial_pr < 0x40000000); } }
 
-		public bool IsItem { get { return (m_Serial >= 0x40000000 && m_Serial <= 0x7FFFFFFF); } }
+		public bool IsItem { get { return (serial_pr >= 0x40000000 && serial_pr <= 0x7FFFFFFF); } }
 
-		public bool IsValid { get { return (m_Serial > 0); } }
+		public bool IsValid { get { return (serial_pr > 0); } }
 
 		public override int GetHashCode()
 		{
-			return m_Serial;
+			return serial_pr;
 		}
 
-		public int CompareTo(Serial other)
+		public int CompareTo(Serial other_serial)
 		{
-			return m_Serial.CompareTo(other.m_Serial);
+			return serial_pr.CompareTo(other_serial.serial_pr);
 		}
 
-		public int CompareTo(object other)
+		public int CompareTo(object other_object)
 		{
-			if (other is Serial)
+			if (other_object is Serial)
 			{
-				return CompareTo((Serial)other);
+				return CompareTo((Serial)other_object);
 			}
-			else if (other == null)
+			else if (other_object == null)
 			{
 				return -1;
 			}
@@ -86,44 +89,44 @@ namespace Server
 			throw new ArgumentException();
 		}
 
-		public override bool Equals(object o)
+		public override bool Equals(object an_object)
 		{
-			if (o == null || !(o is Serial))
+			if (an_object == null || !(an_object is Serial))
 			{
 				return false;
 			}
 
-			return ((Serial)o).m_Serial == m_Serial;
+			return ((Serial)an_object).serial_pr == serial_pr;
 		}
 
-		public static bool operator ==(Serial l, Serial r)
+		public static bool operator ==(Serial left_serial, Serial right_serial)
 		{
-			return l.m_Serial == r.m_Serial;
+			return left_serial.serial_pr == right_serial.serial_pr;
 		}
 
-		public static bool operator !=(Serial l, Serial r)
+		public static bool operator !=(Serial left_serial, Serial right_serial)
 		{
-			return l.m_Serial != r.m_Serial;
+			return left_serial.serial_pr != right_serial.serial_pr;
 		}
 
-		public static bool operator >(Serial l, Serial r)
+		public static bool operator >(Serial left_serial, Serial right_serial)
 		{
-			return l.m_Serial > r.m_Serial;
+			return left_serial.serial_pr > right_serial.serial_pr;
 		}
 
-		public static bool operator <(Serial l, Serial r)
+		public static bool operator <(Serial left_serial, Serial right_serial)
 		{
-			return l.m_Serial < r.m_Serial;
+			return left_serial.serial_pr < right_serial.serial_pr;
 		}
 
-		public static bool operator >=(Serial l, Serial r)
+		public static bool operator >=(Serial left_serial, Serial right_serial)
 		{
-			return l.m_Serial >= r.m_Serial;
+			return left_serial.serial_pr >= right_serial.serial_pr;
 		}
 
-		public static bool operator <=(Serial l, Serial r)
+		public static bool operator <=(Serial left_serial, Serial right_serial)
 		{
-			return l.m_Serial <= r.m_Serial;
+			return left_serial.serial_pr <= right_serial.serial_pr;
 		}
 
 		/*public static Serial operator ++ ( Serial l )
@@ -133,17 +136,17 @@ namespace Server
 
 		public override string ToString()
 		{
-			return String.Format("0x{0:X8}", m_Serial);
+			return String.Format("0x{0:X8}", serial_pr.TostringLookup());
 		}
 
-		public static implicit operator int(Serial a)
+		public static implicit operator int(Serial a_serial)
 		{
-			return a.m_Serial;
+			return a_serial.serial_pr;
 		}
 
-		public static implicit operator Serial(int a)
+		public static implicit operator Serial(int a_serial)
 		{
-			return new Serial(a);
+			return new Serial(a_serial);
 		}
 	}
 }

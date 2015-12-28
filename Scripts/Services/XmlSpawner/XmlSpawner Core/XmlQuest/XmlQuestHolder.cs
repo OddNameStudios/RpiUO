@@ -286,7 +286,7 @@ namespace Server.Items
 			// create a temporary placeholder item used to force allocation empty Items lists used to hold hidden rewards.
 			PlaceHolderItem = new Item(1);
 
-			foreach (Item item in World.Items.Values)
+			foreach (Item item in World.ItemsDictionary_s.Values)
 			{
 				if (item is XmlQuestHolder)
 				{

@@ -1,3 +1,9 @@
+// **********
+// RpiUO - TextDefinition.cs
+// Last Edit: 2015/12/28
+// Look for Rpi comment
+// **********
+
 using System;
 using System.Globalization;
 using Server.Gumps;
@@ -153,7 +159,7 @@ namespace Server
         public override string ToString()
         {
             if (this.m_Number > 0)
-                return String.Concat("#", this.m_Number.ToString());
+                return String.Concat("#", this.m_Number.TostringLookup());
             else if (this.m_String != null)
                 return this.m_String;
 

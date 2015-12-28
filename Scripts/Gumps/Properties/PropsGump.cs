@@ -1,7 +1,7 @@
 #region Header
 // **********
 // RpiUO - PropsGump.cs
-// Last Edit: 2015/12/24
+// Last Edit: 2015/12/28
 // Look for Rpi comment
 // **********
 #endregion
@@ -213,31 +213,31 @@ namespace Server.Gumps
 			}
 		}
 
-		public static string ValueToString(object o)
+		public static string ValueToString(object an_object)
 		{
-			if (o == null)
+			if (an_object == null)
 			{
 				return "-null-";
 			}
 
-			if (o is string)
+			if (an_object is string)
 			{
-				return String.Format("\"{0}\"", o);
+				return String.Format("\"{0}\"", an_object);
 			}
 
-			if (o is bool)
+			if (an_object is bool)
 			{
-				return o.ToString();
+				return an_object.ToString();
 			}
 
-			if (o is char)
+			if (an_object is char)
 			{
-				return String.Format("0x{0:X} '{1}'", (int)(char)o, (char)o);
+				return String.Format("0x{0:X} '{1}'", (int)(char)an_object, (char)an_object);
 			}
 
-			if (o is Serial)
+			if (an_object is Serial)
 			{
-				var s = (Serial)o;
+				var s = (Serial)an_object;
 
 				if (s.IsValid)
 				{
@@ -252,9 +252,9 @@ namespace Server.Gumps
 				return String.Format("(?) 0x{0:X}", s.Value);
 			}
 
-			if (o is CustomSerial)
+			if (an_object is CustomSerial)
 			{
-				var s = (CustomSerial)o;
+				var s = (CustomSerial)an_object;
 
 				if (s.IsValid)
 				{
@@ -264,34 +264,39 @@ namespace Server.Gumps
 				return String.Format("(?) 0x{0:X}", s.Value);
 			}
 
-			if (o is byte || o is sbyte || o is short || o is ushort || o is int || o is uint || o is long || o is ulong)
+            if (an_object is int)
+            {
+                return String.Format("{0} (0x{0:X})", ((int)an_object).TostringLookup());
+            }
+
+			if (an_object is byte || an_object is sbyte || an_object is short || an_object is ushort || an_object is uint || an_object is long || an_object is ulong)
 			{
-				return String.Format("{0} (0x{0:X})", o);
+				return String.Format("{0} (0x{0:X})", an_object);
 			}
 
-			if (o is Mobile)
+			if (an_object is Mobile)
 			{
-				return String.Format("(M) 0x{0:X} \"{1}\"", ((Mobile)o).Serial.Value, ((Mobile)o).Name);
+				return String.Format("(M) 0x{0:X} \"{1}\"", ((Mobile)an_object).Serial.Value, ((Mobile)an_object).Name);
 			}
 
-			if (o is Item)
+			if (an_object is Item)
 			{
-				return String.Format("(I) 0x{0:X} \"{1}\"", ((Item)o).Serial.Value, ((Item)o).Name);
+				return String.Format("(I) 0x{0:X} \"{1}\"", ((Item)an_object).Serial.Value, ((Item)an_object).Name);
 			}
 
-			if (o is Type)
+			if (an_object is Type)
 			{
-				return ((Type)o).Name;
+				return ((Type)an_object).Name;
 			}
 
-			if (o is IAccount)
+			if (an_object is IAccount)
 			{
-				return ((IAccount)o).Username;
+				return ((IAccount)an_object).Username;
 			}
 
-			if (o is Color)
+			if (an_object is Color)
 			{
-				var c = (Color)o;
+				var c = (Color)an_object;
 
 				if (c.IsNamedColor)
 				{
@@ -301,17 +306,17 @@ namespace Server.Gumps
 				return String.Format("#{0:X6}", c.ToArgb());
 			}
 
-			if (o is TextDefinition)
+			if (an_object is TextDefinition)
 			{
-				return ((TextDefinition)o).Format(true);
+				return ((TextDefinition)an_object).Format(true);
 			}
 
-			if (o is IDynamicEnum)
+			if (an_object is IDynamicEnum)
 			{
-				return ((IDynamicEnum)o).Value;
+				return ((IDynamicEnum)an_object).Value;
 			}
 
-			return o.ToString();
+			return an_object.ToString();
 		}
 
 		public static object GetObjectFromString(Type t, string s)

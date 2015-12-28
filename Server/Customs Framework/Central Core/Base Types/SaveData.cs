@@ -63,12 +63,12 @@ namespace CustomsFramework
 			_Serial = serial;
 
 			Type dataType = GetType();
-			_TypeID = World._DataTypes.IndexOf(dataType);
+			_TypeID = World.dataTypesList_is.IndexOf(dataType);
 
 			if (_TypeID == -1)
 			{
-				World._DataTypes.Add(dataType);
-				_TypeID = World._DataTypes.Count - 1;
+				World.dataTypesList_is.Add(dataType);
+				_TypeID = World.dataTypesList_is.Count - 1;
 			}
 		}
 
@@ -79,12 +79,12 @@ namespace CustomsFramework
 			World.AddData(this);
 
 			Type dataType = GetType();
-			_TypeID = World._DataTypes.IndexOf(dataType);
+			_TypeID = World.dataTypesList_is.IndexOf(dataType);
 
 			if (_TypeID == -1)
 			{
-				World._DataTypes.Add(dataType);
-				_TypeID = World._DataTypes.Count - 1;
+				World.dataTypesList_is.Add(dataType);
+				_TypeID = World.dataTypesList_is.Count - 1;
 			}
 		}
 

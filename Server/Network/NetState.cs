@@ -481,7 +481,7 @@ namespace Server.Network
 
 		public void LaunchBrowser(string url)
 		{
-			Send(new MessageLocalized(Serial.MinusOne, -1, MessageType.Label, 0x35, 3, 501231, "", ""));
+			Send(new MessageLocalized(Serial.MinusOne_sr, -1, MessageType.Label, 0x35, 3, 501231, "", ""));
 			Send(new LaunchBrowser(url));
 		}
 

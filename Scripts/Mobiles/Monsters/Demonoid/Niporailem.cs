@@ -159,7 +159,7 @@ namespace Server.Mobiles
                  public void DeleteNipoTreasure()
 		 {
                                
-                   ArrayList items = new ArrayList(World.Items.Values); 
+                   ArrayList items = new ArrayList(World.ItemsDictionary_s.Values); 
                    ArrayList list = new ArrayList(); 
                 
                    foreach (Item item in items) 

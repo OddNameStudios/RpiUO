@@ -96,9 +96,9 @@ namespace Server
 
         private void SaveTypeDatabases()
         {
-            this.SaveTypeDatabase(World.ItemTypesPath, World.m_ItemTypes);
-            this.SaveTypeDatabase(World.MobileTypesPath, World.m_MobileTypes);
-            this.SaveTypeDatabase(World.DataTypesPath, World._DataTypes);
+            this.SaveTypeDatabase(World.itemTypesPath_sr, World.itemTypesList_is);
+            this.SaveTypeDatabase(World.mobileTypesPath_sr, World.mobileTypesList_is);
+            this.SaveTypeDatabase(World.dataTypesPath_sr, World.dataTypesList_is);
         }
 
         private void SaveTypeDatabase(string path, List<Type> types)
@@ -119,22 +119,22 @@ namespace Server
 
         private void OpenFiles()
         {
-            this.itemData = new SequentialFileWriter(World.ItemDataPath, this.metrics);
-            this.itemIndex = new SequentialFileWriter(World.ItemIndexPath, this.metrics);
+            this.itemData = new SequentialFileWriter(World.itemDataPath_sr, this.metrics);
+            this.itemIndex = new SequentialFileWriter(World.itemIndexPath_sr, this.metrics);
 
-            this.mobileData = new SequentialFileWriter(World.MobileDataPath, this.metrics);
-            this.mobileIndex = new SequentialFileWriter(World.MobileIndexPath, this.metrics);
+            this.mobileData = new SequentialFileWriter(World.mobileDataPath_sr, this.metrics);
+            this.mobileIndex = new SequentialFileWriter(World.mobileIndexPath_sr, this.metrics);
 
-            this.guildData = new SequentialFileWriter(World.GuildDataPath, this.metrics);
-            this.guildIndex = new SequentialFileWriter(World.GuildIndexPath, this.metrics);
+            this.guildData = new SequentialFileWriter(World.guildDataPath_sr, this.metrics);
+            this.guildIndex = new SequentialFileWriter(World.guildIndexPath_sr, this.metrics);
 
-            this.customData = new SequentialFileWriter(World.DataBinaryPath, this.metrics);
-            this.customIndex = new SequentialFileWriter(World.DataIndexPath, this.metrics);
+            this.customData = new SequentialFileWriter(World.dataBinaryPath_sr, this.metrics);
+            this.customIndex = new SequentialFileWriter(World.dataIndexPath_sr, this.metrics);
 
-            this.WriteCount(this.itemIndex, World.Items.Count);
-            this.WriteCount(this.mobileIndex, World.Mobiles.Count);
+            this.WriteCount(this.itemIndex, World.ItemsDictionary_s.Count);
+            this.WriteCount(this.mobileIndex, World.MobilesDictionary_s.Count);
             this.WriteCount(this.guildIndex, BaseGuild.List.Count);
-            this.WriteCount(this.customIndex, World.Data.Count);
+            this.WriteCount(this.customIndex, World.DataDictionary_s.Count);
         }
 
         private void WriteCount(SequentialFileWriter indexFile, int count)
@@ -293,10 +293,10 @@ namespace Server
             private readonly IEnumerable<SaveData> data;
             public Producer()
             {
-                this.items = World.Items.Values;
-                this.mobiles = World.Mobiles.Values;
+                this.items = World.ItemsDictionary_s.Values;
+                this.mobiles = World.MobilesDictionary_s.Values;
                 this.guilds = BaseGuild.List.Values;
-                this.data = World.Data.Values;
+                this.data = World.DataDictionary_s.Values;
             }
 
             public IEnumerator<ISerializable> GetEnumerator()

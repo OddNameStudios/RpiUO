@@ -200,11 +200,11 @@ namespace Server.Commands
 
             List<IEntity> list = new List<IEntity>();
 
-            foreach (Item item in World.Items.Values)
+            foreach (Item item in World.ItemsDictionary_s.Values)
                 if (item.Map == map && item.Parent == null)
                     list.Add(item);
 
-            foreach (Mobile m in World.Mobiles.Values)
+            foreach (Mobile m in World.MobilesDictionary_s.Values)
                 if (m.Map == map && !m.Player)
                     list.Add(m);
 
@@ -265,7 +265,7 @@ namespace Server.Commands
                 Mobile master = (Mobile)obj;
                 ArrayList pets = new ArrayList();
 
-                foreach (Mobile m in World.Mobiles.Values)
+                foreach (Mobile m in World.MobilesDictionary_s.Values)
                 {
                     if (m is BaseCreature)
                     {
@@ -308,7 +308,7 @@ namespace Server.Commands
         {
             List<Mobile> list = new List<Mobile>();
 
-            foreach (Mobile m in World.Mobiles.Values)
+            foreach (Mobile m in World.MobilesDictionary_s.Values)
                 if ((m is Banker) && !(m is BaseCreature))
                     list.Add(m);
 
@@ -517,8 +517,8 @@ namespace Server.Commands
         public static void Stats_OnCommand(CommandEventArgs e)
         {
             e.Mobile.SendMessage("Open Connections: {0}", Network.NetState.Instances.Count);
-            e.Mobile.SendMessage("Mobiles: {0}", World.Mobiles.Count);
-            e.Mobile.SendMessage("Items: {0}", World.Items.Count);
+            e.Mobile.SendMessage("Mobiles: {0}", World.MobilesDictionary_s.Count);
+            e.Mobile.SendMessage("Items: {0}", World.ItemsDictionary_s.Count);
         }
 
         [Usage("SpeedBoost [true|false]")]

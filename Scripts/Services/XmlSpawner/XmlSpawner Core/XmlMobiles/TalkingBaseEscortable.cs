@@ -60,7 +60,7 @@ namespace Server.Mobiles
 
 		public static new void Initialize()
 		{
-			foreach (Mobile m in World.Mobiles.Values)
+			foreach (Mobile m in World.MobilesDictionary_s.Values)
 			{
 				if (m is TalkingBaseEscortable)
 				{

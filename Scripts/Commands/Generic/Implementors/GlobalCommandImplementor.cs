@@ -30,7 +30,7 @@ namespace Server.Commands.Generic
 
                 if (items)
                 {
-                    foreach (Item item in World.Items.Values)
+                    foreach (Item item in World.ItemsDictionary_s.Values)
                     {
                         if (ext.IsValid(item))
                             list.Add(item);
@@ -39,7 +39,7 @@ namespace Server.Commands.Generic
 
                 if (mobiles)
                 {
-                    foreach (Mobile mob in World.Mobiles.Values)
+                    foreach (Mobile mob in World.MobilesDictionary_s.Values)
                     {
                         if (ext.IsValid(mob))
                             list.Add(mob);

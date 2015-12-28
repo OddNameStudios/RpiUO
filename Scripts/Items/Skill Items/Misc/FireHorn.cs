@@ -61,7 +61,7 @@ namespace Server.Items
             from.Backpack.ConsumeUpTo(typeof(SulfurousAsh), sulfAsh);
 
             from.PlaySound(0x15F);
-            Effects.SendPacket(from, from.Map, new HuedEffect(EffectType.Moving, from.Serial, Serial.Zero, 0x36D4, from.Location, loc, 5, 0, false, true, 0, 0));
+            Effects.SendPacket(from, from.Map, new HuedEffect(EffectType.Moving, from.Serial, Serial.Zero_sr, 0x36D4, from.Location, loc, 5, 0, false, true, 0, 0));
 
             ArrayList targets = new ArrayList();
             bool playerVsPlayer = false;

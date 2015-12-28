@@ -95,7 +95,7 @@ namespace Server.Engines.Reports
 
             int npcs = 0, players = 0;
 
-            foreach (Mobile mob in World.Mobiles.Values)
+            foreach (Mobile mob in World.MobilesDictionary_s.Values)
             {
                 if (mob.Player)
                     ++players;
@@ -107,7 +107,7 @@ namespace Server.Engines.Reports
             report.Items.Add("Players", players, "N0");
             report.Items.Add("Clients", NetState.Instances.Count, "N0");
             report.Items.Add("Accounts", Accounts.Count, "N0");
-            report.Items.Add("Items", World.Items.Count, "N0");
+            report.Items.Add("Items", World.ItemsDictionary_s.Count, "N0");
 
             return report;
         }
@@ -120,7 +120,7 @@ namespace Server.Engines.Reports
             ChartItem dexItem = new ChartItem("Dexterity", 0);
             ChartItem intItem = new ChartItem("Intelligence", 0);
 
-            foreach (Mobile mob in World.Mobiles.Values)
+            foreach (Mobile mob in World.MobilesDictionary_s.Values)
             {
                 if (mob.RawStatTotal == mob.StatCap && mob is PlayerMobile)
                 {
@@ -146,7 +146,7 @@ namespace Server.Engines.Reports
             for (int i = 0; i < distribs.Length; ++i)
                 distribs[i] = new SkillDistribution(SkillInfo.Table[i]);
 
-            foreach (Mobile mob in World.Mobiles.Values)
+            foreach (Mobile mob in World.MobilesDictionary_s.Values)
             {
                 if (mob.SkillsTotal >= 1500 && mob.SkillsTotal <= 7200 && mob is PlayerMobile)
                 {

@@ -126,7 +126,7 @@ namespace Server.Items
                         }
                         else
                         {
-                            throw new Exception(World.LoadingType);
+                            throw new Exception(World.LoadingType_s);
                         }
 
                         break;
@@ -487,7 +487,7 @@ namespace Server.Items
                         }
                         else
                         {
-                            throw new Exception(World.LoadingType);
+                            throw new Exception(World.LoadingType_s);
                         }
 
                         break;
@@ -650,7 +650,7 @@ namespace Server.Items
                         }
                         else
                         {
-                            throw new Exception(World.LoadingType);
+                            throw new Exception(World.LoadingType_s);
                         }
 
                         break;
@@ -1387,7 +1387,7 @@ namespace Server.Items
 
         protected bool CheckType(string name)
         {
-            return (World.LoadingType == String.Format("Server.Items.{0}", name));
+            return (World.LoadingType_s == String.Format("Server.Items.{0}", name));
         }
 
         public override void Deserialize(GenericReader reader)

@@ -469,7 +469,7 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            foreach (Item item in World.Items.Values)
+            foreach (Item item in World.ItemsDictionary_s.Values)
             {
                 if (item is XmlQuestToken)
                 {

@@ -18,7 +18,7 @@ namespace Server.Engines.XmlSpawner2
             
             // is there already another?
             ArrayList dlist = new ArrayList();
-            foreach( Item i in World.Items.Values)
+            foreach( Item i in World.ItemsDictionary_s.Values)
             {
                 if(i is LBSStone && i != this)
                 {

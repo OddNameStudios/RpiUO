@@ -95,8 +95,8 @@ namespace Server.Spells.Chivalry
                 this.Caster.PlaySound(soundID);
                 this.Caster.FixedParticles(0x3779, 1, 30, 9964, 3, 3, EffectLayer.Waist);
 
-                IEntity from = new Entity(Serial.Zero, new Point3D(this.Caster.X, this.Caster.Y, this.Caster.Z), this.Caster.Map);
-                IEntity to = new Entity(Serial.Zero, new Point3D(this.Caster.X, this.Caster.Y, this.Caster.Z + 50), this.Caster.Map);
+                IEntity from = new Entity(Serial.Zero_sr, new Point3D(this.Caster.X, this.Caster.Y, this.Caster.Z), this.Caster.Map);
+                IEntity to = new Entity(Serial.Zero_sr, new Point3D(this.Caster.X, this.Caster.Y, this.Caster.Z + 50), this.Caster.Map);
                 Effects.SendMovingParticles(from, to, itemID, 1, 0, false, false, 33, 3, 9501, 1, 0, EffectLayer.Head, 0x100);
 
                 double seconds = this.ComputePowerValue(20);

@@ -173,6 +173,7 @@
     <Compile Include=".\Utility.cs" />
     <Compile Include=".\VirtueInfo.cs" />
     <Compile Include=".\World.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Gumps\Gump.cs" />
     <Compile Include="Gumps\GumpAlphaRegion.cs" />
     <Compile Include="Gumps\GumpBackground.cs" />
@@ -209,12 +210,6 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ultima\Ultima.csproj">
-      <Project>{e08cfbe4-e013-44ee-8829-426d05bc083f}</Project>
-      <Name>Ultima</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
@@ -230,5 +225,11 @@
       <ProductName>Windows Installer 4.5</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ultima\Ultima.csproj">
+      <Project>{e08cfbe4-e013-44ee-8829-426d05bc083f}</Project>
+      <Name>Ultima</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

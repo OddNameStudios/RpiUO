@@ -221,26 +221,68 @@ namespace Server.Misc
 
 		public static IPAddress FindPublicAddress()
 		{
-			var data = String.Empty;
+			string _data = String.Empty;
 
-			var request = WebRequest.Create("http://api.ipify.org");
+            try
+            {
+                //Rpi - Lets try to get the IP two times, from different places
+                WebRequest _webRequest1 = WebRequest.Create("http://api.ipify.org");
 
-			using (var response = request.GetResponse())
-			{
-				var r = response.GetResponseStream();
+                using (WebResponse _webResponse = _webRequest1.GetResponse())
+                {
+                    Stream _stream = _webResponse.GetResponseStream();
 
-				if (r != null)
-				{
-					using (var stream = new StreamReader(r))
-					{
-						data = stream.ReadToEnd();
-					}
-				}
-			}
+                    if (_stream != null)
+                    {
+                        using (StreamReader _streamReader = new StreamReader(_stream))
+                        {
+                            _data = _streamReader.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            catch { }
 
-			var m = _AddressPattern.Match(data);
+            Match _match = _AddressPattern.Match(_data);
 
-			return m.Success ? IPAddress.Parse(m.Value) : null;
+            try
+            {
+                if (_match.Success)
+                {
+                    //The server discovered its public ip
+                    return IPAddress.Parse(_match.Value);
+                }
+
+                _data = String.Empty;
+                WebRequest _webRequest2 = WebRequest.Create("http://checkip.dyndns.org/");
+
+                using (WebResponse _webResponse = _webRequest2.GetResponse())
+                {
+                    Stream _stream = _webResponse.GetResponseStream();
+
+                    if (_stream != null)
+                    {
+                        using (StreamReader _streamReader = new StreamReader(_stream))
+                        {
+                            _data = _streamReader.ReadToEnd();
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            _match = _AddressPattern.Match(_data);
+
+            if (_match.Success)
+            {
+                //The server discovered its public ip
+                return IPAddress.Parse(_match.Value);
+            }
+            else
+            {
+                Console.Write(" Unable to verify using web services... ");
+                return null;
+            }
 		}
 	}
 }

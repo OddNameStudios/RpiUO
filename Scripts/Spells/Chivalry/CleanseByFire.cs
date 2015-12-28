@@ -106,8 +106,8 @@ namespace Server.Spells.Chivalry
                 m.PlaySound(0x1E0);
                 m.FixedParticles(0x373A, 1, 15, 5012, 3, 2, EffectLayer.Waist);
 
-                IEntity from = new Entity(Serial.Zero, new Point3D(m.X, m.Y, m.Z - 5), m.Map);
-                IEntity to = new Entity(Serial.Zero, new Point3D(m.X, m.Y, m.Z + 45), m.Map);
+                IEntity from = new Entity(Serial.Zero_sr, new Point3D(m.X, m.Y, m.Z - 5), m.Map);
+                IEntity to = new Entity(Serial.Zero_sr, new Point3D(m.X, m.Y, m.Z + 45), m.Map);
                 Effects.SendMovingParticles(from, to, 0x374B, 1, 0, false, false, 63, 2, 9501, 1, 0, EffectLayer.Head, 0x100);
 
                 this.Caster.PlaySound(0x208);

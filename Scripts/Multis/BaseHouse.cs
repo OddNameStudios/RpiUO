@@ -2520,7 +2520,7 @@ namespace Server.Multis
                 writer.Write((Point3D)relEntity.RelativeLocation);
 
                 if ((relEntity.Entity is Item && ((Item)relEntity.Entity).Deleted) || (relEntity.Entity is Mobile && ((Mobile)relEntity.Entity).Deleted))
-                    writer.Write((int)Serial.MinusOne);
+                    writer.Write((int)Serial.MinusOne_sr);
                 else
                     writer.Write((int)relEntity.Entity.Serial);
             }

@@ -1,3 +1,9 @@
+// **********
+// RpiUO - BaseCommand.cs
+// Last Edit: 2015/12/28
+// Look for Rpi comment
+// **********
+
 using System;
 using System.Collections;
 using Server.Gumps;
@@ -228,7 +234,7 @@ namespace Server.Commands.Generic
             public override string ToString()
             {
                 if (this.m_Count > 1)
-                    return String.Format("{0} ({1})", this.m_Message, this.m_Count);
+                    return String.Format("{0} ({1})", this.m_Message, this.m_Count.TostringLookup());
 
                 return this.m_Message;
             }

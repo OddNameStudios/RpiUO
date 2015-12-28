@@ -79,7 +79,7 @@ namespace Server.Mobiles
 			{
 				activate = true;
 			}
-			else if (World.Loading)
+			else if (World.IsLoading_s)
 			{
 				activate = false;
 			}

@@ -103,7 +103,7 @@ namespace Server.Mobiles
 		public sealed class OffsetTargetEffect : HuedEffect
 		{
 			public OffsetTargetEffect(IEntity e, Point3D loc, int itemID, int speed, int duration, int hue, int renderMode)
-				: base(EffectType.FixedFrom, e.Serial, Serial.Zero, itemID, loc, loc, speed, duration, true, false, hue, renderMode)
+				: base(EffectType.FixedFrom, e.Serial, Serial.Zero_sr, itemID, loc, loc, speed, duration, true, false, hue, renderMode)
 			{
 			}
 		}
@@ -779,7 +779,7 @@ namespace Server.Mobiles
 		public static void Initialize()
 		{
 			// reestablish the DialogAttachment assignment
-			foreach(Mobile m in World.Mobiles.Values)
+			foreach(Mobile m in World.MobilesDictionary_s.Values)
 			{
 				if(m is TalkingBaseCreature)
 				{

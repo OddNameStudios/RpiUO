@@ -536,7 +536,7 @@ namespace Server
                         Effects.SendBoltEffect(from);
                     }
                     else
-                        Effects.SendBoltEffect(new Entity(Serial.Zero, point, from.Map));
+                        Effects.SendBoltEffect(new Entity(Serial.Zero_sr, point, from.Map));
                 }
             }
         }

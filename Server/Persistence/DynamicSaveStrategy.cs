@@ -111,7 +111,7 @@ namespace Server
             //Start the blocking consumer; this runs in background.
             Task commitTask = this.StartCommitTask(this._itemThreadWriters, this._itemData, this._itemIndex);
 
-            IEnumerable<Item> items = World.Items.Values;
+            IEnumerable<Item> items = World.ItemsDictionary_s.Values;
 
             //Start the producer.
             Parallel.ForEach(items, () => new QueuedMemoryWriter(),
@@ -154,7 +154,7 @@ namespace Server
             //Start the blocking consumer; this runs in background.
             Task commitTask = this.StartCommitTask(this._mobileThreadWriters, this._mobileData, this._mobileIndex);
 
-            IEnumerable<Mobile> mobiles = World.Mobiles.Values;
+            IEnumerable<Mobile> mobiles = World.MobilesDictionary_s.Values;
 
             //Start the producer.
             Parallel.ForEach(mobiles, () => new QueuedMemoryWriter(),
@@ -229,7 +229,7 @@ namespace Server
         {
             Task commitTask = this.StartCommitTask(this._dataThreadWriters, this._customData, this._customIndex);
 
-            IEnumerable<SaveData> data = World.Data.Values;
+            IEnumerable<SaveData> data = World.DataDictionary_s.Values;
 
             Parallel.ForEach(data, () => new QueuedMemoryWriter(),
                 (SaveData saveData, ParallelLoopState state, QueuedMemoryWriter writer) =>
@@ -261,22 +261,22 @@ namespace Server
 
         private void OpenFiles()
         {
-            this._itemData = new SequentialFileWriter(World.ItemDataPath, this._metrics);
-            this._itemIndex = new SequentialFileWriter(World.ItemIndexPath, this._metrics);
+            this._itemData = new SequentialFileWriter(World.itemDataPath_sr, this._metrics);
+            this._itemIndex = new SequentialFileWriter(World.itemIndexPath_sr, this._metrics);
 
-            this._mobileData = new SequentialFileWriter(World.MobileDataPath, this._metrics);
-            this._mobileIndex = new SequentialFileWriter(World.MobileIndexPath, this._metrics);
+            this._mobileData = new SequentialFileWriter(World.mobileDataPath_sr, this._metrics);
+            this._mobileIndex = new SequentialFileWriter(World.mobileIndexPath_sr, this._metrics);
 
-            this._guildData = new SequentialFileWriter(World.GuildDataPath, this._metrics);
-            this._guildIndex = new SequentialFileWriter(World.GuildIndexPath, this._metrics);
+            this._guildData = new SequentialFileWriter(World.guildDataPath_sr, this._metrics);
+            this._guildIndex = new SequentialFileWriter(World.guildIndexPath_sr, this._metrics);
 
-            this._customData = new SequentialFileWriter(World.DataBinaryPath, this._metrics);
-            this._customIndex = new SequentialFileWriter(World.DataIndexPath, this._metrics);
+            this._customData = new SequentialFileWriter(World.dataBinaryPath_sr, this._metrics);
+            this._customIndex = new SequentialFileWriter(World.dataIndexPath_sr, this._metrics);
 
-            this.WriteCount(this._itemIndex, World.Items.Count);
-            this.WriteCount(this._mobileIndex, World.Mobiles.Count);
+            this.WriteCount(this._itemIndex, World.ItemsDictionary_s.Count);
+            this.WriteCount(this._mobileIndex, World.MobilesDictionary_s.Count);
             this.WriteCount(this._guildIndex, BaseGuild.List.Count);
-            this.WriteCount(this._customIndex, World.Data.Count);
+            this.WriteCount(this._customIndex, World.DataDictionary_s.Count);
         }
 
         private void CloseFiles()
@@ -309,9 +309,9 @@ namespace Server
 
         private void SaveTypeDatabases()
         {
-            this.SaveTypeDatabase(World.ItemTypesPath, World.m_ItemTypes);
-            this.SaveTypeDatabase(World.MobileTypesPath, World.m_MobileTypes);
-            this.SaveTypeDatabase(World.DataTypesPath, World._DataTypes);
+            this.SaveTypeDatabase(World.itemTypesPath_sr, World.itemTypesList_is);
+            this.SaveTypeDatabase(World.mobileTypesPath_sr, World.mobileTypesList_is);
+            this.SaveTypeDatabase(World.dataTypesPath_sr, World.dataTypesList_is);
         }
 
         private void SaveTypeDatabase(string path, List<Type> types)

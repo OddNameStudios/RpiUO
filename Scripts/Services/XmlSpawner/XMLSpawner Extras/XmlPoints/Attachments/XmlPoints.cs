@@ -679,7 +679,7 @@ namespace Server.Engines.XmlSpawner2
 			CommandSystem.Register( "RemoveAllPoints", AccessLevel.Administrator, new CommandEventHandler( RemoveAllPoints_OnCommand ) );
 			CommandSystem.Register( "LeaderboardSave", AccessLevel.Administrator, new CommandEventHandler( LeaderboardSave_OnCommand ) );
 
-			foreach(Item i in World.Items.Values)
+			foreach(Item i in World.ItemsDictionary_s.Values)
 			{
 				if(i is BaseChallengeGame && !((BaseChallengeGame)i).GameCompleted)
 				{
@@ -1609,7 +1609,7 @@ namespace Server.Engines.XmlSpawner2
 		public static void AddAllPoints_OnCommand( CommandEventArgs e )
 		{
 			int count = 0;
-			foreach(Mobile m in World.Mobiles.Values)
+			foreach(Mobile m in World.MobilesDictionary_s.Values)
 			{
 				if(m.Player)
 				{
@@ -1631,7 +1631,7 @@ namespace Server.Engines.XmlSpawner2
 		public static void RemoveAllPoints_OnCommand( CommandEventArgs e )
 		{
 			int count = 0;
-			foreach(Mobile m in World.Mobiles.Values)
+			foreach(Mobile m in World.MobilesDictionary_s.Values)
 			{
 				if(m.Player)
 				{

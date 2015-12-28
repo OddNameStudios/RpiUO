@@ -82,7 +82,7 @@ namespace Server
                 else
                     CommandLogging.WriteLine(from, "{0} {1} invoking freeze for every item in {0}", from.AccessLevel, CommandLogging.Format(from), targetMap);
 
-                foreach (Item item in World.Items.Values)
+                foreach (Item item in World.ItemsDictionary_s.Values)
                 {
                     if (targetMap != null && item.Map != targetMap)
                         continue;

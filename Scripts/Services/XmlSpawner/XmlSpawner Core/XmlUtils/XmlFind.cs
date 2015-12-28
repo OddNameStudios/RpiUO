@@ -459,7 +459,7 @@ namespace Server.Mobiles
 				// make a copy so that we dont get enumeration errors if World.Items.Values changes while searching
 				ArrayList itemarray = null;
 
-				ICollection itemvalues = World.Items.Values;
+				ICollection itemvalues = World.ItemsDictionary_s.Values;
 
 				lock (itemvalues.SyncRoot)
 				{
@@ -687,7 +687,7 @@ namespace Server.Mobiles
 			{
 				// make a copy so that we dont get enumeration errors if World.Mobiles.Values changes while searching
 				ArrayList mobilearray = null;
-				ICollection mobilevalues = World.Mobiles.Values;
+				ICollection mobilevalues = World.MobilesDictionary_s.Values;
 				lock (mobilevalues.SyncRoot)
 				{
 					try

@@ -345,7 +345,7 @@ namespace Server.Items
 
 				IEntity to;
 
-				to = new Entity(Serial.Zero, new Point3D(p), map);
+				to = new Entity(Serial.Zero_sr, new Point3D(p), map);
 
 				if (p is Mobile)
 				{

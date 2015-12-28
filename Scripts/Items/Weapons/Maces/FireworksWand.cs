@@ -82,7 +82,7 @@ namespace Server.Items
             Point3D startLoc = new Point3D(ourLoc.X, ourLoc.Y, ourLoc.Z + 10);
             Point3D endLoc = new Point3D(startLoc.X + Utility.RandomMinMax(-2, 2), startLoc.Y + Utility.RandomMinMax(-2, 2), startLoc.Z + 32);
 
-            Effects.SendMovingEffect(new Entity(Serial.Zero, startLoc, map), new Entity(Serial.Zero, endLoc, map),
+            Effects.SendMovingEffect(new Entity(Serial.Zero_sr, startLoc, map), new Entity(Serial.Zero_sr, endLoc, map),
                 0x36E4, 5, 0, false, false);
 
             Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(FinishLaunch), new object[] { from, endLoc, map });

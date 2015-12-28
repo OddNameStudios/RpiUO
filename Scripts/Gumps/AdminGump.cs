@@ -250,13 +250,13 @@ namespace Server.Gumps
                         this.AddLabel(150, 190, LabelHue, NetState.Instances.Count.ToString());
 
                         this.AddLabel(20, 210, LabelHue, "Mobiles:");
-                        this.AddLabel(150, 210, LabelHue, World.Mobiles.Count.ToString());
+                        this.AddLabel(150, 210, LabelHue, World.MobilesDictionary_s.Count.ToString());
 
                         this.AddLabel(20, 230, LabelHue, "Mobile Scripts:");
                         this.AddLabel(150, 230, LabelHue, Core.ScriptMobiles.ToString());
 
                         this.AddLabel(20, 250, LabelHue, "Items:");
-                        this.AddLabel(150, 250, LabelHue, World.Items.Count.ToString());
+                        this.AddLabel(150, 250, LabelHue, World.ItemsDictionary_s.Count.ToString());
 
                         this.AddLabel(20, 270, LabelHue, "Item Scripts:");
                         this.AddLabel(150, 270, LabelHue, Core.ScriptItems.ToString());

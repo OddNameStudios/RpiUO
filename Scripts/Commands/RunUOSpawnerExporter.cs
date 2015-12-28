@@ -46,13 +46,13 @@ namespace Server.Commands
                 op.WriteLine("##        Developed by Nerun         ##");
                 op.WriteLine("#######################################");
 
-                foreach (Item item in World.Items.Values)
+                foreach (Item item in World.ItemsDictionary_s.Values)
                 {
                     if (item.Map == map && item.Parent == null && item is Spawner)
                         list.Add(item);
                 }
 
-                foreach (Item item in World.Items.Values)
+                foreach (Item item in World.ItemsDictionary_s.Values)
                 {
                     if (item.Map == map && item.Parent == null && item is Spawner)
                     {

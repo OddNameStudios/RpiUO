@@ -6855,7 +6855,7 @@ namespace Server.Mobiles
 			var toRemove = new List<BaseCreature>();
 
 			Parallel.ForEach(
-				World.Mobiles.Values,
+				World.MobilesDictionary_s.Values,
 				m =>
 				{
 					if (m is BaseMount && ((BaseMount)m).Rider != null)

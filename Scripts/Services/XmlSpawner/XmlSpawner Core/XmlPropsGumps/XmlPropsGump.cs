@@ -1,13 +1,13 @@
+// **********
+// RpiUO - XmlPropsGump.cs
+// Last Edit: 2015/12/28
+// Look for Rpi comment
+// **********
+
 using System;
 using System.Reflection;
 using System.Collections;
-using System.Collections.Generic;
-using Server;
 using Server.Network;
-using Server.Menus;
-using Server.Menus.Questions;
-using Server.Targeting;
-using Server.Commands;
 using Server.Commands.Generic;
 using CPA = Server.CommandPropertyAttribute;
 /*
@@ -16,7 +16,7 @@ using CPA = Server.CommandPropertyAttribute;
 
 namespace Server.Gumps
 {
-	public class XmlPropertiesGump : Gump
+    public class XmlPropertiesGump : Gump
 	{
 		private ArrayList m_List;
 		private int m_Page;
@@ -489,7 +489,11 @@ namespace Server.Gumps
 
 				return String.Format( "(?) 0x{0:X}", s.Value );
 			}
-			else if ( o is byte || o is sbyte || o is short || o is ushort || o is int || o is uint || o is long || o is ulong )
+            else if ( o is int )
+            {
+                return String.Format("{0} (0x{0:X})", ((int)o).TostringLookup());
+            }
+			else if ( o is byte || o is sbyte || o is short || o is ushort || o is uint || o is long || o is ulong )
 			{
 				return String.Format( "{0} (0x{0:X})", o );
 			}

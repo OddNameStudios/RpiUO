@@ -51,7 +51,7 @@ namespace Server.Spells.Spellweaving
                 m.PlaySound(0x211);
                 m.FixedParticles(0x3779, 1, 30, 0x26EC, 0x3, 0x3, EffectLayer.Waist);
 
-                Effects.SendMovingParticles(new Entity(Serial.Zero, loc, m.Map), new Entity(Serial.Zero, m.Location, m.Map), 0xF5F, 1, 0, true, false, 0x21, 0x3F, 0x251D, 0, 0, EffectLayer.Head, 0);
+                Effects.SendMovingParticles(new Entity(Serial.Zero_sr, loc, m.Map), new Entity(Serial.Zero_sr, m.Location, m.Map), 0xF5F, 1, 0, true, false, 0x21, 0x3F, 0x251D, 0, 0, EffectLayer.Head, 0);
 
                 double percentage = 0.05 * this.FocusLevel;
 

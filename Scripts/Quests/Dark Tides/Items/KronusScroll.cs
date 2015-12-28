@@ -149,7 +149,7 @@ namespace Server.Engines.Quests.Necro
 
                         int hue = Utility.RandomList(0x481, 0x482, 0x489, 0x497, 0x66D);
 
-                        Effects.SendPacket(from, map, new HuedEffect(EffectType.Moving, Serial.Zero, Serial.Zero, 0x36D4, from, to, 0, 0, false, true, hue, 0));
+                        Effects.SendPacket(from, map, new HuedEffect(EffectType.Moving, Serial.Zero_sr, Serial.Zero_sr, 0x36D4, from, to, 0, 0, false, true, hue, 0));
                     }
                 }
 

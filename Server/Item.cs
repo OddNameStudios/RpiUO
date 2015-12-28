@@ -1,7 +1,7 @@
 #region Header
 // **********
 // RpiUO - Item.cs
-// Last Edit: 2015/12/23
+// Last Edit: 2015/12/28
 // Look for Rpi comment
 // **********
 #endregion
@@ -1280,35 +1280,35 @@ namespace Server
 
 			if (v != 0)
 			{
-				list.Add(1060448, v.ToString()); // physical resist ~1_val~%
+				list.Add(1060448, v.TostringLookup()); // physical resist ~1_val~%
 			}
 
 			v = FireResistance;
 
 			if (v != 0)
 			{
-				list.Add(1060447, v.ToString()); // fire resist ~1_val~%
+				list.Add(1060447, v.TostringLookup()); // fire resist ~1_val~%
 			}
 
 			v = ColdResistance;
 
 			if (v != 0)
 			{
-				list.Add(1060445, v.ToString()); // cold resist ~1_val~%
+				list.Add(1060445, v.TostringLookup()); // cold resist ~1_val~%
 			}
 
 			v = PoisonResistance;
 
 			if (v != 0)
 			{
-				list.Add(1060449, v.ToString()); // poison resist ~1_val~%
+				list.Add(1060449, v.TostringLookup()); // poison resist ~1_val~%
 			}
 
 			v = EnergyResistance;
 
 			if (v != 0)
 			{
-				list.Add(1060446, v.ToString()); // energy resist ~1_val~%
+				list.Add(1060446, v.TostringLookup()); // energy resist ~1_val~%
 			}
 		}
 
@@ -1342,11 +1342,11 @@ namespace Server
 
 			if (weight == 1)
 			{
-				list.Add(1072788, weight.ToString()); //Weight: ~1_WEIGHT~ stone
+				list.Add(1072788, weight.TostringLookup()); //Weight: ~1_WEIGHT~ stone
 			}
 			else
 			{
-				list.Add(1072789, weight.ToString()); //Weight: ~1_WEIGHT~ stones
+				list.Add(1072789, weight.TostringLookup()); //Weight: ~1_WEIGHT~ stones
 			}
 		}
 
@@ -2114,7 +2114,7 @@ namespace Server
 				return;
 			}
 
-			if (m_Map != null && m_Map != Map.Internal && !World.Loading)
+			if (m_Map != null && m_Map != Map.Internal && !World.IsLoading_s)
 			{
 				ObjectPropertyList oldList = m_PropertyList;
 				m_PropertyList = null;
@@ -2665,7 +2665,7 @@ namespace Server
 				}
 				else
 				{
-					writer.Write(Serial.MinusOne);
+					writer.Write(Serial.MinusOne_sr);
 				}
 			}
 
@@ -5695,12 +5695,12 @@ namespace Server
 			World.AddItem(this);
 
 			Type ourType = GetType();
-			m_TypeRef = World.m_ItemTypes.IndexOf(ourType);
+			m_TypeRef = World.itemTypesList_is.IndexOf(ourType);
 
 			if (m_TypeRef == -1)
 			{
-				World.m_ItemTypes.Add(ourType);
-				m_TypeRef = World.m_ItemTypes.Count - 1;
+				World.itemTypesList_is.Add(ourType);
+				m_TypeRef = World.itemTypesList_is.Count - 1;
 			}
 		}
 
@@ -5716,12 +5716,12 @@ namespace Server
 			m_Serial = serial;
 
 			Type ourType = GetType();
-			m_TypeRef = World.m_ItemTypes.IndexOf(ourType);
+			m_TypeRef = World.itemTypesList_is.IndexOf(ourType);
 
 			if (m_TypeRef == -1)
 			{
-				World.m_ItemTypes.Add(ourType);
-				m_TypeRef = World.m_ItemTypes.Count - 1;
+				World.itemTypesList_is.Add(ourType);
+				m_TypeRef = World.itemTypesList_is.Count - 1;
 			}
 		}
 

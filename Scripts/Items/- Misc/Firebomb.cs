@@ -185,7 +185,7 @@ namespace Server.Items
             if (p is Mobile)
                 to = (Mobile)p;
             else
-                to = new Entity(Serial.Zero, new Point3D(p), this.Map);
+                to = new Entity(Serial.Zero_sr, new Point3D(p), this.Map);
 
             Effects.SendMovingEffect(from, to, this.ItemID, 7, 0, false, false, this.Hue, 0);
 

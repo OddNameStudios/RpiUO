@@ -14,8 +14,8 @@ namespace Server.Misc
         private static void EventSink_Login(LoginEventArgs args)
         {
             int userCount = NetState.Instances.Count;
-            int itemCount = World.Items.Count;
-            int mobileCount = World.Mobiles.Count;
+            int itemCount = World.ItemsDictionary_s.Count;
+            int mobileCount = World.MobilesDictionary_s.Count;
 
             Mobile m = args.Mobile;
 

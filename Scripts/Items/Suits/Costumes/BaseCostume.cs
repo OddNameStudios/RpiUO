@@ -155,7 +155,7 @@ namespace Server.Items
 			writer.Write((int)m_SaveHueMod);
 
 			if (m_Wearer == null)
-				writer.Write((int)Serial.MinusOne.Value);
+				writer.Write((int)Serial.MinusOne_sr.Value);
 			else
 				writer.Write((int)m_Wearer.Serial.Value);
 		}

@@ -754,7 +754,7 @@ namespace Server.Factions
         {
             ArrayList pots = new ArrayList();
 
-            foreach (Item item in World.Items.Values)
+            foreach (Item item in World.ItemsDictionary_s.Values)
             {
                 if (item is IFactionItem && !(item is HoodedShroudOfShadows))
                     pots.Add(item);

@@ -73,7 +73,7 @@ namespace Server
 
         protected void SaveMobiles(SaveMetrics metrics)
         {
-            Dictionary<Serial, Mobile> mobiles = World.Mobiles;
+            Dictionary<Serial, Mobile> mobiles = World.MobilesDictionary_s;
 
             GenericWriter idx;
             GenericWriter tdb;
@@ -81,15 +81,15 @@ namespace Server
 
             if (this.UseSequentialWriters)
             {
-                idx = new BinaryFileWriter(World.MobileIndexPath, false);
-                tdb = new BinaryFileWriter(World.MobileTypesPath, false);
-                bin = new BinaryFileWriter(World.MobileDataPath, true);
+                idx = new BinaryFileWriter(World.mobileIndexPath_sr, false);
+                tdb = new BinaryFileWriter(World.mobileTypesPath_sr, false);
+                bin = new BinaryFileWriter(World.mobileDataPath_sr, true);
             }
             else
             {
-                idx = new AsyncWriter(World.MobileIndexPath, false);
-                tdb = new AsyncWriter(World.MobileTypesPath, false);
-                bin = new AsyncWriter(World.MobileDataPath, true);
+                idx = new AsyncWriter(World.mobileIndexPath_sr, false);
+                tdb = new AsyncWriter(World.mobileTypesPath_sr, false);
+                bin = new AsyncWriter(World.mobileDataPath_sr, true);
             }
 
             idx.Write((int)mobiles.Count);
@@ -113,10 +113,10 @@ namespace Server
                 m.FreeCache();
             }
 
-            tdb.Write((int)World.m_MobileTypes.Count);
+            tdb.Write((int)World.mobileTypesList_is.Count);
 
-            for (int i = 0; i < World.m_MobileTypes.Count; ++i)
-                tdb.Write(World.m_MobileTypes[i].FullName);
+            for (int i = 0; i < World.mobileTypesList_is.Count; ++i)
+                tdb.Write(World.mobileTypesList_is[i].FullName);
 
             idx.Close();
             tdb.Close();
@@ -125,7 +125,7 @@ namespace Server
 
         protected void SaveItems(SaveMetrics metrics)
         {
-            Dictionary<Serial, Item> items = World.Items;
+            Dictionary<Serial, Item> items = World.ItemsDictionary_s;
 
             GenericWriter idx;
             GenericWriter tdb;
@@ -133,15 +133,15 @@ namespace Server
 
             if (this.UseSequentialWriters)
             {
-                idx = new BinaryFileWriter(World.ItemIndexPath, false);
-                tdb = new BinaryFileWriter(World.ItemTypesPath, false);
-                bin = new BinaryFileWriter(World.ItemDataPath, true);
+                idx = new BinaryFileWriter(World.itemIndexPath_sr, false);
+                tdb = new BinaryFileWriter(World.itemTypesPath_sr, false);
+                bin = new BinaryFileWriter(World.itemDataPath_sr, true);
             }
             else
             {
-                idx = new AsyncWriter(World.ItemIndexPath, false);
-                tdb = new AsyncWriter(World.ItemTypesPath, false);
-                bin = new AsyncWriter(World.ItemDataPath, true);
+                idx = new AsyncWriter(World.itemIndexPath_sr, false);
+                tdb = new AsyncWriter(World.itemTypesPath_sr, false);
+                bin = new AsyncWriter(World.itemDataPath_sr, true);
             }
 
             idx.Write((int)items.Count);
@@ -170,9 +170,9 @@ namespace Server
                 item.FreeCache();
             }
 
-            tdb.Write((int)World.m_ItemTypes.Count);
-            for (int i = 0; i < World.m_ItemTypes.Count; ++i)
-                tdb.Write(World.m_ItemTypes[i].FullName);
+            tdb.Write((int)World.itemTypesList_is.Count);
+            for (int i = 0; i < World.itemTypesList_is.Count; ++i)
+                tdb.Write(World.itemTypesList_is[i].FullName);
 
             idx.Close();
             tdb.Close();
@@ -186,13 +186,13 @@ namespace Server
 
             if (this.UseSequentialWriters)
             {
-                idx = new BinaryFileWriter(World.GuildIndexPath, false);
-                bin = new BinaryFileWriter(World.GuildDataPath, true);
+                idx = new BinaryFileWriter(World.guildIndexPath_sr, false);
+                bin = new BinaryFileWriter(World.guildDataPath_sr, true);
             }
             else
             {
-                idx = new AsyncWriter(World.GuildIndexPath, false);
-                bin = new AsyncWriter(World.GuildDataPath, true);
+                idx = new AsyncWriter(World.guildIndexPath_sr, false);
+                bin = new AsyncWriter(World.guildDataPath_sr, true);
             }
 
             idx.Write((int)BaseGuild.List.Count);
@@ -220,7 +220,7 @@ namespace Server
 
         protected void SaveData(SaveMetrics metrics)
         {
-            Dictionary<CustomSerial, SaveData> data = World.Data;
+            Dictionary<CustomSerial, SaveData> data = World.DataDictionary_s;
 
             GenericWriter indexWriter;
             GenericWriter typeWriter;
@@ -228,15 +228,15 @@ namespace Server
 
             if (this.UseSequentialWriters)
             {
-                indexWriter = new BinaryFileWriter(World.DataIndexPath, false);
-                typeWriter = new BinaryFileWriter(World.DataTypesPath, false);
-                dataWriter = new BinaryFileWriter(World.DataBinaryPath, true);
+                indexWriter = new BinaryFileWriter(World.dataIndexPath_sr, false);
+                typeWriter = new BinaryFileWriter(World.dataTypesPath_sr, false);
+                dataWriter = new BinaryFileWriter(World.dataBinaryPath_sr, true);
             }
             else
             {
-                indexWriter = new AsyncWriter(World.DataIndexPath, false);
-                typeWriter = new AsyncWriter(World.DataTypesPath, false);
-                dataWriter = new AsyncWriter(World.DataBinaryPath, true);
+                indexWriter = new AsyncWriter(World.dataIndexPath_sr, false);
+                typeWriter = new AsyncWriter(World.dataTypesPath_sr, false);
+                dataWriter = new AsyncWriter(World.dataBinaryPath_sr, true);
             }
 
             indexWriter.Write(data.Count);
@@ -257,10 +257,10 @@ namespace Server
                 indexWriter.Write((int)(dataWriter.Position - start));
             }
 
-            typeWriter.Write(World._DataTypes.Count);
+            typeWriter.Write(World.dataTypesList_is.Count);
 
-            for (int i = 0; i < World._DataTypes.Count; ++i)
-                typeWriter.Write(World._DataTypes[i].FullName);
+            for (int i = 0; i < World.dataTypesList_is.Count; ++i)
+                typeWriter.Write(World.dataTypesList_is[i].FullName);
 
             indexWriter.Close();
             typeWriter.Close();

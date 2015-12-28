@@ -20,7 +20,8 @@ namespace Server.Misc
         * Example:
         *  private static string CustomPath = @"C:\Program Files\Ultima Online";
         */
-        private static readonly string CustomPath = "/home/pi/uoserver/clientFiles";
+        private static readonly string linuxPath_psr = "/home/pi/uoserver/clientFiles";
+        private static readonly string windowsPath_psr = "D:/Odd Name Studios/Jogos/Ultima Online Shard/Server/clientFiles";
         /* The following is a list of files which a required for proper execution:
         * 
         * Multi.idx
@@ -38,14 +39,13 @@ namespace Server.Misc
         */
         public static void Configure()
         {
+            //Rpi - These are the install dir, but it will not work if there is a client connected on the same time on the server machine.
+            /*
             string pathUO = GetPath(@"Origin Worlds Online\Ultima Online\1.0", "ExePath");
             string pathTD = GetPath(@"Origin Worlds Online\Ultima Online Third Dawn\1.0", "ExePath"); //These refer to 2D & 3D, not the Third Dawn expansion
             string pathKR = GetPath(@"Origin Worlds Online\Ultima Online\KR Legacy Beta", "ExePath"); //After KR, This is the new registry key for the 2D client
             string pathSA = GetPath(@"Electronic Arts\EA Games\Ultima Online Stygian Abyss Classic", "InstallDir");
             string pathHS = GetPath(@"Electronic Arts\EA Games\Ultima Online Classic", "InstallDir");
-
-            if (CustomPath != null) 
-                Core.DataDirectories.Add(CustomPath); 
 
             if (pathUO != null) 
                 Core.DataDirectories.Add(pathUO); 
@@ -61,6 +61,14 @@ namespace Server.Misc
 
             if (pathHS != null)
                 Core.DataDirectories.Add(pathHS);
+                */
+
+            if (linuxPath_psr != null)
+                Core.DataDirectories.Add(linuxPath_psr);
+
+            if (windowsPath_psr != null)
+                Core.DataDirectories.Add(windowsPath_psr);
+
 
             if (Core.DataDirectories.Count == 0 && !Core.Service)
             {

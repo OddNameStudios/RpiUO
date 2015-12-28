@@ -81,9 +81,9 @@ namespace Server.RemoteAdmin
             this.m_Stream.Write((int)Firewall.List.Count);
             this.m_Stream.Write((int)NetState.Instances.Count);
 
-            this.m_Stream.Write((int)World.Mobiles.Count);
+            this.m_Stream.Write((int)World.MobilesDictionary_s.Count);
             this.m_Stream.Write((int)Core.ScriptMobiles);
-            this.m_Stream.Write((int)World.Items.Count);
+            this.m_Stream.Write((int)World.ItemsDictionary_s.Count);
             this.m_Stream.Write((int)Core.ScriptItems);
 
             this.m_Stream.Write((uint)(DateTime.UtcNow - Clock.ServerStart).TotalSeconds);
@@ -138,8 +138,8 @@ namespace Server.RemoteAdmin
             this.EnsureCapacity(1 + 2 + (4 * 4) + 8);
 
             this.m_Stream.Write((int)NetState.Instances.Count - 1);                      // Clients
-            this.m_Stream.Write((int)World.Items.Count);                                 // Items
-            this.m_Stream.Write((int)World.Mobiles.Count);                               // Mobiles
+            this.m_Stream.Write((int)World.ItemsDictionary_s.Count);                                 // Items
+            this.m_Stream.Write((int)World.MobilesDictionary_s.Count);                               // Mobiles
             this.m_Stream.Write((uint)(DateTime.UtcNow - Clock.ServerStart).TotalSeconds);  // Age (seconds)
 
             long memory = GC.GetTotalMemory(false);

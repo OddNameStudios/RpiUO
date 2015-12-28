@@ -32,8 +32,8 @@ namespace Server.Items
             attacker.PlaySound(0x56);
             attacker.FixedParticles(0x3779, 1, 30, 9964, 3, 3, EffectLayer.Waist);
 
-            IEntity from = new Entity(Serial.Zero, new Point3D(attacker.X, attacker.Y, attacker.Z), attacker.Map);
-            IEntity to = new Entity(Serial.Zero, new Point3D(attacker.X, attacker.Y, attacker.Z + 50), attacker.Map);
+            IEntity from = new Entity(Serial.Zero_sr, new Point3D(attacker.X, attacker.Y, attacker.Z), attacker.Map);
+            IEntity to = new Entity(Serial.Zero_sr, new Point3D(attacker.X, attacker.Y, attacker.Z + 50), attacker.Map);
             Effects.SendMovingParticles(from, to, 0xF5F, 1, 0, false, false, 33, 3, 9501, 1, 0, EffectLayer.Head, 0x100);
 
             int damage = 10; 

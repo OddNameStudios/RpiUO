@@ -208,7 +208,7 @@ namespace Server.Misc
                 else
                 {
                     // count playermobiles
-                    foreach (Mobile mob in World.Mobiles.Values)
+                    foreach (Mobile mob in World.MobilesDictionary_s.Values)
                     {
                         if (mob.Player)
                         {

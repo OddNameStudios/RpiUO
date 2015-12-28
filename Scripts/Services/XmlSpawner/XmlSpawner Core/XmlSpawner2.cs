@@ -3599,7 +3599,7 @@ public static void _TraceEnd(int index)
 			int regional = 0;
 			//int timercount=0;
 
-			foreach (Item item in World.Items.Values)
+			foreach (Item item in World.ItemsDictionary_s.Values)
 			{
 				if (item is XmlSpawner)
 				{
@@ -4279,7 +4279,7 @@ public static void _TraceEnd(int index)
 		public static void ShowSpawnPoints_OnCommand(CommandEventArgs e)
 		{
 			List<Item> ToShow = new List<Item>();
-			foreach (Item item in World.Items.Values)
+			foreach (Item item in World.ItemsDictionary_s.Values)
 			{
 				if (item is XmlSpawner)
 				{
@@ -4326,7 +4326,7 @@ public static void _TraceEnd(int index)
 		public static void HideSpawnPoints_OnCommand(CommandEventArgs e)
 		{
 			List<Item> ToDelete = new List<Item>();
-			foreach (Item item in World.Items.Values)
+			foreach (Item item in World.ItemsDictionary_s.Values)
 			{
 				if (item is XmlSpawner)
 				{
@@ -4444,7 +4444,7 @@ public static void _TraceEnd(int index)
 			int maxcount = 0;
 			// maximum possible of spawns that are currently inactivated
 			int savings = 0;
-			foreach (Item item in World.Items.Values)
+			foreach (Item item in World.ItemsDictionary_s.Values)
 			{
 				if (item is XmlSpawner)
 				{
@@ -4521,7 +4521,7 @@ public static void _TraceEnd(int index)
 			}
 			int count = 0;
 			int maxcount = 0;
-			foreach (Item item in World.Items.Values)
+			foreach (Item item in World.ItemsDictionary_s.Values)
 			{
 				if (item is XmlSpawner)
 				{
@@ -4802,7 +4802,7 @@ public static void _TraceEnd(int index)
 							
 							// Check if this spawner already exists
 							XmlSpawner OldSpawner = null;
-							foreach (Item i in World.Items.Values)
+							foreach (Item i in World.ItemsDictionary_s.Values)
 							{
 								if (i is XmlSpawner)
 								{
@@ -6521,7 +6521,7 @@ public static void _TraceEnd(int index)
 							Container spawn_container = null;
 							if (!bad_spawner)
 							{
-								foreach (Item i in World.Items.Values)
+								foreach (Item i in World.ItemsDictionary_s.Values)
 								{
 									if (i is XmlSpawner)
 									{
@@ -6721,7 +6721,7 @@ public static void _TraceEnd(int index)
 
 						bool found_spawner = false;
 						XmlSpawner OldSpawner = null;
-						foreach (Item i in World.Items.Values)
+						foreach (Item i in World.ItemsDictionary_s.Values)
 						{
 							if (i is XmlSpawner)
 							{
@@ -7211,7 +7211,7 @@ public static void _TraceEnd(int index)
 			List<XmlSpawner> saveslist = new List<XmlSpawner>();
 
 			// Add each spawn point to the list
-			foreach (Item i in World.Items.Values)
+			foreach (Item i in World.ItemsDictionary_s.Values)
 			{
 				if (i is XmlSpawner && !i.Deleted && ((SaveAllMaps == true) || (i.Map == e.Mobile.Map))
 					//check for mob carried spawners and ignore them
@@ -7573,7 +7573,7 @@ public static void _TraceEnd(int index)
 				// Delete Xml spawner's in the world based on the mobiles current map
 				int Count = 0;
 				List<Item> ToDelete = new List<Item>();
-				foreach (Item i in World.Items.Values)
+				foreach (Item i in World.ItemsDictionary_s.Values)
 				{
 					if ((i is XmlSpawner) && (WipeAll == true || i.Map == e.Mobile.Map) && (i.Deleted == false))
 					{
@@ -7638,7 +7638,7 @@ public static void _TraceEnd(int index)
 				// Respawn Xml spawner's in the world based on the mobiles current map
 				int Count = 0;
 				List<Item> ToRespawn = new List<Item>();
-				foreach (Item i in World.Items.Values)
+				foreach (Item i in World.ItemsDictionary_s.Values)
 				{
 					try
 					{
@@ -10604,7 +10604,7 @@ public static void _TraceEnd(int index)
 								{
 									WayList = new List<Item>();
 
-									foreach (Item i in World.Items.Values)
+									foreach (Item i in World.ItemsDictionary_s.Values)
 									{
 										if (i is WayPoint && !string.IsNullOrEmpty(i.Name) && i.Map == Map && i.Name == prefix)
 										{
@@ -11853,7 +11853,7 @@ public static void _TraceEnd(int index)
 						}
 						else
 						{
-							writer.Write(Serial.MinusOne);
+							writer.Write(Serial.MinusOne_sr);
 						}
 					}
 				}

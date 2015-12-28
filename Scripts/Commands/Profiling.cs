@@ -89,7 +89,7 @@ namespace Server.Commands
             {
                 Hashtable table = new Hashtable();
 
-                foreach (Item item in World.Items.Values)
+                foreach (Item item in World.ItemsDictionary_s.Values)
                 {
                     Type type = item.GetType();
 
@@ -105,7 +105,7 @@ namespace Server.Commands
 
                 table.Clear();
 
-                foreach (Mobile m in World.Mobiles.Values)
+                foreach (Mobile m in World.MobilesDictionary_s.Values)
                 {
                     Type type = m.GetType();
 
@@ -129,7 +129,7 @@ namespace Server.Commands
                 op.WriteLine("# Items:");
 
                 foreach (DictionaryEntry de in items)
-                    op.WriteLine("{0}\t{1:F2}%\t{2}", de.Value, (100 * (int)de.Value) / (double)World.Items.Count, de.Key);
+                    op.WriteLine("{0}\t{1:F2}%\t{2}", de.Value, (100 * (int)de.Value) / (double)World.ItemsDictionary_s.Count, de.Key);
 
                 op.WriteLine();
                 op.WriteLine();
@@ -137,7 +137,7 @@ namespace Server.Commands
                 op.WriteLine("#Mobiles:");
 
                 foreach (DictionaryEntry de in mobiles)
-                    op.WriteLine("{0}\t{1:F2}%\t{2}", de.Value, (100 * (int)de.Value) / (double)World.Mobiles.Count, de.Key);
+                    op.WriteLine("{0}\t{1:F2}%\t{2}", de.Value, (100 * (int)de.Value) / (double)World.MobilesDictionary_s.Count, de.Key);
             }
 
             e.Mobile.SendMessage("Object table has been generated. See the file : <runuo root>/objects.log");
@@ -149,7 +149,7 @@ namespace Server.Commands
         {
             Hashtable typeTable = new Hashtable();
 
-            foreach (Item item in World.Items.Values)
+            foreach (Item item in World.ItemsDictionary_s.Values)
             {
                 ExpandFlag flags = item.GetExpandFlags();
 
@@ -247,7 +247,7 @@ namespace Server.Commands
             int totalCount = 0;
             Hashtable table = new Hashtable();
 
-            foreach (Item item in World.Items.Values)
+            foreach (Item item in World.ItemsDictionary_s.Values)
             {
                 if (item.Parent != null || item.Map != Map.Internal)
                     continue;

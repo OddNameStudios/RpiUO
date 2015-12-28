@@ -1,0 +1,78 @@
+Rpi - 2015/12/26
+
+==================
+Naming Conventions
+==================
+
+For variables, properties, classes, structs, methods, enums, interfaces. Includes accessors conventions.
+All entities enlisted above should follow the naming convention.
+
+The naming convention alter the following itens:
+a)Prefix
+b)Suffix
+c)Name format
+d)Other mods
+
+Under the following circunstances:
+e)Type Definition
+f)Methods Signatures
+g)Methods In-Body Variable Declarations
+h)Properties
+
+Considering the available accessors modificators
+i)Public
+j)Private
+k)Protected
+l)Static
+m)Readonly
+n)Internal
+
+===========
+Description
+===========
+
+a) We use the underscore as prefix on variables inside a method`s scope, to indicate they belong to tha scope.
+We can also use simple prefixes inside a method`s signature for a boolean parameter. For example, if we have
+to define a list of houses and do some tests on then, then discard the list, we use: List<Houses> _housesList.
+
+b) Suffixes defines the accessors of the variables. For multiple suffixes, we use only one underscore and put
+all the suffixes on sequence, like in: private static string MyPropertie_ps {get; set;}
+
+c) Class and Structs definitions should be ClassName/StructName. Interfaces should be like IMyInterfaceName.
+Enums should be like MyOwnEnum. Methods should be a bit descriptive about they usage. Properties should have
+the same name as the underlying type. Methods`s parameters should inform its type (exception is bool). For
+variables inside method`s scope, you should name after its type (see (a)) or some condition over the data.
+Variables`s names should always start with lower case, while Properties should always have Upper Case.
+
+d) Special mods can be used if it does improve the readability of the code, but should be avoided. In special,
+we should consider collections. The collection type should be listed in the variable name. For example, consider
+the following case: List<Mobiles> mobilesList. It does it right.
+
+e) Type definitions should be concise and preferably respect the single responsability concept.
+
+f) Inside method`s signatures, you should use the following format> [article]_[type] or [article]_[idea].
+For example, in a method could be named like one of the three options below:
+	- public Hue PreferedColor(string a_string)
+	- public Hue PreferedColor(string a_customer)
+	- public Hue PreferedColor(string string_customer)
+While using Visual Studio, it is easy to get the variable`s type, but in large codes we always get lost on 
+the meaning of the variable. The third option is the better, but if the type name is too long, it should be
+avoided. In example, we can use [string_customer], but we should avoid [pooledCarDictionary_cars]. In this
+case, it is better to use [some_cars].
+
+g) For variables declared in method`s scope, we should informe it belongs only to one scope. To do this, we use
+an underscore as prefix, and name the variable using the type or idea it represents. For example, a list of
+mobiles inside a method`s scope can be name like: List<Mobile> a_mobilesList.
+
+i) Public is informed by having NO sufix in Properties and Variables.
+
+j) Private is informed by appending '_p' after the name for Properties and Variables. For example, we can declare
+like this: private string MyPrivateProperty_p {get; set;} or private string myVariable_p.
+
+k) Protected is like Private for a Class and its Derived Classes. We should append '_c' to show it.
+
+l) Static is informed by appending '_s'.
+
+m) Readonly is informed by appending '_r'
+
+n) Internal is informed by appending '_i'

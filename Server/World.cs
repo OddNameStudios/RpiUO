@@ -1,7 +1,7 @@
 #region Header
 // **********
 // RpiUO - World.cs
-// Last Edit: 2015/12/20
+// Last Edit: 2015/12/26
 // Look for Rpi comment
 // **********
 #endregion
@@ -24,41 +24,43 @@ namespace Server
 {
 	public static class World
 	{
-		private static Dictionary<Serial, Mobile> m_Mobiles;
-		private static Dictionary<Serial, Item> m_Items;
-		private static Dictionary<CustomSerial, SaveData> _Data;
+        //Rpi - Refactored using the naming convention
 
-		private static bool m_Loading;
-		private static bool m_Loaded;
+        private static Dictionary<Serial, Mobile> mobilesDictionary_ps;
+		private static Dictionary<Serial, Item> itemsDictionary_ps;
+		private static Dictionary<CustomSerial, SaveData> dataDictionary_ps;
 
-		private static bool m_Saving;
-		private static readonly ManualResetEvent m_DiskWriteHandle = new ManualResetEvent(true);
+		private static bool isLoading_ps;
+		private static bool isLoaded_ps;
 
-		private static Queue<IEntity> _addQueue, _deleteQueue;
-		private static Queue<ICustomsEntity> _CustomsAddQueue, _CustomsDeleteQueue;
+		private static bool isSaving_ps;
+		private static readonly ManualResetEvent diskWriteHandle_psr = new ManualResetEvent(true);
 
-		public static bool Saving { get { return m_Saving; } }
-		public static bool Loaded { get { return m_Loaded; } }
-		public static bool Loading { get { return m_Loading; } }
+		private static Queue<IEntity> addQueue_ps, deleteQueue_ps;
+		private static Queue<ICustomsEntity> customsAddQueue_ps, customsDeleteQueue_ps;
 
-		public static readonly string MobileIndexPath = Path.Combine("Saves/Mobiles/", "Mobiles.idx");
-		public static readonly string MobileTypesPath = Path.Combine("Saves/Mobiles/", "Mobiles.tdb");
-		public static readonly string MobileDataPath = Path.Combine("Saves/Mobiles/", "Mobiles.bin");
+		public static bool IsSaving_s { get { return isSaving_ps; } }
+		public static bool IsLoaded_s { get { return isLoaded_ps; } }
+		public static bool IsLoading_s { get { return isLoading_ps; } }
 
-		public static readonly string ItemIndexPath = Path.Combine("Saves/Items/", "Items.idx");
-		public static readonly string ItemTypesPath = Path.Combine("Saves/Items/", "Items.tdb");
-		public static readonly string ItemDataPath = Path.Combine("Saves/Items/", "Items.bin");
+		public static readonly string mobileIndexPath_sr = Path.Combine("Saves/Mobiles/", "Mobiles.idx");
+		public static readonly string mobileTypesPath_sr = Path.Combine("Saves/Mobiles/", "Mobiles.tdb");
+		public static readonly string mobileDataPath_sr = Path.Combine("Saves/Mobiles/", "Mobiles.bin");
 
-		public static readonly string GuildIndexPath = Path.Combine("Saves/Guilds/", "Guilds.idx");
-		public static readonly string GuildDataPath = Path.Combine("Saves/Guilds/", "Guilds.bin");
+		public static readonly string itemIndexPath_sr = Path.Combine("Saves/Items/", "Items.idx");
+		public static readonly string itemTypesPath_sr = Path.Combine("Saves/Items/", "Items.tdb");
+		public static readonly string itemDataPath_sr = Path.Combine("Saves/Items/", "Items.bin");
 
-		public static readonly string DataIndexPath = Path.Combine("Saves/Customs/", "SaveData.idx");
-		public static readonly string DataTypesPath = Path.Combine("Saves/Customs/", "SaveData.tdb");
-		public static readonly string DataBinaryPath = Path.Combine("Saves/Customs/", "SaveData.bin");
+		public static readonly string guildIndexPath_sr = Path.Combine("Saves/Guilds/", "Guilds.idx");
+		public static readonly string guildDataPath_sr = Path.Combine("Saves/Guilds/", "Guilds.bin");
+
+		public static readonly string dataIndexPath_sr = Path.Combine("Saves/Customs/", "SaveData.idx");
+		public static readonly string dataTypesPath_sr = Path.Combine("Saves/Customs/", "SaveData.tdb");
+		public static readonly string dataBinaryPath_sr = Path.Combine("Saves/Customs/", "SaveData.bin");
 
 		public static void NotifyDiskWriteComplete()
 		{
-			if (m_DiskWriteHandle.Set())
+			if (diskWriteHandle_psr.Set())
 			{
 				Console.WriteLine("Closing Save Files. ");
 			}
@@ -66,25 +68,25 @@ namespace Server
 
 		public static void WaitForWriteCompletion()
 		{
-			m_DiskWriteHandle.WaitOne();
+			diskWriteHandle_psr.WaitOne();
 		}
 
-		public static Dictionary<Serial, Mobile> Mobiles { get { return m_Mobiles; } }
+		public static Dictionary<Serial, Mobile> MobilesDictionary_s { get { return mobilesDictionary_ps; } }
 
-		public static Dictionary<Serial, Item> Items { get { return m_Items; } }
+		public static Dictionary<Serial, Item> ItemsDictionary_s { get { return itemsDictionary_ps; } }
 
-		public static Dictionary<CustomSerial, SaveData> Data { get { return _Data; } }
+		public static Dictionary<CustomSerial, SaveData> DataDictionary_s { get { return dataDictionary_ps; } }
 
-		public static bool OnDelete(IEntity entity)
+		public static bool OnDelete(IEntity an_entity)
 		{
-			if (m_Saving || m_Loading)
+			if (isSaving_ps || isLoading_ps)
 			{
-				if (m_Saving)
+				if (isSaving_ps)
 				{
-					AppendSafetyLog("delete", entity);
+					AppendSafetyLog("delete", an_entity);
 				}
 
-				_deleteQueue.Enqueue(entity);
+				deleteQueue_ps.Enqueue(an_entity);
 
 				return false;
 			}
@@ -92,16 +94,16 @@ namespace Server
 			return true;
 		}
 
-		public static bool OnDelete(ICustomsEntity entity)
+		public static bool OnDelete(ICustomsEntity an_entity)
 		{
-			if (m_Saving || m_Loading)
+			if (isSaving_ps || isLoading_ps)
 			{
-				if (m_Saving)
+				if (isSaving_ps)
 				{
-					AppendSafetyLog("delete", entity);
+					AppendSafetyLog("delete", an_entity);
 				}
 
-				_CustomsDeleteQueue.Enqueue(entity);
+				customsDeleteQueue_ps.Enqueue(an_entity);
 
 				return false;
 			}
@@ -109,39 +111,39 @@ namespace Server
 			return true;
 		}
 
-		public static void Broadcast(int hue, bool ascii, string text)
-		{
-			Packet p;
+		public static void Broadcast(int a_hue, bool is_ascii, string a_text)
+		{   //Rpi - Refactored
+			Packet _packet;
 
-			if (ascii)
+			if (is_ascii)
 			{
-				p = new AsciiMessage(Serial.MinusOne, -1, MessageType.Regular, hue, 3, "System", text);
+				_packet = new AsciiMessage(Serial.MinusOne_sr, -1, MessageType.Regular, a_hue, 3, "System", a_text);
 			}
 			else
 			{
-				p = new UnicodeMessage(Serial.MinusOne, -1, MessageType.Regular, hue, 3, "ENU", "System", text);
+				_packet = new UnicodeMessage(Serial.MinusOne_sr, -1, MessageType.Regular, a_hue, 3, "ENU", "System", a_text);
 			}
 
-			var list = NetState.Instances;
+			List<NetState> _instancesList = NetState.Instances;
 
-			p.Acquire();
+			_packet.Acquire();
 
-			for (int i = 0; i < list.Count; ++i)
+			for (int i = 0; i < _instancesList.Count; ++i)
 			{
-				if (list[i].Mobile != null)
+				if (_instancesList[i].Mobile != null)
 				{
-					list[i].Send(p);
+					_instancesList[i].Send(_packet);
 				}
 			}
 
-			p.Release();
+			_packet.Release();
 
 			NetState.FlushAll();
 		}
 
-		public static void Broadcast(int hue, bool ascii, string format, params object[] args)
+		public static void Broadcast(int a_hue, bool is_ascii, string a_format, params object[] args)
 		{
-			Broadcast(hue, ascii, String.Format(format, args));
+			Broadcast(a_hue, is_ascii, String.Format(a_format, args));
 		}
 
 		private interface IEntityEntry
@@ -154,143 +156,144 @@ namespace Server
 
 		private sealed class GuildEntry : IEntityEntry
 		{
-			private readonly BaseGuild m_Guild;
-			private readonly long m_Position;
-			private readonly int m_Length;
+			private readonly BaseGuild guild_pr;
+			private readonly long position_pr;
+			private readonly int length_pr;
 
-			public BaseGuild Guild { get { return m_Guild; } }
+			public BaseGuild Guild { get { return guild_pr; } }
 
-			public Serial Serial { get { return m_Guild == null ? 0 : m_Guild.Id; } }
+			public Serial Serial { get { return guild_pr == null ? 0 : guild_pr.Id; } }
 
 			public int TypeID { get { return 0; } }
 
-			public long Position { get { return m_Position; } }
+			public long Position { get { return position_pr; } }
 
-			public int Length { get { return m_Length; } }
+			public int Length { get { return length_pr; } }
 
-			public GuildEntry(BaseGuild g, long pos, int length)
+			public GuildEntry(BaseGuild a_baseGuild, long a_position, int a_length)
 			{
-				m_Guild = g;
-				m_Position = pos;
-				m_Length = length;
+				guild_pr = a_baseGuild;
+				position_pr = a_position;
+				length_pr = a_length;
 			}
 		}
 
 		private sealed class ItemEntry : IEntityEntry
 		{
-			private readonly Item m_Item;
-			private readonly int m_TypeID;
-			private readonly string m_TypeName;
-			private readonly long m_Position;
-			private readonly int m_Length;
+			private readonly Item item_pr;
+			private readonly int typeID_pr;
+			private readonly string typeName_pr;
+			private readonly long position_pr;
+			private readonly int length_pr;
 
-			public Item Item { get { return m_Item; } }
+			public Item Item { get { return item_pr; } }
 
-			public Serial Serial { get { return m_Item == null ? Serial.MinusOne : m_Item.Serial; } }
+			public Serial Serial { get { return item_pr == null ? Serial.MinusOne_sr : item_pr.Serial; } }
 
-			public int TypeID { get { return m_TypeID; } }
+			public int TypeID { get { return typeID_pr; } }
 
-			public string TypeName { get { return m_TypeName; } }
+			public string TypeName { get { return typeName_pr; } }
 
-			public long Position { get { return m_Position; } }
+			public long Position { get { return position_pr; } }
 
-			public int Length { get { return m_Length; } }
+			public int Length { get { return length_pr; } }
 
 			public ItemEntry(Item item, int typeID, string typeName, long pos, int length)
 			{
-				m_Item = item;
-				m_TypeID = typeID;
-				m_TypeName = typeName;
-				m_Position = pos;
-				m_Length = length;
+				item_pr = item;
+				typeID_pr = typeID;
+				typeName_pr = typeName;
+				position_pr = pos;
+				length_pr = length;
 			}
 		}
 
 		private sealed class MobileEntry : IEntityEntry
 		{
-			private readonly Mobile m_Mobile;
-			private readonly int m_TypeID;
-			private readonly string m_TypeName;
-			private readonly long m_Position;
-			private readonly int m_Length;
+			private readonly Mobile mobile_pr;
+			private readonly int typeID_pr;
+			private readonly string typeName_pr;
+			private readonly long position_pr;
+			private readonly int length_pr;
 
-			public Mobile Mobile { get { return m_Mobile; } }
+			public Mobile Mobile { get { return mobile_pr; } }
 
-			public Serial Serial { get { return m_Mobile == null ? Serial.MinusOne : m_Mobile.Serial; } }
+			public Serial Serial { get { return mobile_pr == null ? Serial.MinusOne_sr : mobile_pr.Serial; } }
 
-			public int TypeID { get { return m_TypeID; } }
+			public int TypeID { get { return typeID_pr; } }
 
-			public string TypeName { get { return m_TypeName; } }
+			public string TypeName { get { return typeName_pr; } }
 
-			public long Position { get { return m_Position; } }
+			public long Position { get { return position_pr; } }
 
-			public int Length { get { return m_Length; } }
+			public int Length { get { return length_pr; } }
 
 			public MobileEntry(Mobile mobile, int typeID, string typeName, long pos, int length)
 			{
-				m_Mobile = mobile;
-				m_TypeID = typeID;
-				m_TypeName = typeName;
-				m_Position = pos;
-				m_Length = length;
+				mobile_pr = mobile;
+				typeID_pr = typeID;
+				typeName_pr = typeName;
+				position_pr = pos;
+				length_pr = length;
 			}
 		}
 
 		public sealed class DataEntry : ICustomsEntry
 		{
-			private readonly SaveData _Data;
-			private readonly int _TypeID;
-			private readonly string _TypeName;
-			private readonly long _Position;
-			private readonly int _Length;
+			private readonly SaveData data_pr;
+			private readonly int typeID_pr;
+			private readonly string typeName_pr;
+			private readonly long position_pr;
+			private readonly int length_pr;
 
-			public DataEntry(SaveData data, int typeID, string typeName, long pos, int length)
+			public DataEntry(SaveData a_saveData, int a_typeID, string a_typeName, long a_position, int a_length)
 			{
-				_Data = data;
-				_TypeID = typeID;
-				_TypeName = typeName;
-				_Position = pos;
-				_Length = length;
+				data_pr = a_saveData;
+				typeID_pr = a_typeID;
+				typeName_pr = a_typeName;
+				position_pr = a_position;
+				length_pr = a_length;
 			}
 
-			public SaveData Data { get { return _Data; } }
-			public CustomSerial Serial { get { return _Data == null ? CustomSerial.MinusOne : _Data.Serial; } }
-			public int TypeID { get { return _TypeID; } }
-			public string TypeName { get { return _TypeName; } }
-			public long Position { get { return _Position; } }
-			public int Length { get { return _Length; } }
+			public SaveData Data { get { return data_pr; } }
+			public CustomSerial Serial { get { return data_pr == null ? CustomSerial.MinusOne : data_pr.Serial; } }
+			public int TypeID { get { return typeID_pr; } }
+			public string TypeName { get { return typeName_pr; } }
+			public long Position { get { return position_pr; } }
+			public int Length { get { return length_pr; } }
 		}
 
-		private static string m_LoadingType;
+		private static string loadingType_ps;
 
-		public static string LoadingType { get { return m_LoadingType; } }
+		public static string LoadingType_s { get { return loadingType_ps; } }
 
-		private static readonly Type[] m_SerialTypeArray = new Type[1] {typeof(Serial)};
-		private static readonly Type[] _CustomSerialTypeArray = new Type[1] {typeof(CustomSerial)};
+		private static readonly Type[] serialTypeArray_psr = new Type[1] {typeof(Serial)};
+		private static readonly Type[] customSerialTypeArray_psr = new Type[1] {typeof(CustomSerial)};
 
-		private static List<Tuple<ConstructorInfo, string>> ReadTypes(BinaryReader tdbReader)
+		private static List<Tuple<ConstructorInfo, string>> ReadTypes(BinaryReader a_binaryReader)
 		{
-			int count = tdbReader.ReadInt32();
+            //Rpi - Refactored using the naming convention
+			int _count = a_binaryReader.ReadInt32();
 
-			var types = new List<Tuple<ConstructorInfo, string>>(count);
+			List<Tuple<ConstructorInfo,string>> _typesTupleList = new List<Tuple<ConstructorInfo, string>>(_count);
 
-			for (int i = 0; i < count; ++i)
+			for (int i = 0; i < _count; ++i)
 			{
-				string typeName = tdbReader.ReadString();
+				string _typeName = a_binaryReader.ReadString();
 
-				Type t = ScriptCompiler.FindTypeByFullName(typeName);
+				Type _type = ScriptCompiler.FindTypeByFullName(_typeName);
 
-				if (t == null)
+				if (_type == null)
 				{
 					Console.WriteLine("failed");
 
 					if (!Core.Service)
 					{
-						Console.WriteLine("Error: Type '{0}' was not found. Delete all of those types? (y/n)", typeName);
+						Console.WriteLine("Error: Type '{0}' was not found. Delete all of those types? (y/n)", _typeName);
 
 						if (Console.ReadKey(true).Key == ConsoleKey.Y)
 						{
-							types.Add(null);
+							_typesTupleList.Add(null);
 							Console.Write("World: Loading...");
 							continue;
 						}
@@ -299,671 +302,766 @@ namespace Server
 					}
 					else
 					{
-						Console.WriteLine("Error: Type '{0}' was not found.", typeName);
+						Console.WriteLine("Error: Type '{0}' was not found.", _typeName);
 					}
 
-					throw new Exception(String.Format("Bad type '{0}'", typeName));
+					throw new Exception(String.Format("Bad type '{0}'", _typeName));
 				}
 
-				ConstructorInfo ctor = t.GetConstructor(m_SerialTypeArray);
-				ConstructorInfo cctor = t.GetConstructor(_CustomSerialTypeArray);
+				ConstructorInfo _constructor = _type.GetConstructor(serialTypeArray_psr);
+				ConstructorInfo _customConstructor = _type.GetConstructor(customSerialTypeArray_psr);
 
-				if (ctor != null)
+				if (_constructor != null)
 				{
-					types.Add(new Tuple<ConstructorInfo, string>(ctor, typeName));
+					_typesTupleList.Add(new Tuple<ConstructorInfo, string>(_constructor, _typeName));
 				}
-				else if (cctor != null)
+				else if (_customConstructor != null)
 				{
-					types.Add(new Tuple<ConstructorInfo, string>(cctor, typeName));
+					_typesTupleList.Add(new Tuple<ConstructorInfo, string>(_customConstructor, _typeName));
 				}
 				else
 				{
-					throw new Exception(String.Format("Type '{0}' does not have a serialization constructor", t));
+					throw new Exception(String.Format("Type '{0}' does not have a serialization constructor", _type));
 				}
 			}
 
-			return types;
+			return _typesTupleList;
 		}
 
-		public static void Load()
-		{
-			if (m_Loaded)
-			{
-				return;
-			}
+        private static object lockObject_ps = new object();
 
-			m_Loaded = true;
-			m_LoadingType = null;
+        public static void Load()
+        {
+            //Rpi - Refactored using the naming convention
+            lock (lockObject_ps)
+            {
 
-			Utility.PushColor(ConsoleColor.Yellow);
-			Console.Write("World: Loading...");
-			Utility.PopColor();
 
-			Stopwatch watch = Stopwatch.StartNew();
+                if (isLoaded_ps == true)
+                {
+                    return;
+                }
 
-			m_Loading = true;
+                isLoaded_ps = true;
+                loadingType_ps = null;
 
-			_addQueue = new Queue<IEntity>();
-			_deleteQueue = new Queue<IEntity>();
-			_CustomsAddQueue = new Queue<ICustomsEntity>();
-			_CustomsDeleteQueue = new Queue<ICustomsEntity>();
+                Utility.PushColor(ConsoleColor.Yellow);
+                Console.Write("World: Loading...");
+                Utility.PopColor();
 
-			int mobileCount = 0, itemCount = 0, guildCount = 0, dataCount = 0;
+                Stopwatch _stopWatch = Stopwatch.StartNew();
 
-			var ctorArgs = new object[1];
+                isLoading_ps = true;
 
-			var items = new List<ItemEntry>();
-			var mobiles = new List<MobileEntry>();
-			var guilds = new List<GuildEntry>();
-			var data = new List<DataEntry>();
+                addQueue_ps = new Queue<IEntity>();
+                deleteQueue_ps = new Queue<IEntity>();
+                customsAddQueue_ps = new Queue<ICustomsEntity>();
+                customsDeleteQueue_ps = new Queue<ICustomsEntity>();
 
-			if (File.Exists(MobileIndexPath) && File.Exists(MobileTypesPath))
-			{
-				using (FileStream idx = new FileStream(MobileIndexPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-				{
-					BinaryReader idxReader = new BinaryReader(idx);
+                int _mobileCount = 0, _itemCount = 0, _guildCount = 0, _dataCount = 0;
 
-					using (FileStream tdb = new FileStream(MobileTypesPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-					{
-						BinaryReader tdbReader = new BinaryReader(tdb);
+                object[] _constructorArgs = new object[1];
 
-						var types = ReadTypes(tdbReader);
+                List<ItemEntry> _itemEntryList = new List<ItemEntry>();
+                List<MobileEntry> _mobileEntryList = new List<MobileEntry>();
+                List<GuildEntry> _guildEntryList = new List<GuildEntry>();
+                List<DataEntry> _dataEntryList = new List<DataEntry>();
 
-                        //Rpi
-                        //Lets look if there is anything before try to read.
-                        //In Rpi, therer is no Arm7 safe code to ReadInt32()
-                        //so we should check it first
-                        if (idxReader.PeekChar() != -1)
-                        {
-                            mobileCount = idxReader.ReadInt32();
-
-                            m_Mobiles = new Dictionary<Serial, Mobile>(mobileCount);
-
-                            for (int i = 0; i < mobileCount; ++i)
-                            {
-                                int typeID = idxReader.ReadInt32();
-                                int serial = idxReader.ReadInt32();
-                                long pos = idxReader.ReadInt64();
-                                int length = idxReader.ReadInt32();
-
-                                var objs = types[typeID];
-
-                                if (objs == null)
-                                {
-                                    continue;
-                                }
-
-                                Mobile m = null;
-                                ConstructorInfo ctor = objs.Item1;
-                                string typeName = objs.Item2;
-
-                                try
-                                {
-                                    ctorArgs[0] = (Serial)serial;
-                                    m = (Mobile)(ctor.Invoke(ctorArgs));
-                                }
-                                catch
-                                { }
-
-                                if (m != null)
-                                {
-                                    mobiles.Add(new MobileEntry(m, typeID, typeName, pos, length));
-                                    AddMobile(m);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            m_Mobiles = new Dictionary<Serial, Mobile>();
-                        }
-
-						tdbReader.Close();
-					}
-
-					idxReader.Close();
-				}
-			}
-			else
-			{
-				m_Mobiles = new Dictionary<Serial, Mobile>();
-			}
-
-			if (File.Exists(ItemIndexPath) && File.Exists(ItemTypesPath))
-			{
-				using (FileStream idx = new FileStream(ItemIndexPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-				{
-					BinaryReader idxReader = new BinaryReader(idx);
-
-					using (FileStream tdb = new FileStream(ItemTypesPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-					{
-						BinaryReader tdbReader = new BinaryReader(tdb);
-
-						var types = ReadTypes(tdbReader);
-
-                        //Rpi
-                        //Lets look if there is anything before try to read.
-                        //In Rpi, therer is no Arm7 safe code to ReadInt32()
-                        //so we should check it first
-                        if (idxReader.PeekChar() != -1)
-                        {
-                            itemCount = idxReader.ReadInt32();
-
-                            m_Items = new Dictionary<Serial, Item>(itemCount);
-
-                            for (int i = 0; i < itemCount; ++i)
-                            {
-                                int typeID = idxReader.ReadInt32();
-                                int serial = idxReader.ReadInt32();
-                                long pos = idxReader.ReadInt64();
-                                int length = idxReader.ReadInt32();
-
-                                var objs = types[typeID];
-
-                                if (objs == null)
-                                {
-                                    continue;
-                                }
-
-                                Item item = null;
-                                ConstructorInfo ctor = objs.Item1;
-                                string typeName = objs.Item2;
-
-                                try
-                                {
-                                    ctorArgs[0] = (Serial)serial;
-                                    item = (Item)(ctor.Invoke(ctorArgs));
-                                }
-                                catch
-                                { }
-
-                                if (item != null)
-                                {
-                                    items.Add(new ItemEntry(item, typeID, typeName, pos, length));
-                                    AddItem(item);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            m_Items = new Dictionary<Serial, Item>();
-                        }
-
-						tdbReader.Close();
-					}
-
-					idxReader.Close();
-				}
-			}
-			else
-			{
-				m_Items = new Dictionary<Serial, Item>();
-			}
-
-			if (File.Exists(GuildIndexPath))
-			{
-				using (FileStream idx = new FileStream(GuildIndexPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-				{
-					BinaryReader idxReader = new BinaryReader(idx);
-
-                    //Rpi
-                    //Lets look if there is anything before try to read.
-                    //In Rpi, therer is no Arm7 safe code to ReadInt32()
-                    //so we should check it first
-                    if (idxReader.PeekChar() != -1)
+                if (File.Exists(mobileIndexPath_sr) && File.Exists(mobileTypesPath_sr))
+                {
+                    using (FileStream _indexFileStream = new FileStream(mobileIndexPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
                     {
-                        guildCount = idxReader.ReadInt32();
+                        BinaryReader _indexBinaryReader = new BinaryReader(_indexFileStream);
 
-                        CreateGuildEventArgs createEventArgs = new CreateGuildEventArgs(-1);
-                        for (int i = 0; i < guildCount; ++i)
+                        using (FileStream _typeDatabaseFileStream = new FileStream(mobileTypesPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
                         {
-                            idxReader.ReadInt32(); //no typeid for guilds
-                            int id = idxReader.ReadInt32();
-                            long pos = idxReader.ReadInt64();
-                            int length = idxReader.ReadInt32();
+                            BinaryReader _typeDatabaseBinaryReader = new BinaryReader(_typeDatabaseFileStream);
 
-                            createEventArgs.Id = id;
-                            EventSink.InvokeCreateGuild(createEventArgs);
-                            BaseGuild guild = createEventArgs.Guild;
-                            if (guild != null)
+                            List<Tuple<ConstructorInfo, string>> _typesTupleList = ReadTypes(_typeDatabaseBinaryReader);
+
+                            //Rpi
+                            //Lets look if there is anything before try to read.
+                            //In Rpi, therer is no Arm7 safe code to ReadInt32()
+                            //so we should check it first
+                            if (_indexBinaryReader.BaseStream.Length > 4)
                             {
-                                guilds.Add(new GuildEntry(guild, pos, length));
+                                _mobileCount = _indexBinaryReader.ReadInt32();
+
+                                mobilesDictionary_ps = new Dictionary<Serial, Mobile>(_mobileCount);
+
+
+                                //Rpi - Optimized for less memory write       
+                                int _typeID;
+                                int _serial;
+                                long _position;
+                                int _length;
+                                Tuple<ConstructorInfo, string> _typeTuple;
+
+                                Mobile _mobile;
+                                ConstructorInfo _constructorInfo;
+                                string _typeName;
+
+                                for (int i = 0; i < _mobileCount; ++i)
+                                {
+                                    _typeID = _indexBinaryReader.ReadInt32();
+                                    _serial = _indexBinaryReader.ReadInt32();
+                                    _position = _indexBinaryReader.ReadInt64();
+                                    _length = _indexBinaryReader.ReadInt32();
+
+                                    _typeTuple = _typesTupleList[_typeID];
+
+                                    if (_typeTuple == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    _mobile = null;
+                                    _constructorInfo = _typeTuple.Item1;
+                                    _typeName = _typeTuple.Item2;
+
+                                    try
+                                    {
+                                        _constructorArgs[0] = (Serial)_serial;
+                                        _mobile = _constructorInfo.Invoke(_constructorArgs) as Mobile;
+                                    }
+                                    catch
+                                    { }
+
+                                    if (_mobile != null)
+                                    {
+                                        _mobileEntryList.Add(new MobileEntry(_mobile, _typeID, _typeName, _position, _length));
+                                        World.AddMobile(_mobile);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //If there is no mobiles to read, creates an empty dictionary
+                                mobilesDictionary_ps = new Dictionary<Serial, Mobile>();
+                            }
+
+                            _typeDatabaseBinaryReader.Close();
+                        }
+
+                        _indexBinaryReader.Close();
+                    }
+                }
+                else
+                {
+                    mobilesDictionary_ps = new Dictionary<Serial, Mobile>();
+                }
+
+                if (File.Exists(itemIndexPath_sr) && File.Exists(itemTypesPath_sr))
+                {
+                    using (FileStream _indexFileStream = new FileStream(itemIndexPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        BinaryReader _indexBinaryReader = new BinaryReader(_indexFileStream);
+
+                        using (FileStream _typeDatabaseFileStream = new FileStream(itemTypesPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
+                        {
+                            BinaryReader _typeDatabaseBinaryReader = new BinaryReader(_typeDatabaseFileStream);
+
+                            List<Tuple<ConstructorInfo, string>> _typesTupleList = ReadTypes(_typeDatabaseBinaryReader);
+
+                            //Rpi
+                            //Lets look if there is anything before try to read.
+                            //In Rpi, therer is no Arm7 safe code to ReadInt32()
+                            //so we should check it first
+                            if (_indexBinaryReader.BaseStream.Length > 4)
+                            {
+                                _itemCount = _indexBinaryReader.ReadInt32();
+
+                                itemsDictionary_ps = new Dictionary<Serial, Item>(_itemCount);
+
+                                //Rpi - Optimized for less memory write  
+
+                                int _typeID;
+                                int _serial;
+                                long _position;
+                                int _length;
+
+                                Tuple<ConstructorInfo, string> _typeTuple;
+                                Item _item;
+                                ConstructorInfo _constructorInfo;
+                                string _typeName;
+
+                                for (int i = 0; i < _itemCount; ++i)
+                                {
+                                    _typeID = _indexBinaryReader.ReadInt32();
+                                    _serial = _indexBinaryReader.ReadInt32();
+                                    _position = _indexBinaryReader.ReadInt64();
+                                    _length = _indexBinaryReader.ReadInt32();
+
+                                    _typeTuple = _typesTupleList[_typeID];
+
+                                    if (_typeTuple == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    _item = null;
+                                    _constructorInfo = _typeTuple.Item1;
+                                    _typeName = _typeTuple.Item2;
+
+                                    try
+                                    {
+                                        _constructorArgs[0] = (Serial)_serial;
+                                        _item = _constructorInfo.Invoke(_constructorArgs) as Item;
+                                    }
+                                    catch
+                                    { }
+
+                                    if (_item != null)
+                                    {
+                                        _itemEntryList.Add(new ItemEntry(_item, _typeID, _typeName, _position, _length));
+                                        World.AddItem(_item);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //If there is no itens to ready, creat an empty dictionary
+                                itemsDictionary_ps = new Dictionary<Serial, Item>();
+                            }
+
+                            _typeDatabaseBinaryReader.Close();
+                        }
+
+                        _indexBinaryReader.Close();
+                    }
+                }
+                else
+                {
+                    itemsDictionary_ps = new Dictionary<Serial, Item>();
+                }
+
+                if (File.Exists(guildIndexPath_sr))
+                {
+                    using (FileStream _indexFileStream = new FileStream(guildIndexPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        BinaryReader _indexBinaryReader = new BinaryReader(_indexFileStream);
+
+                        //Rpi
+                        //Lets look if there is anything before try to read.
+                        //In Rpi, therer is no Arm7 safe code to ReadInt32()
+                        //so we should check it first
+                        if (_indexBinaryReader.BaseStream.Length > 4)
+                        {
+                            _guildCount = _indexBinaryReader.ReadInt32();
+
+                            CreateGuildEventArgs _createGuildEventArgs = new CreateGuildEventArgs(-1);
+
+                            //Rpi - Optimized for less memory write 
+                            int _id;
+                            long _position;
+                            int _length;
+                            BaseGuild _baseGuild;
+
+                            for (int i = 0; i < _guildCount; ++i)
+                            {
+                                /*_typeID = */
+                                _indexBinaryReader.ReadInt32(); //no typeid for guilds
+                                _id = _indexBinaryReader.ReadInt32();
+                                _position = _indexBinaryReader.ReadInt64();
+                                _length = _indexBinaryReader.ReadInt32();
+
+                                _createGuildEventArgs.Id = _id;
+                                EventSink.InvokeCreateGuild(_createGuildEventArgs);
+                                _baseGuild = _createGuildEventArgs.Guild;
+                                if (_baseGuild != null)
+                                {
+                                    _guildEntryList.Add(new GuildEntry(_baseGuild, _position, _length));
+                                }
                             }
                         }
+
+                        _indexBinaryReader.Close();
+                    }
+                }
+
+                if (File.Exists(dataIndexPath_sr) && File.Exists(dataTypesPath_sr))
+                {
+                    using (FileStream _indexFileStream = new FileStream(dataIndexPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        BinaryReader _indexBinaryReader = new BinaryReader(_indexFileStream);
+
+                        using (FileStream _typeDatabaseFileStream = new FileStream(dataTypesPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
+                        {
+                            BinaryReader _typeDatabaseBinaryReader = new BinaryReader(_typeDatabaseFileStream);
+
+                            List<Tuple<ConstructorInfo, string>> types = ReadTypes(_typeDatabaseBinaryReader);
+
+                            //Rpi
+                            //Lets look if there is anything before try to read.
+                            //In Rpi, therer is no Arm7 safe code to ReadInt32()
+                            //so we should check it first
+                            if (_indexBinaryReader.BaseStream.Length > 4)
+                            {
+                                _dataCount = _indexBinaryReader.ReadInt32();
+                                dataDictionary_ps = new Dictionary<CustomSerial, SaveData>(_dataCount);
+
+
+                                int _typeID;
+                                int _serial;
+                                long _position;
+                                int _length;
+
+                                SaveData _saveData;
+                                ConstructorInfo _constructorInfo;
+                                string _typeName;
+
+                                for (int i = 0; i < _dataCount; ++i)
+                                {
+                                    _typeID = _indexBinaryReader.ReadInt32();
+                                    _serial = _indexBinaryReader.ReadInt32();
+                                    _position = _indexBinaryReader.ReadInt64();
+                                    _length = _indexBinaryReader.ReadInt32();
+
+                                    var objects = types[_typeID];
+
+                                    if (objects == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    _saveData = null;
+                                    _constructorInfo = objects.Item1;
+                                    _typeName = objects.Item2;
+
+                                    try
+                                    {
+                                        _constructorArgs[0] = (CustomSerial)_serial;
+                                        _saveData = _constructorInfo.Invoke(_constructorArgs) as SaveData;
+                                    }
+                                    catch
+                                    {
+                                        Utility.PushColor(ConsoleColor.Red);
+                                        Console.WriteLine("Error loading {0}, Serial: {1}", _typeName, _serial);
+                                        Utility.PopColor();
+                                    }
+
+                                    if (_saveData != null)
+                                    {
+                                        _dataEntryList.Add(new DataEntry(_saveData, _typeID, _typeName, _position, _length));
+                                        World.AddData(_saveData);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                dataDictionary_ps = new Dictionary<CustomSerial, SaveData>();
+                            }
+
+                            _typeDatabaseBinaryReader.Close();
+                        }
+
+                        _indexBinaryReader.Close();
+                    }
+                }
+                else
+                {
+                    dataDictionary_ps = new Dictionary<CustomSerial, SaveData>();
+                }
+
+                bool _failedMobiles = false, _failedItems = false, _failedGuilds = false, _failedData = false;
+                Type _failedType = null;
+                Serial _failedSerial = Serial.Zero_sr;
+                CustomSerial _failedCustomSerial = CustomSerial.Zero;
+                Exception _failedException = null;
+                int _failedTypeID = 0;
+
+                if (File.Exists(mobileDataPath_sr))
+                {
+                    using (FileStream _mobileDataFileStream = new FileStream(mobileDataPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        BinaryFileReader _mobileDataBinaryFileReader = new BinaryFileReader(new BinaryReader(_mobileDataFileStream));
+
+                        MobileEntry _mobileEntry;
+                        Mobile _mobile;
+
+                        for (int i = 0; i < _mobileEntryList.Count; ++i)
+                        {
+                            _mobileEntry = _mobileEntryList[i];
+                            _mobile = _mobileEntry.Mobile;
+
+                            if (_mobile != null)
+                            {
+                                _mobileDataBinaryFileReader.Seek(_mobileEntry.Position, SeekOrigin.Begin);
+
+                                try
+                                {
+                                    loadingType_ps = _mobileEntry.TypeName;
+                                    _mobile.Deserialize(_mobileDataBinaryFileReader);
+
+                                    if (_mobileDataBinaryFileReader.Position != (_mobileEntry.Position + _mobileEntry.Length))
+                                    {
+                                        throw new Exception(String.Format("***** Bad serialize on {0} *****", _mobile.GetType()));
+                                    }
+                                }
+                                catch (Exception _exception)
+                                {
+                                    _mobileEntryList.RemoveAt(i);
+
+                                    _failedException = _exception;
+                                    _failedMobiles = true;
+                                    _failedType = _mobile.GetType();
+                                    _failedTypeID = _mobileEntry.TypeID;
+                                    _failedSerial = _mobile.Serial;
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        _mobileDataBinaryFileReader.Close();
+                    }
+                }
+
+                //Rpi - added for safeness
+                loadingType_ps = null;
+
+                if (!_failedMobiles && File.Exists(itemDataPath_sr))
+                {
+                    using (FileStream _itemDataFileStream = new FileStream(itemDataPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        BinaryFileReader _itemDataBinaryFileReader = new BinaryFileReader(new BinaryReader(_itemDataFileStream));
+
+                        ItemEntry _itemEntry;
+                        Item _Item;
+
+                        for (int i = 0; i < _itemEntryList.Count; ++i)
+                        {
+                            _itemEntry = _itemEntryList[i];
+                            _Item = _itemEntry.Item;
+
+                            if (_Item != null)
+                            {
+                                _itemDataBinaryFileReader.Seek(_itemEntry.Position, SeekOrigin.Begin);
+
+                                try
+                                {
+                                    loadingType_ps = _itemEntry.TypeName;
+                                    _Item.Deserialize(_itemDataBinaryFileReader);
+
+                                    if (_itemDataBinaryFileReader.Position != (_itemEntry.Position + _itemEntry.Length))
+                                    {
+                                        throw new Exception(String.Format("***** Bad serialize on {0} *****", _Item.GetType()));
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    _itemEntryList.RemoveAt(i);
+
+                                    _failedException = e;
+                                    _failedItems = true;
+                                    _failedType = _Item.GetType();
+                                    _failedTypeID = _itemEntry.TypeID;
+                                    _failedSerial = _Item.Serial;
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        _itemDataBinaryFileReader.Close();
+                    }
+                }
+
+                loadingType_ps = null;
+
+                if (!_failedMobiles && !_failedItems && File.Exists(guildDataPath_sr))
+                {
+                    using (FileStream _guildDataFileStream = new FileStream(guildDataPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        BinaryFileReader _guildDataBinaryFileReader = new BinaryFileReader(new BinaryReader(_guildDataFileStream));
+
+                        GuildEntry _guildEntry;
+                        BaseGuild _baseGuild;
+
+                        for (int i = 0; i < _guildEntryList.Count; ++i)
+                        {
+                            _guildEntry = _guildEntryList[i];
+                            _baseGuild = _guildEntry.Guild;
+
+                            if (_baseGuild != null)
+                            {
+                                _guildDataBinaryFileReader.Seek(_guildEntry.Position, SeekOrigin.Begin);
+
+                                try
+                                {
+                                    _baseGuild.Deserialize(_guildDataBinaryFileReader);
+
+                                    if (_guildDataBinaryFileReader.Position != (_guildEntry.Position + _guildEntry.Length))
+                                    {
+                                        throw new Exception(String.Format("***** Bad serialize on Guild {0} *****", _baseGuild.Id));
+                                    }
+                                }
+                                catch (Exception _exception)
+                                {
+                                    _guildEntryList.RemoveAt(i);
+
+                                    _failedException = _exception;
+                                    _failedGuilds = true;
+                                    _failedType = typeof(BaseGuild);
+                                    _failedTypeID = _baseGuild.Id;
+                                    _failedSerial = _baseGuild.Id;
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        _guildDataBinaryFileReader.Close();
+                    }
+                }
+
+                loadingType_ps = null;
+
+                if (!_failedMobiles && !_failedItems && !_failedGuilds && File.Exists(dataBinaryPath_sr))
+                {
+                    using (FileStream _dataFileStream = new FileStream(dataBinaryPath_sr, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        BinaryFileReader _dataBinaryFileReader = new BinaryFileReader(new BinaryReader(_dataFileStream));
+
+                        DataEntry _dataEntry;
+                        SaveData _saveData;
+
+                        for (int i = 0; i < _dataEntryList.Count; ++i)
+                        {
+                            _dataEntry = _dataEntryList[i];
+                            _saveData = _dataEntry.Data;
+
+                            if (_saveData != null)
+                            {
+                                _dataBinaryFileReader.Seek(_dataEntry.Position, SeekOrigin.Begin);
+
+                                try
+                                {
+                                    loadingType_ps = _dataEntry.TypeName;
+                                    _saveData.Deserialize(_dataBinaryFileReader);
+
+                                    if (_dataBinaryFileReader.Position != (_dataEntry.Position + _dataEntry.Length))
+                                    {
+                                        throw new Exception(String.Format("***** Bad serialize on {0} *****", _saveData.GetType()));
+                                    }
+                                }
+                                catch (Exception _exception)
+                                {
+                                    _dataEntryList.RemoveAt(i);
+
+                                    _failedException = _exception;
+                                    _failedData = true;
+                                    _failedType = _saveData.GetType();
+                                    _failedTypeID = _dataEntry.TypeID;
+                                    _failedCustomSerial = _saveData.Serial;
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        _dataBinaryFileReader.Close();
+                    }
+                }
+
+                if (_failedItems || _failedMobiles || _failedGuilds || _failedData)
+                {
+                    Utility.PushColor(ConsoleColor.Red);
+                    Console.WriteLine("An error was encountered while loading a saved object");
+                    Utility.PopColor();
+
+                    Console.WriteLine(" - Type: {0}", _failedType);
+
+                    if (_failedSerial != Serial.Zero_sr)
+                    {
+                        Console.WriteLine(" - Serial: {0}", _failedSerial);
+                    }
+                    else
+                    {
+                        Console.WriteLine(" - Serial: {0}", _failedCustomSerial);
                     }
 
-					idxReader.Close();
-				}
-			}
+                    if (!Core.Service)
+                    {
+                        Console.WriteLine("Delete the object? (y/n)");
 
-			if (File.Exists(DataIndexPath) && File.Exists(DataTypesPath))
-			{
-				using (FileStream indexStream = new FileStream(DataIndexPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-				{
-					BinaryReader indexReader = new BinaryReader(indexStream);
-
-					using (FileStream typeStream = new FileStream(DataTypesPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-					{
-						BinaryReader typeReader = new BinaryReader(typeStream);
-
-						var types = ReadTypes(typeReader);
-
-                        //Rpi
-                        //Lets look if there is anything before try to read.
-                        //In Rpi, therer is no Arm7 safe code to ReadInt32()
-                        //so we should check it first
-                        if (indexReader.PeekChar() != -1)
+                        if (Console.ReadKey(true).Key == ConsoleKey.Y)
                         {
-                            dataCount = indexReader.ReadInt32();
-                            _Data = new Dictionary<CustomSerial, SaveData>(dataCount);
-
-                            for (int i = 0; i < dataCount; ++i)
+                            if (_failedType != typeof(BaseGuild))
                             {
-                                int typeID = indexReader.ReadInt32();
-                                int serial = indexReader.ReadInt32();
-                                long pos = indexReader.ReadInt64();
-                                int length = indexReader.ReadInt32();
+                                Console.WriteLine("Delete all objects of that type? (y/n)");
 
-                                var objects = types[typeID];
-
-                                if (objects == null)
+                                if (Console.ReadKey(true).Key == ConsoleKey.Y)
                                 {
-                                    continue;
-                                }
-
-                                SaveData saveData = null;
-                                ConstructorInfo ctor = objects.Item1;
-                                string typeName = objects.Item2;
-
-                                try
-                                {
-                                    ctorArgs[0] = (CustomSerial)serial;
-                                    saveData = (SaveData)(ctor.Invoke(ctorArgs));
-                                }
-                                catch
-                                {
-                                    Utility.PushColor(ConsoleColor.Red);
-                                    Console.WriteLine("Error loading {0}, Serial: {1}", typeName, serial);
-                                    Utility.PopColor();
-                                }
-
-                                if (saveData != null)
-                                {
-                                    data.Add(new DataEntry(saveData, typeID, typeName, pos, length));
-                                    AddData(saveData);
+                                    if (_failedMobiles)
+                                    {
+                                        for (int i = 0; i < _mobileEntryList.Count;)
+                                        {
+                                            if (_mobileEntryList[i].TypeID == _failedTypeID)
+                                            {
+                                                _mobileEntryList.RemoveAt(i);
+                                            }
+                                            else
+                                            {
+                                                ++i;
+                                            }
+                                        }
+                                    }
+                                    else if (_failedItems)
+                                    {
+                                        for (int i = 0; i < _itemEntryList.Count;)
+                                        {
+                                            if (_itemEntryList[i].TypeID == _failedTypeID)
+                                            {
+                                                _itemEntryList.RemoveAt(i);
+                                            }
+                                            else
+                                            {
+                                                ++i;
+                                            }
+                                        }
+                                    }
+                                    else if (_failedData)
+                                    {
+                                        for (int i = 0; i < _dataEntryList.Count;)
+                                        {
+                                            if (_dataEntryList[i].TypeID == _failedTypeID)
+                                            {
+                                                _dataEntryList.RemoveAt(i);
+                                            }
+                                            else
+                                            {
+                                                ++i;
+                                            }
+                                        }
+                                    }
                                 }
                             }
+
+                            World.SaveIndex(_mobileEntryList, mobileIndexPath_sr);
+                            World.SaveIndex(_itemEntryList, itemIndexPath_sr);
+                            World.SaveIndex(_guildEntryList, guildIndexPath_sr);
+                            World.SaveIndex(dataIndexPath_sr, _dataEntryList);
                         }
-                        else
-                        {
-                            _Data = new Dictionary<CustomSerial, SaveData>();
-                        }
 
-						typeReader.Close();
-					}
+                        Console.WriteLine("After pressing return an exception will be thrown and the server will terminate.");
+                        Console.ReadLine();
+                    }
+                    else
+                    {
+                        Utility.PushColor(ConsoleColor.Red);
+                        Console.WriteLine("An exception will be thrown and the server will terminate.");
+                        Utility.PopColor();
+                    }
 
-					indexReader.Close();
-				}
-			}
-			else
-			{
-				_Data = new Dictionary<CustomSerial, SaveData>();
-			}
+                    throw new Exception(
+                        String.Format(
+                            "Load failed (items={0}, mobiles={1}, guilds={2}, data={3}, type={4}, serial={5})",
+                            _failedItems,
+                            _failedMobiles,
+                            _failedGuilds,
+                            _failedData,
+                            _failedType,
+                            (_failedSerial != Serial.Zero_sr ? _failedSerial.ToString() : _failedCustomSerial.ToString())),
+                        _failedException);
+                }
 
-			bool failedMobiles = false, failedItems = false, failedGuilds = false, failedData = false;
-			Type failedType = null;
-			Serial failedSerial = Serial.Zero;
-			CustomSerial failedCustomSerial = CustomSerial.Zero;
-			Exception failed = null;
-			int failedTypeID = 0;
+                EventSink.InvokeWorldLoad();
 
-			if (File.Exists(MobileDataPath))
-			{
-				using (FileStream bin = new FileStream(MobileDataPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-				{
-					BinaryFileReader reader = new BinaryFileReader(new BinaryReader(bin));
+                isLoading_ps = false;
 
-					for (int i = 0; i < mobiles.Count; ++i)
-					{
-						MobileEntry entry = mobiles[i];
-						Mobile m = entry.Mobile;
+                ProcessSafetyQueues();
 
-						if (m != null)
-						{
-							reader.Seek(entry.Position, SeekOrigin.Begin);
+                foreach (Item _item in itemsDictionary_ps.Values)
+                {
+                    if (_item.Parent == null)
+                    {
+                        _item.UpdateTotals();
+                    }
 
-							try
-							{
-								m_LoadingType = entry.TypeName;
-								m.Deserialize(reader);
+                    _item.ClearProperties();
+                }
 
-								if (reader.Position != (entry.Position + entry.Length))
-								{
-									throw new Exception(String.Format("***** Bad serialize on {0} *****", m.GetType()));
-								}
-							}
-							catch (Exception e)
-							{
-								mobiles.RemoveAt(i);
+                foreach (Mobile _mobile in mobilesDictionary_ps.Values)
+                {
+                    _mobile.UpdateRegion(); // Is this really needed?
+                    _mobile.UpdateTotals();
 
-								failed = e;
-								failedMobiles = true;
-								failedType = m.GetType();
-								failedTypeID = entry.TypeID;
-								failedSerial = m.Serial;
+                    _mobile.ClearProperties();
+                }
 
-								break;
-							}
-						}
-					}
+                foreach (SaveData _saveData in dataDictionary_ps.Values)
+                {
+                    _saveData.Prep();
+                }
 
-					reader.Close();
-				}
-			}
+                _stopWatch.Stop();
 
-			if (!failedMobiles && File.Exists(ItemDataPath))
-			{
-				using (FileStream bin = new FileStream(ItemDataPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-				{
-					BinaryFileReader reader = new BinaryFileReader(new BinaryReader(bin));
-
-					for (int i = 0; i < items.Count; ++i)
-					{
-						ItemEntry entry = items[i];
-						Item item = entry.Item;
-
-						if (item != null)
-						{
-							reader.Seek(entry.Position, SeekOrigin.Begin);
-
-							try
-							{
-								m_LoadingType = entry.TypeName;
-								item.Deserialize(reader);
-
-								if (reader.Position != (entry.Position + entry.Length))
-								{
-									throw new Exception(String.Format("***** Bad serialize on {0} *****", item.GetType()));
-								}
-							}
-							catch (Exception e)
-							{
-								items.RemoveAt(i);
-
-								failed = e;
-								failedItems = true;
-								failedType = item.GetType();
-								failedTypeID = entry.TypeID;
-								failedSerial = item.Serial;
-
-								break;
-							}
-						}
-					}
-
-					reader.Close();
-				}
-			}
-
-			m_LoadingType = null;
-
-			if (!failedMobiles && !failedItems && File.Exists(GuildDataPath))
-			{
-				using (FileStream bin = new FileStream(GuildDataPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-				{
-					BinaryFileReader reader = new BinaryFileReader(new BinaryReader(bin));
-
-					for (int i = 0; i < guilds.Count; ++i)
-					{
-						GuildEntry entry = guilds[i];
-						BaseGuild g = entry.Guild;
-
-						if (g != null)
-						{
-							reader.Seek(entry.Position, SeekOrigin.Begin);
-
-							try
-							{
-								g.Deserialize(reader);
-
-								if (reader.Position != (entry.Position + entry.Length))
-								{
-									throw new Exception(String.Format("***** Bad serialize on Guild {0} *****", g.Id));
-								}
-							}
-							catch (Exception e)
-							{
-								guilds.RemoveAt(i);
-
-								failed = e;
-								failedGuilds = true;
-								failedType = typeof(BaseGuild);
-								failedTypeID = g.Id;
-								failedSerial = g.Id;
-
-								break;
-							}
-						}
-					}
-
-					reader.Close();
-				}
-			}
-
-			if (!failedMobiles && !failedItems && !failedGuilds && File.Exists(DataBinaryPath))
-			{
-				using (FileStream stream = new FileStream(DataBinaryPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-				{
-					BinaryFileReader reader = new BinaryFileReader(new BinaryReader(stream));
-
-					for (int i = 0; i < data.Count; ++i)
-					{
-						DataEntry entry = data[i];
-						SaveData saveData = entry.Data;
-
-						if (saveData != null)
-						{
-							reader.Seek(entry.Position, SeekOrigin.Begin);
-
-							try
-							{
-								m_LoadingType = entry.TypeName;
-								saveData.Deserialize(reader);
-
-								if (reader.Position != (entry.Position + entry.Length))
-								{
-									throw new Exception(String.Format("***** Bad serialize on {0} *****", saveData.GetType()));
-								}
-							}
-							catch (Exception error)
-							{
-								data.RemoveAt(i);
-
-								failed = error;
-								failedData = true;
-								failedType = saveData.GetType();
-								failedTypeID = entry.TypeID;
-								failedCustomSerial = saveData.Serial;
-
-								break;
-							}
-						}
-					}
-
-					reader.Close();
-				}
-			}
-
-			if (failedItems || failedMobiles || failedGuilds || failedData)
-			{
-				Utility.PushColor(ConsoleColor.Red);
-				Console.WriteLine("An error was encountered while loading a saved object");
-				Utility.PopColor();
-
-				Console.WriteLine(" - Type: {0}", failedType);
-
-				if (failedSerial != Serial.Zero)
-				{
-					Console.WriteLine(" - Serial: {0}", failedSerial);
-				}
-				else
-				{
-					Console.WriteLine(" - Serial: {0}", failedCustomSerial);
-				}
-
-				if (!Core.Service)
-				{
-					Console.WriteLine("Delete the object? (y/n)");
-
-					if (Console.ReadKey(true).Key == ConsoleKey.Y)
-					{
-						if (failedType != typeof(BaseGuild))
-						{
-							Console.WriteLine("Delete all objects of that type? (y/n)");
-
-							if (Console.ReadKey(true).Key == ConsoleKey.Y)
-							{
-								if (failedMobiles)
-								{
-									for (int i = 0; i < mobiles.Count;)
-									{
-										if (mobiles[i].TypeID == failedTypeID)
-										{
-											mobiles.RemoveAt(i);
-										}
-										else
-										{
-											++i;
-										}
-									}
-								}
-								else if (failedItems)
-								{
-									for (int i = 0; i < items.Count;)
-									{
-										if (items[i].TypeID == failedTypeID)
-										{
-											items.RemoveAt(i);
-										}
-										else
-										{
-											++i;
-										}
-									}
-								}
-								else if (failedData)
-								{
-									for (int i = 0; i < data.Count;)
-									{
-										if (data[i].TypeID == failedTypeID)
-										{
-											data.RemoveAt(i);
-										}
-										else
-										{
-											++i;
-										}
-									}
-								}
-							}
-						}
-
-						SaveIndex(mobiles, MobileIndexPath);
-						SaveIndex(items, ItemIndexPath);
-						SaveIndex(guilds, GuildIndexPath);
-						SaveIndex(DataIndexPath, data);
-					}
-
-					Console.WriteLine("After pressing return an exception will be thrown and the server will terminate.");
-					Console.ReadLine();
-				}
-				else
-				{
-					Utility.PushColor(ConsoleColor.Red);
-					Console.WriteLine("An exception will be thrown and the server will terminate.");
-					Utility.PopColor();
-				}
-
-				throw new Exception(
-					String.Format(
-						"Load failed (items={0}, mobiles={1}, guilds={2}, data={3}, type={4}, serial={5})",
-						failedItems,
-						failedMobiles,
-						failedGuilds,
-						failedData,
-						failedType,
-						(failedSerial != Serial.Zero ? failedSerial.ToString() : failedCustomSerial.ToString())),
-					failed);
-			}
-
-			EventSink.InvokeWorldLoad();
-
-			m_Loading = false;
-
-			ProcessSafetyQueues();
-
-			foreach (Item item in m_Items.Values)
-			{
-				if (item.Parent == null)
-				{
-					item.UpdateTotals();
-				}
-
-				item.ClearProperties();
-			}
-
-			foreach (Mobile m in m_Mobiles.Values)
-			{
-				m.UpdateRegion(); // Is this really needed?
-				m.UpdateTotals();
-
-				m.ClearProperties();
-			}
-
-			foreach (SaveData saveData in _Data.Values)
-			{
-				saveData.Prep();
-			}
-
-			watch.Stop();
-
-			Utility.PushColor(ConsoleColor.Green);
-			Console.WriteLine(
-				"done ({1} items, {2} mobiles, {3} customs) ({0:F2} seconds)",
-				watch.Elapsed.TotalSeconds,
-				m_Items.Count,
-				m_Mobiles.Count,
-				_Data.Count);
-			Utility.PopColor();
-		}
+                Utility.PushColor(ConsoleColor.Green);
+                Console.WriteLine(
+                    "done ({1} items, {2} mobiles, {3} customs) ({0:F2} seconds)",
+                    _stopWatch.Elapsed.TotalSeconds,
+                    itemsDictionary_ps.Count,
+                    mobilesDictionary_ps.Count,
+                    dataDictionary_ps.Count);
+                Utility.PopColor();
+            }
+        }
 
 		private static void ProcessSafetyQueues()
 		{
-			while (_addQueue.Count > 0)
+			while (addQueue_ps.Count > 0)
 			{
-				IEntity entity = _addQueue.Dequeue();
+				IEntity _entity = addQueue_ps.Dequeue();
 
-				Item item = entity as Item;
+                //Rpi - Lets verify what it is, instead of try by brute force
 
-				if (item != null)
+                if(_entity is Item)
+                {
+                    AddItem(_entity as Item);
+                }
+                else if (_entity is Mobile)
+                {
+                    AddMobile(_entity as Mobile);
+                }
+
+                /*
+				Item _item = _entity as Item;
+
+				if (_item != null)
 				{
-					AddItem(item);
+					AddItem(_item);
 				}
 				else
 				{
-					Mobile mob = entity as Mobile;
+					Mobile _mobile = _entity as Mobile;
 
-					if (mob != null)
+					if (_mobile != null)
 					{
-						AddMobile(mob);
+						AddMobile(_mobile);
 					}
-				}
+				}*/
 			}
 
-			while (_deleteQueue.Count > 0)
+			while (deleteQueue_ps.Count > 0)
 			{
-				IEntity entity = _deleteQueue.Dequeue();
+				IEntity _entity = deleteQueue_ps.Dequeue();
 
-				Item item = entity as Item;
+                
+
+                //Rpi - Lets verify what it is, instead of try by brute force
+                if(_entity is Item)
+                {
+                    (_entity as Item).Delete();
+                }
+                else if (_entity is Mobile)
+                {
+                    (_entity as Mobile).Delete();
+                }
+                
+                
+                /*
+                Item item = _entity as Item;
 
 				if (item != null)
 				{
@@ -971,75 +1069,89 @@ namespace Server
 				}
 				else
 				{
-					Mobile mob = entity as Mobile;
+					Mobile mob = _entity as Mobile;
 
 					if (mob != null)
 					{
 						mob.Delete();
 					}
-				}
+				}*/
 			}
 
-			while (_CustomsAddQueue.Count > 0)
+			while (customsAddQueue_ps.Count > 0)
 			{
-				ICustomsEntity entity = _CustomsAddQueue.Dequeue();
+				ICustomsEntity _customEntity = customsAddQueue_ps.Dequeue();
 
-				SaveData data = entity as SaveData;
+                //Rpi - Lets verify what it is, instead of try by brute force
+                if (_customEntity is SaveData)
+                {
+                    AddData(_customEntity as SaveData);
+                }
 
-				if (data != null)
+                /*
+				SaveData _saveData = _entity as SaveData;
+
+				if (_saveData != null)
 				{
-					AddData(data);
-				}
+					AddData(_saveData);
+				}*/
 			}
 
-			while (_CustomsDeleteQueue.Count > 0)
+			while (customsDeleteQueue_ps.Count > 0)
 			{
-				ICustomsEntity entity = _CustomsDeleteQueue.Dequeue();
+				ICustomsEntity _customEntity = customsDeleteQueue_ps.Dequeue();
 
-				SaveData data = entity as SaveData;
+                //Rpi - Lets verify what it is, instead of try by brute force
+                if(_customEntity is SaveData)
+                {
+                    (_customEntity as SaveData).Delete();
+                }
+
+                /*
+                SaveData data = _customEntity as SaveData;
 
 				if (data != null)
 				{
 					data.Delete();
-				}
+				}*/
 			}
 		}
 
-		private static void AppendSafetyLog(string action, ICustomsEntity entity)
+		private static void AppendSafetyLog(string an_action, ICustomsEntity a_customEntity)
 		{
 			string message =
 				String.Format(
 					"Warning: Attempted to {1} {2} during world save." + "{0}This action could cause inconsistent state." +
 					"{0}It is strongly advised that the offending scripts be corrected.",
 					Environment.NewLine,
-					action,
-					entity);
+					an_action,
+					a_customEntity);
 
 			AppendSafetyLog(message);
 		}
 
-		private static void AppendSafetyLog(string action, IEntity entity)
+		private static void AppendSafetyLog(string an_action, IEntity an_entity)
 		{
 			string message =
 				String.Format(
 					"Warning: Attempted to {1} {2} during world save." + "{0}This action could cause inconsistent state." +
 					"{0}It is strongly advised that the offending scripts be corrected.",
 					Environment.NewLine,
-					action,
-					entity);
+					an_action,
+					an_entity);
 
 			AppendSafetyLog(message);
 		}
 
-		private static void AppendSafetyLog(string message)
+		private static void AppendSafetyLog(string a_message)
 		{
-			Console.WriteLine(message);
+			Console.WriteLine(a_message);
 
 			try
 			{
 				using (StreamWriter op = new StreamWriter("world-save-errors.log", true))
 				{
-					op.WriteLine("{0}\t{1}", DateTime.UtcNow, message);
+					op.WriteLine("{0}\t{1}", DateTime.UtcNow, a_message);
 					op.WriteLine(new StackTrace(2).ToString());
 					op.WriteLine();
 				}
@@ -1048,7 +1160,7 @@ namespace Server
 			{ }
 		}
 
-		private static void SaveIndex<T>(List<T> list, string path) where T : IEntityEntry
+		private static void SaveIndex<T>(List<T> a_entityEntryList, string a_path) where T : IEntityEntry
 		{
 			if (!Directory.Exists("Saves/Mobiles/"))
 			{
@@ -1065,89 +1177,95 @@ namespace Server
 				Directory.CreateDirectory("Saves/Guilds/");
 			}
 
-			using (FileStream idx = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+			using (FileStream _indexFileStream = new FileStream(a_path, FileMode.Create, FileAccess.Write, FileShare.None))
 			{
-				BinaryWriter idxWriter = new BinaryWriter(idx);
+				BinaryWriter _indexBinaryWriter = new BinaryWriter(_indexFileStream);
 
-				idxWriter.Write(list.Count);
+				_indexBinaryWriter.Write(a_entityEntryList.Count);
 
-				for (int i = 0; i < list.Count; ++i)
+                T _entityEntry;
+
+				for (int i = 0; i < a_entityEntryList.Count; ++i)
 				{
-					T e = list[i];
+					_entityEntry = a_entityEntryList[i];
 
-					idxWriter.Write(e.TypeID);
-					idxWriter.Write(e.Serial);
-					idxWriter.Write(e.Position);
-					idxWriter.Write(e.Length);
+					_indexBinaryWriter.Write(_entityEntry.TypeID);
+					_indexBinaryWriter.Write(_entityEntry.Serial);
+					_indexBinaryWriter.Write(_entityEntry.Position);
+					_indexBinaryWriter.Write(_entityEntry.Length);
 				}
 
-				idxWriter.Close();
+				_indexBinaryWriter.Close();
 			}
 		}
 
-		private static void SaveIndex<T>(string path, List<T> list) where T : ICustomsEntry
+		private static void SaveIndex<T>(string a_path, List<T> a_customEntryList) where T : ICustomsEntry
 		{
 			if (!Directory.Exists("Saves/Customs/"))
 			{
 				Directory.CreateDirectory("Saves/Customs/");
 			}
 
-			using (FileStream indexStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+			using (FileStream _indexFileStream = new FileStream(a_path, FileMode.Create, FileAccess.Write, FileShare.None))
 			{
-				BinaryWriter indexWriter = new BinaryWriter(indexStream);
+				BinaryWriter _indexBinaryWriter = new BinaryWriter(_indexFileStream);
 
-				indexWriter.Write(list.Count);
+				_indexBinaryWriter.Write(a_customEntryList.Count);
 
-				for (int i = 0; i < list.Count; ++i)
+                T _customEntry;
+
+				for (int i = 0; i < a_customEntryList.Count; ++i)
 				{
-					T e = list[i];
+					_customEntry = a_customEntryList[i];
 
-					indexWriter.Write(e.TypeID);
-					indexWriter.Write(e.Serial);
-					indexWriter.Write(e.Position);
-					indexWriter.Write(e.Length);
+					_indexBinaryWriter.Write(_customEntry.TypeID);
+					_indexBinaryWriter.Write(_customEntry.Serial);
+					_indexBinaryWriter.Write(_customEntry.Position);
+					_indexBinaryWriter.Write(_customEntry.Length);
 				}
 
-				indexWriter.Close();
+				_indexBinaryWriter.Close();
 			}
 		}
 
-		internal static int m_Saves;
+		internal static int saves_is;
 
 		public static void Save()
 		{
 			Save(true, false);
 		}
 
-		public static void Save(bool message, bool permitBackgroundWrite)
+        //Rpi - There is a memory leak during the save, adding about 1MB of data to ram memory
+        //TODO - find what function does have the leak
+		public static void Save(bool a_message, bool is_permitedBackgroundWrite)
 		{
-			if (m_Saving)
+			if (isSaving_ps)
 			{
 				return;
 			}
 
-			++m_Saves;
+			++saves_is;
 
 			NetState.FlushAll();
 			NetState.Pause();
 
 			WaitForWriteCompletion(); //Blocks Save until current disk flush is done.
 
-			m_Saving = true;
+			isSaving_ps = true;
 
-			m_DiskWriteHandle.Reset();
+			diskWriteHandle_psr.Reset();
 
-			if (message)
+			if (a_message)
 			{
 				Broadcast(0x35, true, "The world is saving, please wait.");
 			}
 
-			SaveStrategy strategy = SaveStrategy.Acquire();
-			Console.WriteLine("Core: Using {0} save strategy", strategy.Name.ToLowerInvariant());
+			SaveStrategy _saveStrategy = SaveStrategy.Acquire();
+			Console.WriteLine("Core: Using {0} save strategy", _saveStrategy.Name.ToLowerInvariant());
 
 			Console.Write("World: Saving...");
 
-			Stopwatch watch = Stopwatch.StartNew();
+			Stopwatch _stopWatch = Stopwatch.StartNew();
 
 			if (!Directory.Exists("Saves/Mobiles/"))
 			{
@@ -1167,23 +1285,23 @@ namespace Server
 			}
 
 			/*using ( SaveMetrics metrics = new SaveMetrics() ) {*/
-			strategy.Save(null, permitBackgroundWrite);
+			_saveStrategy.Save(null, is_permitedBackgroundWrite);
 			/*}*/
 
 			try
 			{
-				EventSink.InvokeWorldSave(new WorldSaveEventArgs(message));
+				EventSink.InvokeWorldSave(new WorldSaveEventArgs(a_message));
 			}
 			catch (Exception e)
 			{
 				throw new Exception("World Save event threw an exception.  Save failed!", e);
 			}
 
-			watch.Stop();
+			_stopWatch.Stop();
 
-			m_Saving = false;
+			isSaving_ps = false;
 
-			if (!permitBackgroundWrite)
+			if (!is_permitedBackgroundWrite)
 			{
 				NotifyDiskWriteComplete();
 				//Sets the DiskWriteHandle.  If we allow background writes, we leave this upto the individual save strategies.
@@ -1191,310 +1309,278 @@ namespace Server
 
 			ProcessSafetyQueues();
 
-			strategy.ProcessDecay();
+			_saveStrategy.ProcessDecay();
 
-			Console.WriteLine("Save finished in {0:F2} seconds.", watch.Elapsed.TotalSeconds);
+			Console.WriteLine("Save finished in {0:F2} seconds.", _stopWatch.Elapsed.TotalSeconds);
 
-			if (message)
+			if (a_message)
 			{
-				Broadcast(0x35, true, "World save complete. The entire process took {0:F1} seconds.", watch.Elapsed.TotalSeconds);
+				Broadcast(0x35, true, "World save complete. The entire process took {0:F1} seconds.", _stopWatch.Elapsed.TotalSeconds);
 			}
 
 			NetState.Resume();
 		}
 
-		internal static List<Type> m_ItemTypes = new List<Type>();
-		internal static List<Type> m_MobileTypes = new List<Type>();
-		internal static List<Type> _DataTypes = new List<Type>();
+		internal static List<Type> itemTypesList_is = new List<Type>();
+		internal static List<Type> mobileTypesList_is = new List<Type>();
+		internal static List<Type> dataTypesList_is = new List<Type>();
 
-		public static IEntity FindEntity(Serial serial)
+		public static IEntity FindEntity(Serial a_serial)
 		{
-			if (serial.IsItem)
+			if (a_serial.IsItem)
 			{
-				return FindItem(serial);
+				return FindItem(a_serial);
 			}
-			else if (serial.IsMobile)
+			else if (a_serial.IsMobile)
 			{
-				return FindMobile(serial);
-			}
-
-			return null;
-		}
-
-		public static ICustomsEntity FindCustomEntity(CustomSerial serial)
-		{
-			if (serial.IsValid)
-			{
-				return GetData(serial);
+				return FindMobile(a_serial);
 			}
 
 			return null;
 		}
 
-		public static Mobile FindMobile(Serial serial)
+		public static ICustomsEntity FindCustomEntity(CustomSerial a_serial)
 		{
-			Mobile mob;
+			if (a_serial.IsValid)
+			{
+				return GetData(a_serial);
+			}
 
-			m_Mobiles.TryGetValue(serial, out mob);
-
-			return mob;
+			return null;
 		}
 
-		public static void AddMobile(Mobile m)
+		public static Mobile FindMobile(Serial a_serial)
 		{
-			if (m_Saving)
+			Mobile _mobile;
+
+			mobilesDictionary_ps.TryGetValue(a_serial, out _mobile);
+
+			return _mobile;
+		}
+
+		public static void AddMobile(Mobile a_mobile)
+		{
+			if (isSaving_ps)
 			{
-				AppendSafetyLog("add", m);
-				_addQueue.Enqueue(m);
+				AppendSafetyLog("add", a_mobile);
+				addQueue_ps.Enqueue(a_mobile);
 			}
 			else
 			{
-				m_Mobiles[m.Serial] = m;
+				mobilesDictionary_ps[a_mobile.Serial] = a_mobile;
 			}
 		}
 
-		public static Item FindItem(Serial serial)
+		public static Item FindItem(Serial a_serial)
 		{
-			Item item;
+			Item an_item;
 
-			m_Items.TryGetValue(serial, out item);
+			itemsDictionary_ps.TryGetValue(a_serial, out an_item);
 
-			return item;
+			return an_item;
 		}
 
-		public static void AddItem(Item item)
+		public static void AddItem(Item an_item)
 		{
-			if (m_Saving)
+			if (isSaving_ps)
 			{
-				AppendSafetyLog("add", item);
-				_addQueue.Enqueue(item);
-			}
-			else
-			{
-				m_Items[item.Serial] = item;
-			}
-		}
-
-		public static void RemoveMobile(Mobile m)
-		{
-			m_Mobiles.Remove(m.Serial);
-		}
-
-		public static void RemoveItem(Item item)
-		{
-			m_Items.Remove(item.Serial);
-		}
-
-		public static void AddData(SaveData data)
-		{
-			if (m_Saving)
-			{
-				AppendSafetyLog("add", data);
-				_CustomsAddQueue.Enqueue(data);
+				AppendSafetyLog("add", an_item);
+				addQueue_ps.Enqueue(an_item);
 			}
 			else
 			{
-				_Data[data.Serial] = data;
+				itemsDictionary_ps[an_item.Serial] = an_item;
 			}
 		}
 
-		public static void RemoveData(SaveData data)
+		public static void RemoveMobile(Mobile a_mobile)
 		{
-			_Data.Remove(data.Serial);
+			mobilesDictionary_ps.Remove(a_mobile.Serial);
 		}
 
-		public static SaveData GetData(CustomSerial serial)
+		public static void RemoveItem(Item an_item)
 		{
-			SaveData data;
-
-			_Data.TryGetValue(serial, out data);
-
-			return data;
+			itemsDictionary_ps.Remove(an_item.Serial);
 		}
 
-		public static SaveData GetData(string name)
+		public static void AddData(SaveData a_saveData)
 		{
-			foreach (SaveData data in _Data.Values)
+			if (isSaving_ps)
 			{
-				if (data.Name == name)
+				AppendSafetyLog("add", a_saveData);
+				customsAddQueue_ps.Enqueue(a_saveData);
+			}
+			else
+			{
+				dataDictionary_ps[a_saveData.Serial] = a_saveData;
+			}
+		}
+
+		public static void RemoveData(SaveData a_saveData)
+		{
+			dataDictionary_ps.Remove(a_saveData.Serial);
+		}
+
+		public static SaveData GetData(CustomSerial a_customSerial)
+		{
+			SaveData a_saveData;
+
+			dataDictionary_ps.TryGetValue(a_customSerial, out a_saveData);
+
+			return a_saveData;
+		}
+
+		public static SaveData GetData(string a_name)
+		{
+			foreach (SaveData a_saveData in dataDictionary_ps.Values)
+			{
+				if (a_saveData.Name == a_name)
 				{
-					return data;
+					return a_saveData;
 				}
 			}
 
 			return null;
 		}
 
-		public static SaveData GetData(Type type)
+		public static SaveData GetData(Type a_type)
 		{
-			foreach (SaveData data in _Data.Values)
+			foreach (SaveData a_saveData in dataDictionary_ps.Values)
 			{
-				if (data.GetType() == type)
+				if (a_saveData.GetType() == a_type)
 				{
-					return data;
+					return a_saveData;
 				}
 			}
 
 			return null;
 		}
 
-		public static List<SaveData> GetDataList(Type type)
+		public static List<SaveData> GetDataList(Type a_type)
 		{
-			var results = new List<SaveData>();
+			List<SaveData> _saveDataList = new List<SaveData>();
 
-			foreach (SaveData data in _Data.Values)
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
 			{
-				if (data.GetType() == type)
+				if (_saveData.GetType() == a_type)
 				{
-					results.Add(data);
+					_saveDataList.Add(_saveData);
 				}
 			}
 
-			return results;
+			return _saveDataList;
 		}
 
-		public static List<SaveData> SearchData(string find)
+		public static List<SaveData> SearchData(string a_search)
 		{
-			var keywords = find.ToLower().Split(' ');
-			var results = new List<SaveData>();
+			string[] keywords = a_search.ToLower().Split(' ');
+			List<SaveData> _saveDataList = new List<SaveData>();
 
-			foreach (SaveData data in _Data.Values)
+            bool _isMatch;
+            string _name;
+
+			foreach (SaveData _SaveData in dataDictionary_ps.Values)
 			{
-				bool match = true;
-				string name = data.Name.ToLower();
+				_isMatch = true;
+				_name = _SaveData.Name.ToLower();
 
 				for (int i = 0; i < keywords.Length; i++)
 				{
-					if (name.IndexOf(keywords[i]) == -1)
+					if (_name.IndexOf(keywords[i]) == -1)
 					{
-						match = false;
+						_isMatch = false;
 					}
 				}
 
-				if (match)
+				if (_isMatch)
 				{
-					results.Add(data);
+                    _saveDataList.Add(_SaveData);
 				}
 			}
 
-			return results;
+			return _saveDataList;
 		}
 
-		public static SaveData GetCore(Type type)
+		public static SaveData GetCore(Type a_type)
 		{
-			foreach (SaveData data in _Data.Values)
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
 			{
-				if (data.GetType() == type)
+				if (_saveData.GetType() == a_type)
 				{
-					return data;
+					return _saveData;
 				}
 			}
 
 			return null;
 		}
 
-		public static List<SaveData> GetCores(Type type)
+		public static List<SaveData> GetCores(Type a_type)
 		{
-			var results = new List<SaveData>();
+			List<SaveData> _saveDataList = new List<SaveData>();
 
-			foreach (SaveData data in _Data.Values)
+			foreach (SaveData a_saveData in dataDictionary_ps.Values)
 			{
-				if (data.GetType() == type)
+				if (a_saveData.GetType() == a_type)
 				{
-					results.Add(data);
+                    _saveDataList.Add(a_saveData);
 				}
 			}
 
-			return results;
+			return _saveDataList;
 		}
 
-		public static BaseModule GetModule(Mobile mobile)
+		public static BaseModule GetModule(Mobile a_mobile)
 		{
-			foreach (SaveData data in _Data.Values)
+            BaseModule _baseModule;
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
 			{
-				if (data is BaseModule)
+				if (_saveData is BaseModule)
 				{
-					BaseModule module = data as BaseModule;
+                    _baseModule = _saveData as BaseModule;
 
-					if (module.LinkedMobile == mobile)
-					{
-						return module;
-					}
-				}
-			}
-
-			return null;
-		}
-
-		public static List<BaseModule> GetModules(Mobile mobile)
-		{
-			var results = new List<BaseModule>();
-
-			foreach (SaveData data in _Data.Values)
-			{
-				if (data is BaseModule)
-				{
-					BaseModule module = data as BaseModule;
-
-					if (module.LinkedMobile == mobile)
-					{
-						results.Add(module);
-					}
-				}
-			}
-
-			return results;
-		}
-
-		public static BaseModule GetModule(Item item)
-		{
-			foreach (SaveData data in _Data.Values)
-			{
-				if (data is BaseModule)
-				{
-					BaseModule module = data as BaseModule;
-
-					if (module.LinkedItem == item)
-					{
-						return module;
-					}
+                    if (_baseModule.LinkedMobile == a_mobile)
+                    {
+                        return _baseModule;
+                    }
 				}
 			}
 
 			return null;
 		}
 
-		public static List<BaseModule> GetModules(Item item)
+		public static List<BaseModule> GetModules(Mobile a_mobile)
 		{
-			var results = new List<BaseModule>();
+			List<BaseModule> _baseModuleList = new List<BaseModule>();
 
-			foreach (SaveData data in _Data.Values)
+            BaseModule _baseModule;
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
 			{
-				if (data is BaseModule)
+				if (_saveData is BaseModule)
 				{
-					BaseModule module = data as BaseModule;
+                    _baseModule = _saveData as BaseModule;
 
-					if (module.LinkedItem == item)
+					if (_baseModule.LinkedMobile == a_mobile)
 					{
-						results.Add(module);
+						_baseModuleList.Add(_baseModule);
 					}
 				}
 			}
 
-			return results;
+			return _baseModuleList;
 		}
 
-		public static BaseModule GetModule(Mobile mobile, string name)
+		public static BaseModule GetModule(Item an_item)
 		{
-			foreach (SaveData data in _Data.Values)
+            BaseModule _baseModule;
+			foreach (SaveData data in dataDictionary_ps.Values)
 			{
 				if (data is BaseModule)
 				{
-					BaseModule module = data as BaseModule;
+					_baseModule = data as BaseModule;
 
-					if (module.Name == name && module.LinkedMobile == mobile)
+					if (_baseModule.LinkedItem == an_item)
 					{
-						return module;
+						return _baseModule;
 					}
 				}
 			}
@@ -1502,55 +1588,39 @@ namespace Server
 			return null;
 		}
 
-		public static List<BaseModule> GetModules(Mobile mobile, string name)
+		public static List<BaseModule> GetModules(Item an_item)
 		{
-			var results = new List<BaseModule>();
+			List<BaseModule> _baseModuleList = new List<BaseModule>();
 
-			foreach (SaveData data in _Data.Values)
+            BaseModule _baseModule;
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
 			{
-				if (data is BaseModule)
+				if (_saveData is BaseModule)
 				{
-					BaseModule module = data as BaseModule;
+                    _baseModule = _saveData as BaseModule;
 
-					if (module.Name == name && module.LinkedMobile == mobile)
+					if (_baseModule.LinkedItem == an_item)
 					{
-						results.Add(module);
+						_baseModuleList.Add(_baseModule);
 					}
 				}
 			}
 
-			return results;
+			return _baseModuleList;
 		}
 
-		public static BaseModule GetModule(Mobile mobile, Type type)
+		public static BaseModule GetModule(Mobile a_mobile, string a_baseModuleName)
 		{
-			foreach (SaveData data in _Data.Values)
+            BaseModule _baseModule;
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
 			{
-				if (data is BaseModule)
+				if (_saveData is BaseModule)
 				{
-					BaseModule module = data as BaseModule;
+                    _baseModule = _saveData as BaseModule;
 
-					if (module.GetType() == type && module.LinkedMobile == mobile)
+                    if (_baseModule.Name == a_baseModuleName && _baseModule.LinkedMobile == a_mobile)
 					{
-						return module;
-					}
-				}
-			}
-
-			return null;
-		}
-
-		public static BaseModule GetModule(Item item, string name)
-		{
-			foreach (SaveData data in _Data.Values)
-			{
-				if (data is BaseModule)
-				{
-					BaseModule module = data as BaseModule;
-
-					if (module.Name == name && module.LinkedItem == item)
-					{
-						return module;
+						return _baseModule;
 					}
 				}
 			}
@@ -1558,37 +1628,39 @@ namespace Server
 			return null;
 		}
 
-		public static List<BaseModule> GetModules(Item item, string name)
+		public static List<BaseModule> GetModules(Mobile a_mobile, string a_baseModuleName)
 		{
-			var results = new List<BaseModule>();
+		    List<BaseModule> _baseModuleList = new List<BaseModule>();
 
-			foreach (SaveData data in _Data.Values)
+            BaseModule _baseModule;
+            foreach (SaveData _saveData in dataDictionary_ps.Values)
 			{
-				if (data is BaseModule)
+				if (_saveData is BaseModule)
 				{
-					BaseModule module = data as BaseModule;
+                    _baseModule = _saveData as BaseModule;
 
-					if (module.Name == name && module.LinkedItem == item)
+					if (_baseModule.Name == a_baseModuleName && _baseModule.LinkedMobile == a_mobile)
 					{
-						results.Add(module);
+						_baseModuleList.Add(_baseModule);
 					}
 				}
 			}
 
-			return results;
+			return _baseModuleList;
 		}
 
-		public static BaseModule GetModule(Item item, Type type)
+		public static BaseModule GetModule(Mobile a_mobile, Type a_type)
 		{
-			foreach (SaveData data in _Data.Values)
+            BaseModule _baseModule;
+			foreach (SaveData _SaveData in dataDictionary_ps.Values)
 			{
-				if (data is BaseModule)
+				if (_SaveData is BaseModule)
 				{
-					BaseModule module = data as BaseModule;
+                    _baseModule = _SaveData as BaseModule;
 
-					if (module.GetType() == type && module.LinkedItem == item)
+					if (_baseModule.GetType() == a_type && _baseModule.LinkedMobile == a_mobile)
 					{
-						return module;
+						return _baseModule;
 					}
 				}
 			}
@@ -1596,68 +1668,134 @@ namespace Server
 			return null;
 		}
 
-		public static List<BaseModule> SearchModules(Mobile mobile, string text)
+		public static BaseModule GetModule(Item an_item, string a_baseModuleName)
 		{
-			var keywords = text.ToLower().Split(' ');
-			var results = new List<BaseModule>();
-
-			foreach (SaveData data in _Data.Values)
+            BaseModule _baseModule;
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
 			{
-				if (data is BaseModule)
+				if (_saveData is BaseModule)
 				{
-					BaseModule module = data as BaseModule;
+					_baseModule = _saveData as BaseModule;
 
-					bool match = true;
-					string name = module.Name.ToLower();
-
-					for (int i = 0; i < keywords.Length; i++)
+					if (_baseModule.Name == a_baseModuleName && _baseModule.LinkedItem == an_item)
 					{
-						if (name.IndexOf(keywords[i]) == -1)
+						return _baseModule;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		public static List<BaseModule> GetModules(Item an_item, string a_baseModuleName)
+		{
+			List<BaseModule> _baseModuleList = new List<BaseModule>();
+
+            BaseModule _baseModule;
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
+			{
+				if (_saveData is BaseModule)
+				{
+                    _baseModule = _saveData as BaseModule;
+
+					if (_baseModule.Name == a_baseModuleName && _baseModule.LinkedItem == an_item)
+					{
+						_baseModuleList.Add(_baseModule);
+					}
+				}
+			}
+
+			return _baseModuleList;
+		}
+
+		public static BaseModule GetModule(Item an_item, Type an_type)
+		{
+            BaseModule _baseModule;
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
+			{
+				if (_saveData is BaseModule)
+				{
+					_baseModule = _saveData as BaseModule;
+
+					if (_baseModule.GetType() == an_type && _baseModule.LinkedItem == an_item)
+					{
+						return _baseModule;
+					}
+				}
+			}
+
+			return null;
+		}
+
+		public static List<BaseModule> SearchModules(Mobile a_mobile, string a_search)
+		{
+			string[] _searchArray = a_search.ToLower().Split(' ');
+			List<BaseModule> _baseModuleList = new List<BaseModule>();
+
+            BaseModule _baseModule;
+            bool _isMatch;
+            string _moduleName;
+
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
+			{
+				if (_saveData is BaseModule)
+				{
+				    _baseModule = _saveData as BaseModule;
+
+					_isMatch = true;
+					_moduleName = _baseModule.Name.ToLower();
+
+					for (int i = 0; i < _searchArray.Length; i++)
+					{
+						if (_moduleName.IndexOf(_searchArray[i]) == -1)
 						{
-							match = false;
+							_isMatch = false;
 						}
 					}
 
-					if (match && module.LinkedMobile == mobile)
+					if (_isMatch && _baseModule.LinkedMobile == a_mobile)
 					{
-						results.Add(module);
+						_baseModuleList.Add(_baseModule);
 					}
 				}
 			}
 
-			return results;
+			return _baseModuleList;
 		}
 
-		public static List<BaseModule> SearchModules(Item item, string text)
+		public static List<BaseModule> SearchModules(Item an_item, string a_baseModuleName)
 		{
-			var keywords = text.ToLower().Split(' ');
-			var results = new List<BaseModule>();
+			string[] _namesArray = a_baseModuleName.ToLower().Split(' ');
+			List<BaseModule> _baseModulesList = new List<BaseModule>();
 
-			foreach (SaveData data in _Data.Values)
+            BaseModule _baseModule;
+            bool _isMatch;
+            string _name;
+			foreach (SaveData _saveData in dataDictionary_ps.Values)
 			{
-				if (data is BaseModule)
+				if (_saveData is BaseModule)
 				{
-					BaseModule module = data as BaseModule;
+					_baseModule = _saveData as BaseModule;
 
-					bool match = true;
-					string name = module.Name.ToLower();
+					_isMatch = true;
+					_name = _baseModule.Name.ToLower();
 
-					for (int i = 0; i < keywords.Length; i++)
+					for (int i = 0; i < _namesArray.Length; i++)
 					{
-						if (name.IndexOf(keywords[i]) == -1)
+						if (_name.IndexOf(_namesArray[i]) == -1)
 						{
-							match = false;
+							_isMatch = false;
 						}
 					}
 
-					if (match && module.LinkedItem == item)
+					if (_isMatch && _baseModule.LinkedItem == an_item)
 					{
-						results.Add(module);
+						_baseModulesList.Add(_baseModule);
 					}
 				}
 			}
 
-			return results;
+			return _baseModulesList;
 		}
 	}
 }

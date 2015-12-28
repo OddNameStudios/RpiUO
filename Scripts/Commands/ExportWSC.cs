@@ -22,7 +22,7 @@ namespace Server.Commands
             e.Mobile.SendMessage("Exporting all static items to \"{0}\"...", ExportFile);
             e.Mobile.SendMessage("This will delete all static items in the world.  Please make a backup.");
 
-            foreach (Item item in World.Items.Values)
+            foreach (Item item in World.ItemsDictionary_s.Values)
             {
                 if ((item is Static || item is BaseFloor || item is BaseWall) &&
                     item.RootParent == null)

@@ -319,7 +319,7 @@ namespace Server
 
 				while (!Core.Closing)
 				{
-					if (World.Loading || World.Saving)
+					if (World.IsLoading_s || World.IsSaving_s)
 					{
 						m_Signal.WaitOne(1, false);
 						continue;

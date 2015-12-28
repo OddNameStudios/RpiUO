@@ -48,8 +48,8 @@ namespace Server.Items
                 from.PlaySound(0x1F7);
                 from.FixedParticles(0x3709, 1, 30, 9963, 13, 3, EffectLayer.Head);
 
-                IEntity mfrom = new Entity(Serial.Zero, new Point3D(from.X, from.Y, from.Z - 10), from.Map);
-                IEntity mto = new Entity(Serial.Zero, new Point3D(from.X, from.Y, from.Z + 50), from.Map);
+                IEntity mfrom = new Entity(Serial.Zero_sr, new Point3D(from.X, from.Y, from.Z - 10), from.Map);
+                IEntity mto = new Entity(Serial.Zero_sr, new Point3D(from.X, from.Y, from.Z + 50), from.Map);
                 Effects.SendMovingParticles(mfrom, mto, 0x2255, 1, 0, false, false, 13, 3, 9501, 1, 0, EffectLayer.Head, 0x100);
 
                 StatMod mod;

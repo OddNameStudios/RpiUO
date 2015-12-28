@@ -1,6 +1,8 @@
 #region Header
 // **********
-// ServUO - Geometry.cs
+// RpiUO - Geometry.cs
+// Last Edit: 2015/12/28
+// Look for Rpi comment
 // **********
 #endregion
 
@@ -36,7 +38,8 @@ namespace Server
 
 		public override string ToString()
 		{
-			return String.Format("({0}, {1})", m_X, m_Y);
+            //RPi - Convert the integers using a look uo table. It is faster!
+			return String.Format("({0}, {1})", m_X.TostringLookup(), m_Y.TostringLookup());
 		}
 
 		public static Point2D Parse(string value)
@@ -243,7 +246,7 @@ namespace Server
 
 		public override string ToString()
 		{
-			return String.Format("({0}, {1}, {2})", m_X, m_Y, m_Z);
+			return String.Format("({0}, {1}, {2})", m_X.TostringLookup(), m_Y.TostringLookup(), m_Z.TostringLookup());
 		}
 
 		public override bool Equals(object o)
@@ -457,7 +460,7 @@ namespace Server
 
 		public override string ToString()
 		{
-			return String.Format("({0}, {1})+({2}, {3})", X, Y, Width, Height);
+			return String.Format("({0}, {1})+({2}, {3})", X.TostringLookup(), Y.TostringLookup(), Width.TostringLookup(), Height.TostringLookup());
 		}
 	}
 

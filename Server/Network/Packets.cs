@@ -388,7 +388,7 @@ namespace Server.Network
 			EnsureCapacity(256);
 
 			Container BuyPack = vendor.FindItemOnLayer(Layer.ShopBuy) as Container;
-			m_Stream.Write((BuyPack == null ? Serial.MinusOne : BuyPack.Serial));
+			m_Stream.Write((BuyPack == null ? Serial.MinusOne_sr : BuyPack.Serial));
 
 			m_Stream.Write((byte)list.Count);
 
@@ -476,7 +476,7 @@ namespace Server.Network
 			: base(0xAF, 13)
 		{
 			m_Stream.Write(killed.Serial);
-			m_Stream.Write((corpse == null ? Serial.Zero : corpse.Serial));
+			m_Stream.Write((corpse == null ? Serial.Zero_sr : corpse.Serial));
 			m_Stream.Write(0);
 		}
 	}
@@ -626,7 +626,7 @@ namespace Server.Network
 		public ChangeCombatant(Mobile combatant)
 			: base(0xAA, 5)
 		{
-			m_Stream.Write(combatant != null ? combatant.Serial : Serial.Zero);
+			m_Stream.Write(combatant != null ? combatant.Serial : Serial.Zero_sr);
 		}
 	}
 
@@ -965,7 +965,7 @@ namespace Server.Network
 
 			IEntity target = menu.Target as IEntity;
 
-			m_Stream.Write((target == null ? Serial.MinusOne : target.Serial));
+			m_Stream.Write((target == null ? Serial.MinusOne_sr : target.Serial));
 
 			m_Stream.Write((byte)length);
 
@@ -1023,7 +1023,7 @@ namespace Server.Network
 
 			IEntity target = menu.Target as IEntity;
 
-			m_Stream.Write((target == null ? Serial.MinusOne : target.Serial));
+			m_Stream.Write((target == null ? Serial.MinusOne_sr : target.Serial));
 
 			m_Stream.Write((byte)length);
 
@@ -1099,7 +1099,7 @@ namespace Server.Network
 
 			EnsureCapacity(12 + header.Length + (footer.Length * 2) + (body.Length * 2));
 
-			m_Stream.Write((realSerial ? m.Serial : Serial.Zero));
+			m_Stream.Write((realSerial ? m.Serial : Serial.Zero_sr));
 			m_Stream.WriteAsciiNull(header);
 			m_Stream.WriteBigUniNull(footer);
 			m_Stream.WriteBigUniNull(body);
@@ -1133,7 +1133,7 @@ namespace Server.Network
 			else
 			{
 				Console.WriteLine("Warning: EquipUpdate on item with !(parent is Mobile)");
-				parentSerial = Serial.Zero;
+				parentSerial = Serial.Zero_sr;
 			}
 
 			int hue = item.Hue;
@@ -1702,7 +1702,7 @@ namespace Server.Network
 			: base(
 				EffectType.FixedFrom,
 				e.Serial,
-				Serial.Zero,
+				Serial.Zero_sr,
 				itemID,
 				e.Location,
 				e.Location,
@@ -1727,7 +1727,7 @@ namespace Server.Network
 			: base(
 				EffectType.FixedFrom,
 				e.Serial,
-				Serial.Zero,
+				Serial.Zero_sr,
 				itemID,
 				e.Location,
 				e.Location,
@@ -1747,7 +1747,7 @@ namespace Server.Network
 			: base(
 				EffectType.FixedXYZ,
 				e.Serial,
-				Serial.Zero,
+				Serial.Zero_sr,
 				itemID,
 				e.Location,
 				e.Location,
@@ -1769,7 +1769,7 @@ namespace Server.Network
 	public sealed class LocationEffect : HuedEffect
 	{
 		public LocationEffect(IPoint3D p, int itemID, int speed, int duration, int hue, int renderMode)
-			: base(EffectType.FixedXYZ, Serial.Zero, Serial.Zero, itemID, p, p, speed, duration, true, false, hue, renderMode)
+			: base(EffectType.FixedXYZ, Serial.Zero_sr, Serial.Zero_sr, itemID, p, p, speed, duration, true, false, hue, renderMode)
 		{ }
 	}
 
@@ -1806,7 +1806,7 @@ namespace Server.Network
 				effect,
 				explodeEffect,
 				explodeSound,
-				Serial.Zero,
+				Serial.Zero_sr,
 				(int)layer,
 				unknown)
 		{ }
@@ -1982,7 +1982,7 @@ m_Stream.Write( (int) renderMode );
 		{
 			m_Stream.Write((byte)0x01); // type
 			m_Stream.Write(target.Serial);
-			m_Stream.Write(Serial.Zero);
+			m_Stream.Write(Serial.Zero_sr);
 			m_Stream.Write((short)0); // itemID
 			m_Stream.Write((short)target.X);
 			m_Stream.Write((short)target.Y);
@@ -2148,7 +2148,7 @@ m_Stream.Write( (int) renderMode );
 			else
 			{
 				Console.WriteLine("Warning: ContainerContentUpdate on item with !(parent is Item)");
-				parentSerial = Serial.Zero;
+				parentSerial = Serial.Zero_sr;
 			}
 
 			m_Stream.Write(item.Serial);
@@ -2176,7 +2176,7 @@ m_Stream.Write( (int) renderMode );
 			else
 			{
 				Console.WriteLine("Warning: ContainerContentUpdate on item with !(parent is Item)");
-				parentSerial = Serial.Zero;
+				parentSerial = Serial.Zero_sr;
 			}
 
 			m_Stream.Write(item.Serial);
@@ -2487,13 +2487,13 @@ m_Stream.Write( (int) renderMode );
 
 				if (p == null)
 				{
-					cache[index] = p = new MessageLocalized(Serial.MinusOne, -1, MessageType.Regular, 0x3B2, 3, number, "System", "");
+					cache[index] = p = new MessageLocalized(Serial.MinusOne_sr, -1, MessageType.Regular, 0x3B2, 3, number, "System", "");
 					p.SetStatic();
 				}
 			}
 			else
 			{
-				p = new MessageLocalized(Serial.MinusOne, -1, MessageType.Regular, 0x3B2, 3, number, "System", "");
+				p = new MessageLocalized(Serial.MinusOne_sr, -1, MessageType.Regular, 0x3B2, 3, number, "System", "");
 			}
 
 			return p;

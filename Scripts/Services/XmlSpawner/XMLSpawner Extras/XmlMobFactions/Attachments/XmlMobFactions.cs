@@ -706,7 +706,7 @@ namespace Server.Engines.XmlSpawner2
 		public static void AddAllMobFactions_OnCommand( CommandEventArgs e )
 		{
 			int count = 0;
-			foreach(Mobile m in World.Mobiles.Values)
+			foreach(Mobile m in World.MobilesDictionary_s.Values)
 			{
 				if(m.Player)
 				{
@@ -729,7 +729,7 @@ namespace Server.Engines.XmlSpawner2
 		{
 			int count = 0;
 			int total = 0;
-			foreach(Mobile m in World.Mobiles.Values)
+			foreach(Mobile m in World.MobilesDictionary_s.Values)
 			{
 				if(m.Player)
 				{

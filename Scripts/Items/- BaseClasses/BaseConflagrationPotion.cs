@@ -195,7 +195,7 @@ namespace Server.Items
                 if (p is Mobile)
                     to = (Mobile)p;
                 else
-                    to = new Entity(Serial.Zero, new Point3D(p), from.Map);
+                    to = new Entity(Serial.Zero_sr, new Point3D(p), from.Map);
 
                 Effects.SendMovingEffect(from, to, 0xF0D, 7, 0, false, false, this.m_Potion.Hue, 0);
                 Timer.DelayCall(TimeSpan.FromSeconds(1.5), new TimerStateCallback(this.m_Potion.Explode_Callback), new object[] { from, new Point3D(p), from.Map });

@@ -1,19 +1,17 @@
+// RpiUO - XmlAdd.cs
+// Last Edit: 2015/12/28
+// Look for Rpi comment
+// **********
+
 using System;
 using System.Data;
 using System.IO;
 using System.Collections;
-using Server;
 using Server.Items;
 using Server.Network;
 using Server.Gumps;
 using Server.Targeting;
-using System.Reflection;
 using Server.Commands;
-using Server.Commands.Generic;
-using CPA = Server.CommandPropertyAttribute;
-using System.Xml;
-using Server.Spells;
-using System.Text;
 using Server.Accounting;
 
 /*
@@ -50,7 +48,7 @@ using Server.Accounting;
 
 namespace Server.Mobiles
 {
-	public class XmlSpawnerDefaults
+    public class XmlSpawnerDefaults
 	{
 		public class DefaultEntry
 		{
@@ -230,7 +228,7 @@ namespace Server.Mobiles
 			if(defs.NameList == null || defs.NameList.Length == 0)
 				return "0";
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
-			sb.AppendFormat( "{0}", defs.NameList.Length);
+			sb.AppendFormat( "{0}", defs.NameList.Length.TostringLookup());
 			for(int i = 0; i < defs.NameList.Length;i++)
 			{
 				sb.AppendFormat( ":{0}", defs.NameList[i] );
@@ -243,7 +241,7 @@ namespace Server.Mobiles
 			if(defs.SelectionList == null || defs.SelectionList.Length == 0)
 				return "0";
 			System.Text.StringBuilder sb = new System.Text.StringBuilder();
-			sb.AppendFormat( "{0}", defs.SelectionList.Length);
+			sb.AppendFormat( "{0}", defs.SelectionList.Length.TostringLookup());
 			for(int i = 0; i < defs.SelectionList.Length;i++)
 			{
 				sb.AppendFormat( ":{0}", (defs.SelectionList[i] ? 1:0) );

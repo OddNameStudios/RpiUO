@@ -3643,7 +3643,7 @@ namespace Server.Mobiles
 									// test the drop probability
 									if (Utility.RandomDouble() < drop_probability)
 									{
-										((Mobile)o).Send(new UnicodeMessage(Serial.MinusOne, -1, MessageType.Regular, hue, font, "ENU", "System", msgstr));
+										((Mobile)o).Send(new UnicodeMessage(Serial.MinusOne_sr, -1, MessageType.Regular, hue, font, "ENU", "System", msgstr));
 									}
 								}
 								if (arglist.Length < 3) break;
@@ -3682,7 +3682,7 @@ namespace Server.Mobiles
 									// test the drop probability
 									if (Utility.RandomDouble() < drop_probability)
 									{
-										((Mobile)o).Send(new AsciiMessage(Serial.MinusOne, -1, MessageType.Regular, hue, font, "System", msgstr));
+										((Mobile)o).Send(new AsciiMessage(Serial.MinusOne_sr, -1, MessageType.Regular, hue, font, "System", msgstr));
 									}
 								}
 								if (arglist.Length < 3) break;
@@ -6160,7 +6160,7 @@ namespace Server.Mobiles
 			}
 
 			// search through all items in the world and find the first one with a matching name
-			foreach (Item item in World.Items.Values)
+			foreach (Item item in World.ItemsDictionary_s.Values)
 			{
 				Type itemtype = item.GetType();
 
@@ -6208,7 +6208,7 @@ namespace Server.Mobiles
 			}
 
 			// search through all mobiles in the world and find one with a matching name
-			foreach (Mobile mobile in World.Mobiles.Values)
+			foreach (Mobile mobile in World.MobilesDictionary_s.Values)
 			{
 				Type mobtype = mobile.GetType();
 				if (!mobile.Deleted && ((name.Length == 0 || String.Compare(mobile.Name, name, true) == 0)) && (typestr == null ||
@@ -6259,7 +6259,7 @@ namespace Server.Mobiles
 				int count=0;
 	
 				// search through all xmlspawners in the world and find one with a matching name
-				foreach (Item item in World.Items.Values)
+				foreach (Item item in World.ItemsDictionary_s.Values)
 				{
 					if (item is XmlSpawner)
 					{
@@ -7703,7 +7703,7 @@ namespace Server.Mobiles
 
 				if (m != null && m.AccessLevel >= ac)
 					//m.SendMessage(hue, message);
-					m.Send(new AsciiMessage(Serial.MinusOne, -1, MessageType.Regular, hue, font, "System", message));
+					m.Send(new AsciiMessage(Serial.MinusOne_sr, -1, MessageType.Regular, hue, font, "System", message));
 			}
 		}
 
@@ -9935,7 +9935,7 @@ namespace Server.Mobiles
 							if (triggermob != null && !triggermob.Deleted && (triggermob is PlayerMobile))
 							{
 								//triggermob.SendMessage(msgText);
-								triggermob.Send(new UnicodeMessage(Serial.MinusOne, -1, MessageType.Regular, hue, font, "ENU", "System", msgText));
+								triggermob.Send(new UnicodeMessage(Serial.MinusOne_sr, -1, MessageType.Regular, hue, font, "ENU", "System", msgText));
 							}
 
 							TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
@@ -9988,7 +9988,7 @@ namespace Server.Mobiles
 							}
 							if (triggermob != null && !triggermob.Deleted && (triggermob is PlayerMobile))
 							{
-								triggermob.Send(new AsciiMessage(Serial.MinusOne, -1, MessageType.Regular, hue, font, "System", msgText));
+								triggermob.Send(new AsciiMessage(Serial.MinusOne_sr, -1, MessageType.Regular, hue, font, "System", msgText));
 							}
 
 							TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));

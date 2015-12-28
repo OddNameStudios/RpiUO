@@ -21,7 +21,7 @@ namespace Server.Misc
 
             int boxes = 0;
 
-            foreach (Item item in World.Items.Values)
+            foreach (Item item in World.ItemsDictionary_s.Values)
             {
                 if (item.Map == null)
                 {

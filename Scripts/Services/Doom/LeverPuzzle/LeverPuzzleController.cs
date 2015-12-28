@@ -266,7 +266,7 @@ namespace Server.Engines.Doom
 
         public static IEntity ZAdjustedIEFromMobile(Mobile m, int ZDelta)
         {
-            return new Entity(Serial.Zero, new Point3D(m.X, m.Y, m.Z + ZDelta), m.Map);
+            return new Entity(Serial.Zero_sr, new Point3D(m.X, m.Y, m.Z + ZDelta), m.Map);
         }
 
         public static void DoDamage(Mobile m, int min, int max, bool poison)
@@ -311,7 +311,7 @@ namespace Server.Engines.Doom
 
         public static void PlayerSendASCII(Mobile player, int index)
         {
-            player.Send(new AsciiMessage(Serial.MinusOne, 0xFFFF, MessageType.Label, MsgParams[index][0], MsgParams[index][1], null, Msgs[index]));
+            player.Send(new AsciiMessage(Serial.MinusOne_sr, 0xFFFF, MessageType.Label, MsgParams[index][0], MsgParams[index][1], null, Msgs[index]));
         }
 
         /* I cant find any better way to send "speech" using fonts other than default */
@@ -626,7 +626,7 @@ namespace Server.Engines.Doom
                         int j = Utility.Random(6, 10);
                         for (int i = 0; i < j; i++)
                         {
-                            IEntity m_IEntity = new Entity(Serial.Zero, RandomPointIn(this.m_Player.Location, 10), this.m_Player.Map);
+                            IEntity m_IEntity = new Entity(Serial.Zero_sr, RandomPointIn(this.m_Player.Location, 10), this.m_Player.Map);
 
                             List<Mobile> mobiles = new List<Mobile>();
                             foreach (Mobile m in m_IEntity.Map.GetMobilesInRange(m_IEntity.Location, 2))

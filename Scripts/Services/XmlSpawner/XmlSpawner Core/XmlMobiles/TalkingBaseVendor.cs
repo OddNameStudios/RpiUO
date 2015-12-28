@@ -44,7 +44,7 @@ namespace Server.Mobiles
 		public static void Initialize()
 		{
 			// reestablish the DialogAttachment assignment
-			foreach(Mobile m in World.Mobiles.Values)
+			foreach(Mobile m in World.MobilesDictionary_s.Values)
 			{
 				if(m is TalkingBaseVendor)
 				{

@@ -280,7 +280,7 @@ namespace Server
 
 		private static bool OnConsoleEvent(ConsoleEventType type)
 		{
-			if (World.Saving || (Service && type == ConsoleEventType.CTRL_LOGOFF_EVENT))
+			if (World.IsSaving_s || (Service && type == ConsoleEventType.CTRL_LOGOFF_EVENT))
 			{
 				return true;
 			}

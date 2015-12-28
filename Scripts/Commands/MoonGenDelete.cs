@@ -33,7 +33,7 @@ namespace Server.Commands
         {
             List<Item> list = new List<Item>();
 
-            foreach (Item item in World.Items.Values)
+            foreach (Item item in World.ItemsDictionary_s.Values)
             {
                 if (item is PublicMoongate)
                     list.Add(item);

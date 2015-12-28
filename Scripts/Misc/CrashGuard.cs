@@ -190,7 +190,7 @@ namespace Server.Misc
 
                     try
                     {
-                        op.WriteLine("Mobiles: {0}", World.Mobiles.Count);
+                        op.WriteLine("Mobiles: {0}", World.MobilesDictionary_s.Count);
                     }
                     catch
                     {
@@ -198,7 +198,7 @@ namespace Server.Misc
 
                     try
                     {
-                        op.WriteLine("Items: {0}", World.Items.Count);
+                        op.WriteLine("Items: {0}", World.ItemsDictionary_s.Count);
                     }
                     catch
                     {

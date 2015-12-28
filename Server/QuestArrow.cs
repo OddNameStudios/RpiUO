@@ -49,7 +49,7 @@ namespace Server
 				}
 				else
 				{
-					ns.Send(new SetArrowHS(x, y, Serial.MinusOne));
+					ns.Send(new SetArrowHS(x, y, Serial.MinusOne_sr));
 				}
 			}
 			else
@@ -84,7 +84,7 @@ namespace Server
 					}
 					else
 					{
-						ns.Send(new CancelArrowHS(x, y, Serial.MinusOne));
+						ns.Send(new CancelArrowHS(x, y, Serial.MinusOne_sr));
 					}
 				}
 				else

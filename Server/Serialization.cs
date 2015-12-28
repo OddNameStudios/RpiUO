@@ -678,7 +678,7 @@ namespace Server
 		{
 			if (value == null || value.Deleted)
 			{
-				Write(Serial.MinusOne);
+				Write(Serial.MinusOne_sr);
 			}
 			else
 			{
@@ -690,7 +690,7 @@ namespace Server
 		{
 			if (value == null || value.Deleted)
 			{
-				Write(Serial.MinusOne);
+				Write(Serial.MinusOne_sr);
 			}
 			else
 			{
@@ -2204,7 +2204,7 @@ namespace Server
 		{
 			if (value == null || value.Deleted)
 			{
-				Write(Serial.MinusOne);
+				Write(Serial.MinusOne_sr);
 			}
 			else
 			{
@@ -2216,7 +2216,7 @@ namespace Server
 		{
 			if (value == null || value.Deleted)
 			{
-				Write(Serial.MinusOne);
+				Write(Serial.MinusOne_sr);
 			}
 			else
 			{
