@@ -16,10 +16,14 @@ Stable on:
 
 Getting started with RpiUO is quite easy. Just run 'bash Compile.PI.bash' and its done!. This script will compile both the server binary and Ultima SDK binary for you. After this you can run the server by executing the linux bash command: 'mono initServer.exe'.
 
-### Last Big Changes History
+### Resumed Change History
 
 [2015/12/28] Removed all Linq, refactored some classes for a speed up.
+
 [2015/12/25] Removed some Linq usage for better cpu performance and smaller memory footprint. 
+
 [2015/12/23] Removed some compiler warning causes.
+
 [2015/12/21] Updated project dependencies, serialization checks and small fixes.
+
 [2015/12/20] Added minor changes to compile on Raspberry Pi 2.
