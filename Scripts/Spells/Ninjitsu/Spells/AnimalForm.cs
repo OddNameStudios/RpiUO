@@ -203,11 +203,11 @@ namespace Server.Spells.Ninjitsu
 			}
 
 			/*
-            if( !m.CheckSkill( SkillName.Ninjitsu, entry.ReqSkill, entry.ReqSkill + 37.5 ) )
-            return MorphResult.Fail;
-            *
-            * On OSI,it seems you can only gain starting at '0' using Animal form.
-            */
+			if( !m.CheckSkill( SkillName.Ninjitsu, entry.ReqSkill, entry.ReqSkill + 37.5 ) )
+			return MorphResult.Fail;
+			*
+			* On OSI,it seems you can only gain starting at '0' using Animal form.
+			*/
 
 			double ninjitsu = m.Skills.Ninjitsu.Value;
 
@@ -246,7 +246,7 @@ namespace Server.Spells.Ninjitsu
 			if (entry.StealthBonus)
 			{
 				mod = new DefaultSkillMod(SkillName.Stealth, true, 20.0);
-				mod.DoObeyCap = true;
+				mod.ObeyCap = true;
 				m.AddSkillMod(mod);
 			}
 
@@ -255,7 +255,7 @@ namespace Server.Spells.Ninjitsu
 			if (entry.StealingBonus)
 			{
 				stealingMod = new DefaultSkillMod(SkillName.Stealing, true, 10.0);
-				stealingMod.DoObeyCap = true;
+				stealingMod.ObeyCap = true;
 				m.AddSkillMod(stealingMod);
 			}
 
@@ -341,9 +341,9 @@ namespace Server.Spells.Ninjitsu
 		}
 
 		/*
-        private delegate void AnimalFormCallback( Mobile from );
-        private delegate bool AnimalFormRequirementCallback( Mobile from );
-        */
+		private delegate void AnimalFormCallback( Mobile from );
+		private delegate bool AnimalFormRequirementCallback( Mobile from );
+		*/
 
 		public class AnimalFormEntry
 		{
@@ -372,10 +372,10 @@ namespace Server.Spells.Ninjitsu
 			public bool SpeedBoost { get { return m_SpeedBoost; } }
 			public bool StealingBonus { get { return m_StealingBonus; } }
 			/*
-            private AnimalFormCallback m_TransformCallback;
-            private AnimalFormCallback m_UntransformCallback;
-            private AnimalFormRequirementCallback m_RequirementCallback;
-            */
+			private AnimalFormCallback m_TransformCallback;
+			private AnimalFormCallback m_UntransformCallback;
+			private AnimalFormRequirementCallback m_RequirementCallback;
+			*/
 
 			public AnimalFormEntry(
 				Type type,

@@ -13463,513 +13463,175 @@
     <Compile Include="SpecialSystems\Items\SupplyBags\TailorBag.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Spells\Base\DisturbType.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Base\MagerySpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Base\SpecialMove.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Base\Spell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Base\SpellCircle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Base\SpellHelper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Base\SpellInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Base\SpellRegistry.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Base\SpellState.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Bushido\Confidence.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Bushido\CounterAttack.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Bushido\Evasion.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Bushido\HonorableExecution.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Bushido\LightningStrike.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Bushido\MomentumStrike.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Bushido\SamuraiMove.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Bushido\SamuraiSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\CleanseByFire.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\CloseWounds.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\ConsecrateWeapon.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\DispelEvil.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\DivineFury.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\EnemyOfOne.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\HolyLight.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\NobleSacrifice.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\PaladinSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\RemoveCurse.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Chivalry\SacredJourney.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Eighth\AirElemental.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Eighth\EarthElemental.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Eighth\Earthquake.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Eighth\EnergyVortex.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Eighth\FireElemental.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Eighth\Resurrection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Eighth\SummonDaemon.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Eighth\WaterElemental.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fifth\BladeSpirits.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fifth\DispelField.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fifth\Incognito.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fifth\MagicReflect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fifth\MindBlast.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fifth\Paralyze.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fifth\PoisonField.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fifth\SummonCreature.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\First\Clumsy.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\First\CreateFood.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\First\Feeblemind.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\First\Heal.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\First\MagicArrow.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\First\NightSight.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\First\ReactiveArmor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\First\Weaken.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fourth\ArchCure.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fourth\ArchProtection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fourth\Curse.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fourth\FireField.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fourth\GreaterHeal.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fourth\Lightning.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fourth\ManaDrain.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Fourth\Recall.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Gargoyle\SpellDefinitions\FlySpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Initializer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\MysticSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\AnimatedWeaponSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\BombardSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\CleansingWindsSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\EagleStrikeSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\EnchantGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\EnchantSpell .cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\HailStormSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\HealingStoneSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\MassSleepSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\MysticTransformationSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\NetherBoltSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\NetherCycloneSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\PurgeMagicSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\RisingColossusSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\SleepSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\SpellPlague.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\SpellTriggerSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellDefinitions\StoneForm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Mysticism\SpellTriggerGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\AnimateDeadSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\BloodOathSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\CorpseSkin.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\CurseWeapon.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\EvilOmen.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\Exorcism.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\HorrificBeast.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\LichForm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\MindRot.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\NecromancerSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\PainSpike.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\PoisonStrike.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\Strangle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\SummonFamiliar.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\TransformationSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\VampiricEmbrace.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\VengefulSpirit.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\Wither.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Necromancy\WraithForm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Ninjitsu\AnimalForm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Ninjitsu\Backstab.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Ninjitsu\DeathStrike.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Ninjitsu\FocusAttack.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Ninjitsu\KiAttack.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Ninjitsu\MirrorImage.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Ninjitsu\NinjaMove.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Ninjitsu\NinjaSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Ninjitsu\ShadowJump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Ninjitsu\SurpriseAttack.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Reagent.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Second\Agility.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Second\Cunning.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Second\Cure.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Second\Harm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Second\MagicTrap.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Second\Protection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Second\RemoveTrap.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Second\Strength.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Seventh\ChainLightning.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Seventh\EnergyField.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Seventh\FlameStrike.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Seventh\GateTravel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Seventh\ManaVampire.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Seventh\MassDispel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Seventh\MeteorSwarm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Seventh\Polymorph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Sixth\Dispel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Sixth\EnergyBolt.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Sixth\Explosion.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Sixth\Invisibility.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Sixth\Mark.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Sixth\MassCurse.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Sixth\ParalyzeField.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Sixth\Reveal.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\ArcaneCircle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\ArcaneEmpowerment.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\ArcaneForm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\ArcaneSummon.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\ArcanistSpell.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\AttuneWeapon.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\DryadAllure.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\EssenceOfWind.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\EtherealVoyage.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\GiftOfLife.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\GiftOfRenewal.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\ImmolatingWeapon.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\Items\ArcaneFocus.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\Items\TransientItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\Mobiles\ArcaneFey.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\Mobiles\ArcaneFiend.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\Mobiles\NatureFury.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\NatureFury.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\ReaperForm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\SummonFey.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\SummonFiend.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\Thunderstorm.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\Wildfire.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Spellweaving\WordOfDeath.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Third\Bless.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Third\Fireball.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Third\MagicLock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Third\Poison.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Third\Telekinesis.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Third\Teleport.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Third\Unlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\Third\WallOfStone.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Spells\UnsummonTimer.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Spells\Base\DisturbType.cs" />
+    <Compile Include="Spells\Base\SpecialMove.cs" />
+    <Compile Include="Spells\Base\Spell.cs" />
+    <Compile Include="Spells\Base\SpellCircle.cs" />
+    <Compile Include="Spells\Base\SpellHelper.cs" />
+    <Compile Include="Spells\Base\SpellInfo.cs" />
+    <Compile Include="Spells\Base\SpellRegistry.cs" />
+    <Compile Include="Spells\Base\SpellState.cs" />
+    <Compile Include="Spells\Bushido\Confidence.cs" />
+    <Compile Include="Spells\Bushido\CounterAttack.cs" />
+    <Compile Include="Spells\Bushido\Evasion.cs" />
+    <Compile Include="Spells\Bushido\HonorableExecution.cs" />
+    <Compile Include="Spells\Bushido\LightningStrike.cs" />
+    <Compile Include="Spells\Bushido\MomentumStrike.cs" />
+    <Compile Include="Spells\Bushido\SamuraiMove.cs" />
+    <Compile Include="Spells\Bushido\SamuraiSpell.cs" />
+    <Compile Include="Spells\Chivalry\CleanseByFire.cs" />
+    <Compile Include="Spells\Chivalry\CloseWounds.cs" />
+    <Compile Include="Spells\Chivalry\ConsecrateWeapon.cs" />
+    <Compile Include="Spells\Chivalry\DispelEvil.cs" />
+    <Compile Include="Spells\Chivalry\DivineFury.cs" />
+    <Compile Include="Spells\Chivalry\EnemyOfOne.cs" />
+    <Compile Include="Spells\Chivalry\HolyLight.cs" />
+    <Compile Include="Spells\Chivalry\NobleSacrifice.cs" />
+    <Compile Include="Spells\Chivalry\PaladinSpell.cs" />
+    <Compile Include="Spells\Chivalry\RemoveCurse.cs" />
+    <Compile Include="Spells\Chivalry\SacredJourney.cs" />
+    <Compile Include="Spells\Gargoyle\SpellDefinitions\FlySpell.cs" />
+    <Compile Include="Spells\Initializer.cs" />
+    <Compile Include="Spells\Magery\1st Circle\Clumsy.cs" />
+    <Compile Include="Spells\Magery\1st Circle\CreateFood.cs" />
+    <Compile Include="Spells\Magery\1st Circle\Feeblemind.cs" />
+    <Compile Include="Spells\Magery\1st Circle\Heal.cs" />
+    <Compile Include="Spells\Magery\1st Circle\MagicArrow.cs" />
+    <Compile Include="Spells\Magery\1st Circle\NightSight.cs" />
+    <Compile Include="Spells\Magery\1st Circle\ReactiveArmor.cs" />
+    <Compile Include="Spells\Magery\1st Circle\Weaken.cs" />
+    <Compile Include="Spells\Magery\2nd Circle\Agility.cs" />
+    <Compile Include="Spells\Magery\2nd Circle\Cunning.cs" />
+    <Compile Include="Spells\Magery\2nd Circle\Cure.cs" />
+    <Compile Include="Spells\Magery\2nd Circle\Harm.cs" />
+    <Compile Include="Spells\Magery\2nd Circle\MagicTrap.cs" />
+    <Compile Include="Spells\Magery\2nd Circle\Protection.cs" />
+    <Compile Include="Spells\Magery\2nd Circle\RemoveTrap.cs" />
+    <Compile Include="Spells\Magery\2nd Circle\Strength.cs" />
+    <Compile Include="Spells\Magery\3rd Circle\Bless.cs" />
+    <Compile Include="Spells\Magery\3rd Circle\Fireball.cs" />
+    <Compile Include="Spells\Magery\3rd Circle\MagicLock.cs" />
+    <Compile Include="Spells\Magery\3rd Circle\Poison.cs" />
+    <Compile Include="Spells\Magery\3rd Circle\Telekinesis.cs" />
+    <Compile Include="Spells\Magery\3rd Circle\Teleport.cs" />
+    <Compile Include="Spells\Magery\3rd Circle\Unlock.cs" />
+    <Compile Include="Spells\Magery\3rd Circle\WallOfStone.cs" />
+    <Compile Include="Spells\Magery\4th Circle\ArchCure.cs" />
+    <Compile Include="Spells\Magery\4th Circle\ArchProtection.cs" />
+    <Compile Include="Spells\Magery\4th Circle\Curse.cs" />
+    <Compile Include="Spells\Magery\4th Circle\FireField.cs" />
+    <Compile Include="Spells\Magery\4th Circle\GreaterHeal.cs" />
+    <Compile Include="Spells\Magery\4th Circle\Lightning.cs" />
+    <Compile Include="Spells\Magery\4th Circle\ManaDrain.cs" />
+    <Compile Include="Spells\Magery\4th Circle\Recall.cs" />
+    <Compile Include="Spells\Magery\5th Circle\BladeSpirits.cs" />
+    <Compile Include="Spells\Magery\5th Circle\DispelField.cs" />
+    <Compile Include="Spells\Magery\5th Circle\Incognito.cs" />
+    <Compile Include="Spells\Magery\5th Circle\MagicReflect.cs" />
+    <Compile Include="Spells\Magery\5th Circle\MindBlast.cs" />
+    <Compile Include="Spells\Magery\5th Circle\Paralyze.cs" />
+    <Compile Include="Spells\Magery\5th Circle\PoisonField.cs" />
+    <Compile Include="Spells\Magery\5th Circle\SummonCreature.cs" />
+    <Compile Include="Spells\Magery\6th Circle\Dispel.cs" />
+    <Compile Include="Spells\Magery\6th Circle\EnergyBolt.cs" />
+    <Compile Include="Spells\Magery\6th Circle\Explosion.cs" />
+    <Compile Include="Spells\Magery\6th Circle\Invisibility.cs" />
+    <Compile Include="Spells\Magery\6th Circle\Mark.cs" />
+    <Compile Include="Spells\Magery\6th Circle\MassCurse.cs" />
+    <Compile Include="Spells\Magery\6th Circle\ParalyzeField.cs" />
+    <Compile Include="Spells\Magery\6th Circle\Reveal.cs" />
+    <Compile Include="Spells\Magery\7th Circle\ChainLightning.cs" />
+    <Compile Include="Spells\Magery\7th Circle\EnergyField.cs" />
+    <Compile Include="Spells\Magery\7th Circle\FlameStrike.cs" />
+    <Compile Include="Spells\Magery\7th Circle\GateTravel.cs" />
+    <Compile Include="Spells\Magery\7th Circle\ManaVampire.cs" />
+    <Compile Include="Spells\Magery\7th Circle\MassDispel.cs" />
+    <Compile Include="Spells\Magery\7th Circle\MeteorSwarm.cs" />
+    <Compile Include="Spells\Magery\7th Circle\Polymorph.cs" />
+    <Compile Include="Spells\Magery\8th Circle\AirElemental.cs" />
+    <Compile Include="Spells\Magery\8th Circle\EarthElemental.cs" />
+    <Compile Include="Spells\Magery\8th Circle\Earthquake.cs" />
+    <Compile Include="Spells\Magery\8th Circle\EnergyVortex.cs" />
+    <Compile Include="Spells\Magery\8th Circle\FireElemental.cs" />
+    <Compile Include="Spells\Magery\8th Circle\Resurrection.cs" />
+    <Compile Include="Spells\Magery\8th Circle\SummonDaemon.cs" />
+    <Compile Include="Spells\Magery\8th Circle\WaterElemental.cs" />
+    <Compile Include="Spells\Magery\MagerySpell.cs" />
+    <Compile Include="Spells\Mysticism\MysticSpell.cs" />
+    <Compile Include="Spells\Mysticism\SpellTriggerGump.cs" />
+    <Compile Include="Spells\Mysticism\Spell\AnimatedWeaponSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\BombardSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\CleansingWindsSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\EagleStrikeSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\EnchantGump.cs" />
+    <Compile Include="Spells\Mysticism\Spell\EnchantSpell .cs" />
+    <Compile Include="Spells\Mysticism\Spell\HailStormSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\HealingStoneSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\MassSleepSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\MysticTransformationSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\NetherBoltSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\NetherCycloneSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\PurgeMagicSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\RisingColossusSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\SleepSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\SpellPlague.cs" />
+    <Compile Include="Spells\Mysticism\Spell\SpellTriggerSpell.cs" />
+    <Compile Include="Spells\Mysticism\Spell\StoneForm.cs" />
+    <Compile Include="Spells\Necromancy\NecromancerSpell.cs" />
+    <Compile Include="Spells\Necromancy\Spells\AnimateDeadSpell.cs" />
+    <Compile Include="Spells\Necromancy\Spells\BloodOathSpell.cs" />
+    <Compile Include="Spells\Necromancy\Spells\CorpseSkin.cs" />
+    <Compile Include="Spells\Necromancy\Spells\CurseWeapon.cs" />
+    <Compile Include="Spells\Necromancy\Spells\EvilOmen.cs" />
+    <Compile Include="Spells\Necromancy\Spells\Exorcism.cs" />
+    <Compile Include="Spells\Necromancy\Spells\HorrificBeast.cs" />
+    <Compile Include="Spells\Necromancy\Spells\LichForm.cs" />
+    <Compile Include="Spells\Necromancy\Spells\MindRot.cs" />
+    <Compile Include="Spells\Necromancy\Spells\PainSpike.cs" />
+    <Compile Include="Spells\Necromancy\Spells\PoisonStrike.cs" />
+    <Compile Include="Spells\Necromancy\Spells\Strangle.cs" />
+    <Compile Include="Spells\Necromancy\Spells\SummonFamiliar.cs" />
+    <Compile Include="Spells\Necromancy\Spells\TransformationSpell.cs" />
+    <Compile Include="Spells\Necromancy\Spells\VampiricEmbrace.cs" />
+    <Compile Include="Spells\Necromancy\Spells\VengefulSpirit.cs" />
+    <Compile Include="Spells\Necromancy\Spells\Wither.cs" />
+    <Compile Include="Spells\Necromancy\Spells\WraithForm.cs" />
+    <Compile Include="Spells\Ninjitsu\NinjaMove.cs" />
+    <Compile Include="Spells\Ninjitsu\NinjaSpell.cs" />
+    <Compile Include="Spells\Ninjitsu\Spells\AnimalForm.cs" />
+    <Compile Include="Spells\Ninjitsu\Spells\Backstab.cs" />
+    <Compile Include="Spells\Ninjitsu\Spells\DeathStrike.cs" />
+    <Compile Include="Spells\Ninjitsu\Spells\FocusAttack.cs" />
+    <Compile Include="Spells\Ninjitsu\Spells\KiAttack.cs" />
+    <Compile Include="Spells\Ninjitsu\Spells\MirrorImage.cs" />
+    <Compile Include="Spells\Ninjitsu\Spells\ShadowJump.cs" />
+    <Compile Include="Spells\Ninjitsu\Spells\SurpriseAttack.cs" />
+    <Compile Include="Spells\Reagent.cs" />
+    <Compile Include="Spells\Spellweaving\ArcaneCircle.cs" />
+    <Compile Include="Spells\Spellweaving\ArcaneEmpowerment.cs" />
+    <Compile Include="Spells\Spellweaving\ArcaneForm.cs" />
+    <Compile Include="Spells\Spellweaving\ArcaneSummon.cs" />
+    <Compile Include="Spells\Spellweaving\ArcanistSpell.cs" />
+    <Compile Include="Spells\Spellweaving\AttuneWeapon.cs" />
+    <Compile Include="Spells\Spellweaving\DryadAllure.cs" />
+    <Compile Include="Spells\Spellweaving\EssenceOfWind.cs" />
+    <Compile Include="Spells\Spellweaving\EtherealVoyage.cs" />
+    <Compile Include="Spells\Spellweaving\GiftOfLife.cs" />
+    <Compile Include="Spells\Spellweaving\GiftOfRenewal.cs" />
+    <Compile Include="Spells\Spellweaving\ImmolatingWeapon.cs" />
+    <Compile Include="Spells\Spellweaving\Items\ArcaneFocus.cs" />
+    <Compile Include="Spells\Spellweaving\Items\TransientItem.cs" />
+    <Compile Include="Spells\Spellweaving\Mobiles\ArcaneFey.cs" />
+    <Compile Include="Spells\Spellweaving\Mobiles\ArcaneFiend.cs" />
+    <Compile Include="Spells\Spellweaving\Mobiles\NatureFury.cs" />
+    <Compile Include="Spells\Spellweaving\NatureFury.cs" />
+    <Compile Include="Spells\Spellweaving\ReaperForm.cs" />
+    <Compile Include="Spells\Spellweaving\SummonFey.cs" />
+    <Compile Include="Spells\Spellweaving\SummonFiend.cs" />
+    <Compile Include="Spells\Spellweaving\Thunderstorm.cs" />
+    <Compile Include="Spells\Spellweaving\Wildfire.cs" />
+    <Compile Include="Spells\Spellweaving\WordOfDeath.cs" />
+    <Compile Include="Spells\UnsummonTimer.cs" />
     <Compile Include="Targets\BladedItemTarget.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -14128,6 +13790,7 @@
     <Content Include="SpecialSystems\README.TXT" />
     <Content Include="Spells\Mysticism\Blank.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />

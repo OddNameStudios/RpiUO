@@ -20,7 +20,8 @@ namespace Server.Misc
         * Example:
         *  private static string CustomPath = @"C:\Program Files\Ultima Online";
         */
-        private static readonly string linuxPath_psr = "/home/pi/uoserver/clientFiles";
+        private static readonly string linuxPath1_psr = "/home/pi/uoserver/clientFiles";
+        private static readonly string linuxPath2_psr = "/home/pi/uoserver/clientFiles";
         private static readonly string windowsPath_psr = "D:/Odd Name Studios/Jogos/Ultima Online Shard/Server/clientFiles";
         /* The following is a list of files which a required for proper execution:
         * 
@@ -63,8 +64,11 @@ namespace Server.Misc
                 Core.DataDirectories.Add(pathHS);
                 */
 
-            if (linuxPath_psr != null)
-                Core.DataDirectories.Add(linuxPath_psr);
+            if (linuxPath1_psr != null)
+                Core.DataDirectories.Add(linuxPath1_psr);
+
+            if (linuxPath2_psr != null)
+                Core.DataDirectories.Add(linuxPath2_psr);
 
             if (windowsPath_psr != null)
                 Core.DataDirectories.Add(windowsPath_psr);
